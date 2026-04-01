@@ -1,0 +1,133 @@
+- generic [ref=e1]:
+  - button "Admin menü" [active] [ref=e13]:
+    - generic [ref=e14]: close
+  - generic [ref=e15]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - generic [ref=e18]: admin panel
+        - button "close" [ref=e19]:
+          - generic [ref=e20]: close
+      - paragraph [ref=e21]: /
+    - navigation [ref=e22]:
+      - generic [ref=e23]:
+        - paragraph [ref=e24]: sayfalar
+        - link "home anasayfa" [ref=e25] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e26]: home
+          - generic [ref=e27]: anasayfa
+        - link "gallery_thumbnail galeri" [ref=e28] [cursor=pointer]:
+          - /url: /galeri
+          - generic [ref=e29]: gallery_thumbnail
+          - generic [ref=e30]: galeri
+        - link "person hakkında" [ref=e31] [cursor=pointer]:
+          - /url: /hakkinda
+          - generic [ref=e32]: person
+          - generic [ref=e33]: hakkında
+        - link "mail iletişim" [ref=e34] [cursor=pointer]:
+          - /url: /iletisim
+          - generic [ref=e35]: mail
+          - generic [ref=e36]: iletişim
+        - link "brush özel istek" [ref=e37] [cursor=pointer]:
+          - /url: /ozel-istek
+          - generic [ref=e38]: brush
+          - generic [ref=e39]: özel istek
+      - generic [ref=e40]:
+        - paragraph [ref=e41]: yönetim
+        - link "inbox gönderiler" [ref=e42] [cursor=pointer]:
+          - /url: /admin/submissions
+          - generic [ref=e43]: inbox
+          - generic [ref=e44]: gönderiler
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - generic [ref=e49]: mail
+            - text: bülten aboneleri
+          - generic [ref=e50]: "0"
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - generic [ref=e53]: inbox
+            - text: okunmamış
+          - generic [ref=e54]: "0"
+    - generic [ref=e55]:
+      - generic [ref=e56]: düzenleme modu aktif
+      - button "logout çıkış yap" [ref=e57]:
+        - generic [ref=e58]: logout
+        - text: çıkış yap
+  - alert [ref=e12]
+  - navigation [ref=e59]:
+    - link "by zeynep kömür" [ref=e60] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e61]:
+      - link "anasayfa" [ref=e62] [cursor=pointer]:
+        - /url: /
+      - link "galeri" [ref=e63] [cursor=pointer]:
+        - /url: /galeri
+      - link "hakkında" [ref=e64] [cursor=pointer]:
+        - /url: /hakkinda
+      - link "iletişim" [ref=e65] [cursor=pointer]:
+        - /url: /iletisim
+    - button "KULÜBE KATIL" [ref=e67]
+  - banner [ref=e68]:
+    - generic [ref=e69]:
+      - heading "Sınırsız Sanat edit" [level=1] [ref=e70] [cursor=pointer]:
+        - text: Sınırsız Sanat
+        - generic [ref=e71]: edit
+      - img "img 8607" [ref=e75]
+    - generic [ref=e76] [cursor=pointer]:
+      - text: modernizmin sınırlarını zorlayan, renk ve formun dansı.
+      - generic [ref=e77]: edit
+  - generic [ref=e78]:
+    - generic [ref=e79]:
+      - heading "yeni gelenler edit" [level=2] [ref=e81] [cursor=pointer]:
+        - text: yeni gelenler
+        - generic [ref=e82]: edit
+      - paragraph [ref=e84] [cursor=pointer]:
+        - text: son eklenen eserler ve koleksiyonlar. zeynep kömür seçkisiyle modern sanatın taze soluğu.
+        - generic [ref=e85]: edit
+    - generic [ref=e86]:
+      - generic [ref=e87]:
+        - img "img 8607" [ref=e88]
+        - generic [ref=e89]:
+          - generic [ref=e90]: koleksiyon 01
+          - heading "img 8607" [level=3] [ref=e91]
+      - generic [ref=e92]:
+        - img "img 8608" [ref=e93]
+        - generic [ref=e94]: yeni
+      - generic [ref=e96]:
+        - generic [ref=e97]: brush
+        - paragraph [ref=e98]:
+          - text: sanatın dijital
+          - text: formunda kaybolun.
+      - generic [ref=e99]:
+        - img "img 8609" [ref=e100]
+        - generic [ref=e101]:
+          - heading "img 8609" [level=4] [ref=e102]
+          - paragraph [ref=e103]: "koleksiyon: BLUE VALENTINE 2"
+  - generic [ref=e105]:
+    - generic [ref=e106]: “
+    - blockquote [ref=e107]:
+      - paragraph [ref=e108] [cursor=pointer]:
+        - text: Her çocuk bir sanatçıdır. Sorun, büyüdüğümüzde sanatçı kalmayı nasıl başaracağımızdır.
+        - generic [ref=e109]: edit
+      - generic [ref=e110]:
+        - text: —
+        - generic [ref=e111] [cursor=pointer]:
+          - text: Pablo Picasso
+          - generic [ref=e112]: edit
+  - contentinfo [ref=e117]:
+    - generic [ref=e118]:
+      - generic [ref=e119]: by zeynep kömür
+      - paragraph [ref=e120]: sanatın herkes için erişilebilir olduğu, sınırların kalktığı dijital bir kürasyon alanı.
+    - generic [ref=e122]:
+      - link "telefon" [ref=e123] [cursor=pointer]:
+        - /url: tel:+900000000000
+      - link "e-posta" [ref=e124] [cursor=pointer]:
+        - /url: mailto:info@zeyn.art
+      - link "instagram" [ref=e125] [cursor=pointer]:
+        - /url: https://instagram.com
+    - generic [ref=e126]:
+      - generic [ref=e127]:
+        - generic [ref=e128]: palette
+        - generic [ref=e129]: brush
+        - generic [ref=e130]: gallery_thumbnail
+      - generic [ref=e131]: © by zeynep kömür. all rights reserved.

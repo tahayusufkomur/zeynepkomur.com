@@ -1,0 +1,11 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - heading "yönetici girişi" [level=1] [ref=e4]
+    - generic [ref=e5]:
+      - generic [ref=e6]: e-posta
+      - textbox [ref=e7]
+    - generic [ref=e8]:
+      - generic [ref=e9]: şifre
+      - textbox [ref=e10]
+    - button "giriş yap" [ref=e11]
+  - alert [ref=e12]
