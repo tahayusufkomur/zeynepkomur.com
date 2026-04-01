@@ -21,6 +21,7 @@ export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModal
   const [imagePath, setImagePath] = useState(artwork?.imagePath ?? "");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const isEditing = !!artwork;
@@ -79,8 +80,24 @@ export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModal
     }
   }
 
+  async function handleDelete() {
+    if (!artwork) return;
+    if (!confirm("Bu eseri silmek istediğinize emin misiniz?")) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/artworks/${artwork.id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      showToast("eser silindi", "success");
+      onSaved();
+    } catch {
+      showToast("silinemedi", "error");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   return (
-    <div className="fixed inset-0 z-[150] flex items-center justify-center bg-on-surface/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-on-surface/60 backdrop-blur-sm p-4">
       <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
         <div className="flex items-center justify-between px-8 py-6 border-b border-surface-container">
           <h2 className="text-2xl font-bold text-on-surface lowercase">
@@ -228,6 +245,16 @@ export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModal
             >
               iptal
             </button>
+            {isEditing && (
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="ml-auto bg-error text-on-error px-8 py-3 font-bold tracking-tight hover:bg-error/80 transition-all duration-300 disabled:opacity-50"
+              >
+                {deleting ? "siliniyor..." : "sil"}
+              </button>
+            )}
           </div>
         </form>
       </div>
