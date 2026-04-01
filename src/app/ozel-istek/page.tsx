@@ -1,10 +1,37 @@
 export const dynamic = "force-dynamic";
+import { db } from "@/lib/db/index";
+import { pageContent } from "@/lib/db/schema";
+import { and, eq } from "drizzle-orm";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { CustomRequestForm } from "@/components/forms/custom-request-form";
-import { FallbackImage } from "@/components/ui/fallback-image";
+import { InlineEdit } from "@/components/admin/inline-edit";
+import { OzelIstekImage } from "./ozel-istek-client";
 
-export default function OzelIstekPage() {
+async function getContent(sectionKey: string, fallback: string) {
+  const [row] = await db
+    .select()
+    .from(pageContent)
+    .where(
+      and(
+        eq(pageContent.pageSlug, "ozel-istek"),
+        eq(pageContent.sectionKey, sectionKey)
+      )
+    );
+  return row?.content ?? fallback;
+}
+
+export default async function OzelIstekPage() {
+  const headline = await getContent("headline", "özelleştirilmiş resim isteği");
+  const description = await getContent("description", "mekanınıza ruh katacak, sadece size özel üretilecek bir eser için kürasyon sürecini başlatın.");
+  const feature1Title = await getContent("feature_1_title", "renk kürasyonu");
+  const feature1Desc = await getContent("feature_1_desc", "mekanınızın ışık ve dokusuna uygun özel pigment seçimi.");
+  const feature2Title = await getContent("feature_2_title", "boyut ve oran");
+  const feature2Desc = await getContent("feature_2_desc", "duvar ölçülerinize altın oran ile uyumlu özel kanvas üretimi.");
+  const feature3Title = await getContent("feature_3_title", "imzalı hikaye");
+  const feature3Desc = await getContent("feature_3_desc", "her eser, sürecin hikayesini anlatan ıslak imzalı sertifika ile gelir.");
+  const artImage = await getContent("art_image", "/images/custom-request-art.jpg");
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar currentPage="ozel-istek" />
@@ -12,13 +39,21 @@ export default function OzelIstekPage() {
       <main className="flex-1 pt-48 pb-24 px-6 md:px-12 max-w-7xl mx-auto w-full">
         {/* Hero Section */}
         <header className="mb-20">
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter text-on-surface lowercase mb-6 leading-none">
-            özelleştirilmiş{" "}
-            <span style={{ color: "#085F7F" }}>resim</span> isteği
-          </h1>
-          <p className="text-on-surface-variant max-w-2xl text-lg lowercase">
-            mekanınıza ruh katacak, sadece size özel üretilecek bir eser için kürasyon sürecini başlatın. zeynep kömür&apos;ün fırçasından modern bir hikaye.
-          </p>
+          <InlineEdit
+            pageSlug="ozel-istek"
+            sectionKey="headline"
+            initialContent={headline}
+            as="h1"
+            className="text-5xl md:text-7xl font-extrabold tracking-tighter text-on-surface lowercase mb-6 leading-none"
+          />
+          <InlineEdit
+            pageSlug="ozel-istek"
+            sectionKey="description"
+            initialContent={description}
+            as="p"
+            multiline
+            className="text-on-surface-variant max-w-2xl text-lg lowercase"
+          />
         </header>
 
         {/* Two-column form + info */}
@@ -32,69 +67,41 @@ export default function OzelIstekPage() {
           {/* Visual side */}
           <section className="lg:col-span-5 bg-white flex flex-col">
             <div className="aspect-square w-full relative group overflow-hidden">
-              <FallbackImage
-                alt="modern sanat illüstrasyonu"
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
-                src="/images/custom-request-art.jpg"
-                fallbackSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23e8e6ff'/%3E%3Crect x='50' y='50' width='300' height='300' fill='%23004be3' opacity='0.2'/%3E%3C/svg%3E"
-              />
-              <div className="absolute inset-0 opacity-10 mix-blend-multiply" style={{ backgroundColor: "#085F7F" }} />
+              <OzelIstekImage initialSrc={artImage} />
+              <div className="absolute inset-0 opacity-10 mix-blend-multiply pointer-events-none" style={{ backgroundColor: "#085F7F" }} />
             </div>
 
             <div className="p-12 space-y-8 bg-surface-container flex-grow">
-              {/* Feature: Renk kürasyonu */}
+              {/* Feature 1: Renk kürasyonu */}
               <div className="flex gap-4 items-start">
-                <div
-                  className="w-10 h-10 flex items-center justify-center shrink-0"
-                  style={{ backgroundColor: "#085F7F" }}
-                >
+                <div className="w-10 h-10 flex items-center justify-center shrink-0" style={{ backgroundColor: "#085F7F" }}>
                   <span className="material-symbols-outlined text-white text-sm">palette</span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-on-surface lowercase mb-1 text-sm">
-                    renk kürasyonu
-                  </h3>
-                  <p className="text-xs text-on-surface-variant lowercase">
-                    mekanınızın ışık ve dokusuna uygun özel pigment seçimi.
-                  </p>
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_1_title" initialContent={feature1Title} as="h3" className="font-bold text-on-surface lowercase mb-1 text-sm" />
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_1_desc" initialContent={feature1Desc} as="p" className="text-xs text-on-surface-variant lowercase" />
                 </div>
               </div>
 
-              {/* Feature: Boyut ve oran */}
+              {/* Feature 2: Boyut ve oran */}
               <div className="flex gap-4 items-start">
-                <div
-                  className="w-10 h-10 flex items-center justify-center shrink-0"
-                  style={{ backgroundColor: "#FFD54F" }}
-                >
-                  <span className="material-symbols-outlined text-on-secondary-container text-sm">
-                    aspect_ratio
-                  </span>
+                <div className="w-10 h-10 flex items-center justify-center shrink-0" style={{ backgroundColor: "#FFD54F" }}>
+                  <span className="material-symbols-outlined text-on-secondary-container text-sm">aspect_ratio</span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-on-surface lowercase mb-1 text-sm">
-                    boyut ve oran
-                  </h3>
-                  <p className="text-xs text-on-surface-variant lowercase">
-                    duvar ölçülerinize altın oran ile uyumlu özel kanvas üretimi.
-                  </p>
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_2_title" initialContent={feature2Title} as="h3" className="font-bold text-on-surface lowercase mb-1 text-sm" />
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_2_desc" initialContent={feature2Desc} as="p" className="text-xs text-on-surface-variant lowercase" />
                 </div>
               </div>
 
-              {/* Feature: İmzalı hikaye */}
+              {/* Feature 3: İmzalı hikaye */}
               <div className="flex gap-4 items-start">
-                <div
-                  className="w-10 h-10 flex items-center justify-center shrink-0"
-                  style={{ backgroundColor: "#F4A261" }}
-                >
+                <div className="w-10 h-10 flex items-center justify-center shrink-0" style={{ backgroundColor: "#F4A261" }}>
                   <span className="material-symbols-outlined text-white text-sm">history_edu</span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-on-surface lowercase mb-1 text-sm">
-                    imzalı hikaye
-                  </h3>
-                  <p className="text-xs text-on-surface-variant lowercase">
-                    her eser, sürecin hikayesini anlatan ıslak imzalı sertifika ile gelir.
-                  </p>
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_3_title" initialContent={feature3Title} as="h3" className="font-bold text-on-surface lowercase mb-1 text-sm" />
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_3_desc" initialContent={feature3Desc} as="p" className="text-xs text-on-surface-variant lowercase" />
                 </div>
               </div>
             </div>
