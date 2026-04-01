@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { CustomRequestForm } from "@/components/forms/custom-request-form";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 export default function OzelIstekPage() {
   return (
@@ -30,14 +31,11 @@ export default function OzelIstekPage() {
           {/* Visual side */}
           <section className="lg:col-span-5 bg-white flex flex-col">
             <div className="aspect-square w-full relative group overflow-hidden">
-              <img
+              <FallbackImage
                 alt="modern sanat illüstrasyonu"
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
                 src="/images/custom-request-art.jpg"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23e8e6ff'/%3E%3Crect x='50' y='50' width='300' height='300' fill='%23004be3' opacity='0.2'/%3E%3C/svg%3E";
-                }}
+                fallbackSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23e8e6ff'/%3E%3Crect x='50' y='50' width='300' height='300' fill='%23004be3' opacity='0.2'/%3E%3C/svg%3E"
               />
               <div className="absolute inset-0 opacity-10 mix-blend-multiply" style={{ backgroundColor: "#085F7F" }} />
             </div>
