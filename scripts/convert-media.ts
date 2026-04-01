@@ -10,7 +10,9 @@ import { readdirSync, statSync, existsSync, mkdirSync, writeFileSync } from "fs"
 import path from "path";
 
 const MEDIA_DIR = path.join(process.cwd(), "media", "photos");
-const OUTPUT_DIR = path.join(process.cwd(), "public", "uploads", "artworks");
+// Output to ./uploads/ (Docker volume mount) AND ./public/uploads/ (local dev)
+const OUTPUT_DIR = path.join(process.cwd(), "uploads", "artworks");
+const PUBLIC_OUTPUT_DIR = path.join(process.cwd(), "public", "uploads", "artworks");
 const SEED_FILE = path.join(process.cwd(), "scripts", "artwork-seed.json");
 
 const IMAGE_EXTENSIONS = [".png", ".jpg", ".jpeg", ".webp"];
@@ -25,8 +27,10 @@ type ArtworkSeed = {
 };
 
 async function main() {
-  if (!existsSync(OUTPUT_DIR)) {
-    mkdirSync(OUTPUT_DIR, { recursive: true });
+  for (const dir of [OUTPUT_DIR, PUBLIC_OUTPUT_DIR]) {
+    if (!existsSync(dir)) {
+      mkdirSync(dir, { recursive: true });
+    }
   }
 
   const collections = readdirSync(MEDIA_DIR).filter((f) =>
@@ -61,12 +65,17 @@ async function main() {
         .replace(/-+/g, "-");
       const outputName = `${slug}_${baseName}.avif`;
       const outputPath = path.join(OUTPUT_DIR, outputName);
+      const publicOutputPath = path.join(PUBLIC_OUTPUT_DIR, outputName);
 
       try {
-        const info = await sharp(inputPath)
+        await sharp(inputPath)
           .resize(MAX_WIDTH, MAX_WIDTH, { fit: "inside", withoutEnlargement: true })
           .avif({ quality: AVIF_QUALITY })
           .toFile(outputPath);
+
+        // Copy to public dir for local dev
+        const { copyFileSync } = await import("fs");
+        copyFileSync(outputPath, publicOutputPath);
 
         const newSize = statSync(outputPath).size;
         totalConverted += newSize;
