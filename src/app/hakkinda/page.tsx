@@ -4,6 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { InlineEdit } from "@/components/admin/inline-edit";
+import { HakkindaPortrait, HakkindaSkills, HakkindaIdentityLabel } from "./hakkinda-client";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,11 @@ export default async function HakkindaPage() {
     "bio_2",
     "Mimar Sinan Güzel Sanatlar Üniversitesi mezunu olan Kömür, on yılı aşkın süredir hem yerel hem de uluslararası sergilerde eserlerini sergilemekte ve küratörlük yapmaktadır. Onun vizyonu, 'sade ama vurucu' bir estetik anlayışını her esere nakşetmektir."
   );
+  const skill1 = await getContent("skill_1", "dijital sanat");
+  const skill2 = await getContent("skill_2", "kürasyon");
+  const skill3 = await getContent("skill_3", "fotoğrafçılık");
+  const identityLabel = await getContent("identity_label", "kurucu & küratör");
+  const portraitImage = await getContent("portrait_image", "/uploads/pages/portrait.webp");
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -42,17 +48,11 @@ export default async function HakkindaPage() {
             {/* Yellow accent block */}
             <div className="absolute -top-4 -left-4 w-24 h-24 bg-secondary-container z-0 opacity-40" />
             <div className="relative z-10 bg-white p-2 shadow-xl">
-              <img
-                src="/uploads/pages/portrait.webp"
-                alt="Zeynep Kömür"
-                className="w-full aspect-[4/5] object-cover grayscale"
-              />
+              <HakkindaPortrait initialSrc={portraitImage} />
             </div>
             {/* Identity label */}
             <div className="absolute -bottom-4 right-4 bg-tertiary text-on-tertiary px-6 py-3 z-20 shadow-lg">
-              <span className="font-bold text-sm tracking-widest lowercase">
-                kurucu &amp; küratör
-              </span>
+              <HakkindaIdentityLabel initialContent={identityLabel} />
             </div>
           </div>
 
@@ -87,20 +87,7 @@ export default async function HakkindaPage() {
               </div>
 
               {/* Skill tags */}
-              <div className="flex flex-wrap gap-3 pt-6">
-                <div className="flex items-center gap-2 bg-secondary-container px-4 py-2 text-on-secondary-container text-xs font-bold tracking-widest lowercase">
-                  <span className="material-symbols-outlined text-sm">palette</span>
-                  dijital sanat
-                </div>
-                <div className="flex items-center gap-2 bg-tertiary-container px-4 py-2 text-on-tertiary-container text-xs font-bold tracking-widest lowercase">
-                  <span className="material-symbols-outlined text-sm">architecture</span>
-                  kürasyon
-                </div>
-                <div className="flex items-center gap-2 bg-primary-container px-4 py-2 text-on-primary-container text-xs font-bold tracking-widest lowercase">
-                  <span className="material-symbols-outlined text-sm">frame_person</span>
-                  fotoğrafçılık
-                </div>
-              </div>
+              <HakkindaSkills skill1={skill1} skill2={skill2} skill3={skill3} />
             </section>
           </div>
         </div>
