@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const UPLOAD_BASE = path.join(process.cwd(), "public", "uploads");
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 
 export type UploadCategory = "artworks" | "forms" | "pages";
 
@@ -34,14 +34,14 @@ export async function processUpload(
   const originalPath = path.join(dir, `${id}-original${getExtension(file.type)}`);
   await writeFile(originalPath, buffer);
 
-  // Process: resize + convert to WebP
-  const webpPath = path.join(dir, `${id}.webp`);
+  // Process: resize + convert to AVIF
+  const avifPath = path.join(dir, `${id}.avif`);
   await sharp(buffer)
     .resize(2000, 2000, { fit: "inside", withoutEnlargement: true })
-    .webp({ quality: 85 })
-    .toFile(webpPath);
+    .avif({ quality: 65 })
+    .toFile(avifPath);
 
-  return { path: `/uploads/${category}/${id}.webp` };
+  return { path: `/uploads/${category}/${id}.avif` };
 }
 
 export async function deleteUpload(filePath: string): Promise<void> {
@@ -52,8 +52,9 @@ export async function deleteUpload(filePath: string): Promise<void> {
     }
     // Also try to delete original backup
     const dir = path.dirname(fullPath);
-    const id = path.basename(fullPath, ".webp");
-    const originals = ["jpg", "png", "webp"].map(
+    const ext = path.extname(fullPath);
+    const id = path.basename(fullPath, ext);
+    const originals = ["jpg", "png", "webp", "avif"].map(
       (ext) => path.join(dir, `${id}-original.${ext}`)
     );
     for (const orig of originals) {

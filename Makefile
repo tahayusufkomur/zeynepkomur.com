@@ -1,4 +1,4 @@
-.PHONY: dev run stop reset build logs
+.PHONY: dev run stop reset build logs convert-media seed-artworks
 
 dev:
 	npm run dev
@@ -19,3 +19,9 @@ reset:
 
 logs:
 	docker compose logs -f
+
+convert-media:
+	npx tsx scripts/convert-media.ts
+
+seed-artworks: convert-media
+	npx tsx scripts/seed-artworks.ts
