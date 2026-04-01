@@ -1,10 +1,35 @@
 export const dynamic = "force-dynamic";
+import { db } from "@/lib/db/index";
+import { pageContent } from "@/lib/db/schema";
+import { and, eq } from "drizzle-orm";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { ContactForm } from "@/components/forms/contact-form";
 import { QuestionForm } from "@/components/forms/question-form";
+import { InlineEdit } from "@/components/admin/inline-edit";
 
-export default function IletisimPage() {
+async function getContent(sectionKey: string, fallback: string) {
+  const [row] = await db
+    .select()
+    .from(pageContent)
+    .where(
+      and(
+        eq(pageContent.pageSlug, "contact"),
+        eq(pageContent.sectionKey, sectionKey)
+      )
+    );
+  return row?.content ?? fallback;
+}
+
+export default async function IletisimPage() {
+  const headline = await getContent("headline", "arada bağ kuralım");
+  const section1Title = await getContent("section_1_title", "beraber çalışalım.");
+  const section2Title = await getContent("section_2_title", "bana her şeyi sorabilirsin.");
+  const studioAddress = await getContent("studio_address", "moda, kadıköy, istanbul, türkiye");
+  const studioHours = await getContent("studio_hours", "pazartesi - cumartesi, 10:00 - 19:00");
+  const studioEmail = await getContent("studio_email", "merhaba@zeyn.art");
+  const studioSocial = await getContent("studio_social", "@zeyn.art");
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar currentPage="iletisim" />
@@ -13,7 +38,13 @@ export default function IletisimPage() {
         {/* Hero headline */}
         <div className="mb-24 text-center lg:text-left">
           <h1 className="text-8xl md:text-[10rem] font-extrabold tracking-tighter text-on-surface lowercase leading-none">
-            arada <span className="text-primary italic">bağ</span> kuralım
+            <InlineEdit
+              pageSlug="contact"
+              sectionKey="headline"
+              initialContent={headline}
+              as="span"
+              className="text-8xl md:text-[10rem] font-extrabold tracking-tighter text-on-surface lowercase leading-none"
+            />
           </h1>
         </div>
 
@@ -21,9 +52,13 @@ export default function IletisimPage() {
         <section className="mb-48">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <div className="lg:col-span-7">
-              <h2 className="text-7xl md:text-[9rem] font-extrabold tracking-tighter text-on-surface lowercase leading-[0.85] mb-8">
-                beraber <span className="text-primary">çalışalım.</span>
-              </h2>
+              <InlineEdit
+                pageSlug="contact"
+                sectionKey="section_1_title"
+                initialContent={section1Title}
+                as="h2"
+                className="text-7xl md:text-[9rem] font-extrabold tracking-tighter text-on-surface lowercase leading-[0.85] mb-8"
+              />
             </div>
             <div className="lg:col-span-5 lg:pt-8">
               <ContactForm />
@@ -41,11 +76,13 @@ export default function IletisimPage() {
               <QuestionForm />
             </div>
             <div className="lg:col-span-7 order-1 lg:order-2 text-right">
-              <h2 className="text-7xl md:text-[9rem] font-extrabold tracking-tighter text-on-surface lowercase leading-[0.85] mb-8">
-                bana{" "}
-                <span style={{ color: "#FFD700" }}>her şeyi</span>{" "}
-                sorabilirsin.
-              </h2>
+              <InlineEdit
+                pageSlug="contact"
+                sectionKey="section_2_title"
+                initialContent={section2Title}
+                as="h2"
+                className="text-7xl md:text-[9rem] font-extrabold tracking-tighter text-on-surface lowercase leading-[0.85] mb-8"
+              />
             </div>
           </div>
         </section>
@@ -56,31 +93,46 @@ export default function IletisimPage() {
             <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-4">
               stüdyo
             </p>
-            <p className="text-2xl text-on-surface lowercase leading-tight">
-              moda, kadıköy
-              <br />
-              istanbul, türkiye
-            </p>
+            <InlineEdit
+              pageSlug="contact"
+              sectionKey="studio_address"
+              initialContent={studioAddress}
+              as="p"
+              multiline
+              className="text-2xl text-on-surface lowercase leading-tight"
+            />
           </div>
           <div className="border-t border-outline-variant pt-8">
             <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-4">
               mesai
             </p>
-            <p className="text-2xl text-on-surface lowercase leading-tight">
-              pazartesi - cumartesi
-              <br />
-              10:00 - 19:00
-            </p>
+            <InlineEdit
+              pageSlug="contact"
+              sectionKey="studio_hours"
+              initialContent={studioHours}
+              as="p"
+              multiline
+              className="text-2xl text-on-surface lowercase leading-tight"
+            />
           </div>
           <div className="border-t border-outline-variant pt-8">
             <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-4">
               dijital
             </p>
-            <p className="text-2xl text-on-surface lowercase leading-tight">
-              merhaba@zeyn.art
-              <br />
-              @zeyn.art
-            </p>
+            <InlineEdit
+              pageSlug="contact"
+              sectionKey="studio_email"
+              initialContent={studioEmail}
+              as="p"
+              className="text-2xl text-on-surface lowercase leading-tight"
+            />
+            <InlineEdit
+              pageSlug="contact"
+              sectionKey="studio_social"
+              initialContent={studioSocial}
+              as="p"
+              className="text-2xl text-on-surface lowercase leading-tight mt-1"
+            />
           </div>
         </div>
       </main>
