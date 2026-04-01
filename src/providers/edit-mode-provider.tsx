@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 type EditModeContextType = {
   isEditing: boolean;
@@ -12,8 +12,21 @@ const EditModeContext = createContext<EditModeContextType>({
   setIsEditing: () => {},
 });
 
+const STORAGE_KEY = "admin-edit-mode";
+
 export function EditModeProvider({ children }: { children: ReactNode }) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditingState] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === "true") setIsEditingState(true);
+  }, []);
+
+  function setIsEditing(v: boolean) {
+    setIsEditingState(v);
+    localStorage.setItem(STORAGE_KEY, String(v));
+  }
+
   return (
     <EditModeContext.Provider value={{ isEditing, setIsEditing }}>
       {children}

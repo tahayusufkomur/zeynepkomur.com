@@ -1,0 +1,116 @@
+- generic [ref=e1]:
+  - button "Admin menü" [ref=e21]:
+    - generic [ref=e22]: chevron_right
+  - generic [ref=e23]:
+    - generic [ref=e25]:
+      - generic [ref=e26]: admin panel
+      - button "close" [active] [ref=e27]:
+        - generic [ref=e28]: close
+    - generic [ref=e29]:
+      - button "edit_off düzenleme aktif" [ref=e123]:
+        - generic [ref=e31]: edit_off
+        - generic [ref=e32]: düzenleme aktif
+      - paragraph [ref=e124]: sayfalardaki metin ve görselleri tıklayarak düzenleyebilirsiniz
+    - navigation [ref=e35]:
+      - generic [ref=e36]:
+        - paragraph [ref=e37]: yönetim
+        - link "inbox gönderiler" [ref=e38] [cursor=pointer]:
+          - /url: /admin/submissions
+          - generic [ref=e39]: inbox
+          - generic [ref=e40]: gönderiler
+      - generic [ref=e41]:
+        - paragraph [ref=e42]: istatistikler
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - generic [ref=e45]:
+              - generic [ref=e46]: mail
+              - text: bülten aboneleri
+            - generic [ref=e47]: "0"
+          - generic [ref=e48]:
+            - generic [ref=e49]:
+              - generic [ref=e50]: inbox
+              - text: okunmamış
+            - generic [ref=e51]: "0"
+    - button "logout çıkış yap" [ref=e53]:
+      - generic [ref=e54]: logout
+      - text: çıkış yap
+  - button "Open Next.js Dev Tools" [ref=e17] [cursor=pointer]:
+    - img [ref=e18]
+  - alert [ref=e55]
+  - navigation [ref=e56]:
+    - link "by zeynep kömür" [ref=e57] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e58]:
+      - link "anasayfa" [ref=e59] [cursor=pointer]:
+        - /url: /
+      - link "galeri" [ref=e60] [cursor=pointer]:
+        - /url: /galeri
+      - link "hakkında" [ref=e61] [cursor=pointer]:
+        - /url: /hakkinda
+      - link "iletişim" [ref=e62] [cursor=pointer]:
+        - /url: /iletisim
+    - button "KULÜBE KATIL" [ref=e64]
+  - banner [ref=e65]:
+    - generic [ref=e66]:
+      - heading "Sınırsız Sanat2 edit" [level=1] [ref=e125] [cursor=pointer]:
+        - text: Sınırsız Sanat2
+        - generic [ref=e126]: edit
+      - img "img 8607" [ref=e71]
+    - generic [ref=e72] [cursor=pointer]:
+      - text: modernizmin sınırlarını zorlayan, renk ve formun dansı.
+      - generic [ref=e127]: edit
+  - generic [ref=e73]:
+    - generic [ref=e74]:
+      - heading "yeni gelenler edit" [level=2] [ref=e128] [cursor=pointer]:
+        - text: yeni gelenler
+        - generic [ref=e129]: edit
+      - paragraph [ref=e78] [cursor=pointer]:
+        - text: son eklenen eserler ve koleksiyonlar. zeynep kömür seçkisiyle modern sanatın taze soluğu.
+        - generic [ref=e130]: edit
+    - generic [ref=e79]:
+      - generic [ref=e80]:
+        - img "img 8607" [ref=e81]
+        - generic [ref=e82]:
+          - generic [ref=e83]: koleksiyon 01
+          - heading "img 8607" [level=3] [ref=e84]
+      - generic [ref=e85]:
+        - img "img 8608" [ref=e86]
+        - generic [ref=e87]: yeni
+      - generic [ref=e89]:
+        - generic [ref=e90]: brush
+        - paragraph [ref=e91]:
+          - text: sanatın dijital
+          - text: formunda kaybolun.
+      - generic [ref=e92]:
+        - img "img 8609" [ref=e93]
+        - generic [ref=e94]:
+          - heading "img 8609" [level=4] [ref=e95]
+          - paragraph [ref=e96]: "koleksiyon: BLUE VALENTINE 2"
+  - generic [ref=e98]:
+    - generic [ref=e99]: “
+    - blockquote [ref=e100]:
+      - paragraph [ref=e101] [cursor=pointer]:
+        - text: Her çocuk bir sanatçıdır. Sorun, büyüdüğümüzde sanatçı kalmayı nasıl başaracağımızdır.
+        - generic [ref=e131]: edit
+      - generic [ref=e102]:
+        - text: —
+        - generic [ref=e132] [cursor=pointer]:
+          - text: Pablo Picasso
+          - generic [ref=e133]: edit
+  - contentinfo [ref=e107]:
+    - generic [ref=e108]:
+      - generic [ref=e109]: by zeynep kömür
+      - paragraph [ref=e110]: sanatın herkes için erişilebilir olduğu, sınırların kalktığı dijital bir kürasyon alanı.
+    - generic [ref=e112]:
+      - link "telefon" [ref=e113] [cursor=pointer]:
+        - /url: tel:+900000000000
+      - link "e-posta" [ref=e114] [cursor=pointer]:
+        - /url: mailto:info@zeyn.art
+      - link "instagram" [ref=e115] [cursor=pointer]:
+        - /url: https://instagram.com
+    - generic [ref=e116]:
+      - generic [ref=e117]:
+        - generic [ref=e118]: palette
+        - generic [ref=e119]: brush
+        - generic [ref=e120]: gallery_thumbnail
+      - generic [ref=e121]: © by zeynep kömür. all rights reserved.
