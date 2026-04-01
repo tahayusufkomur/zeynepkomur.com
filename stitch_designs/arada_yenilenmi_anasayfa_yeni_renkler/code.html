@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#004be3", "primary-dim": "#0041c8", "primary-container": "#819bff", "on-primary": "#f2f1ff", secondary: "#6c5a00", "secondary-container": "#ffd709", "on-secondary-container": "#5b4b00", tertiary: "#b30065", "tertiary-container": "#ff8db7", "on-tertiary-container": "#650036", "highlight-pink": "#F28482", "surface-container-lowest": "#ffffff", "on-surface": "#2a2b51", "on-surface-variant": "#575881", background: "#f8f5ff", surface: "#f8f5ff", "surface-container": "#e8e6ff", "surface-container-low": "#f2efff", "surface-container-high": "#e1e0ff", "surface-container-highest": "#dbd9ff", outline: "#72739e", "outline-variant": "#a9a9d7", "secondary-dim": "#5e4e00", "surface-bright": "#f8f5ff", "on-secondary-fixed-variant": "#665500", "tertiary-fixed-dim": "#ff74ac", "surface-dim": "#d1d0ff", "error-dim": "#a70138", "secondary-fixed": "#ffd709", "inverse-primary": "#6889ff", "on-primary-fixed": "#000000", "primary-fixed-dim": "#6c8cff", "on-error-container": "#510017", "error-container": "#f74b6d", "inverse-surface": "#08082f", error: "#b41340", "surface-variant": "#dbd9ff", "on-primary-container": "#001b61", "tertiary-fixed": "#ff8db7", "tertiary-dim": "#9d0058", "on-tertiary": "#ffeff2", "on-tertiary-fixed-variant": "#750040", "primary-fixed": "#819bff", "on-primary-fixed-variant": "#002376", "on-background": "#2a2b51", "inverse-on-surface": "#9999c6", "on-secondary": "#fff2cd", "surface-tint": "#004be3", "on-secondary-fixed": "#453900", "secondary-fixed-dim": "#efc900", "on-error": "#ffefef", "on-tertiary-fixed": "#37001b"}, fontFamily: {headline: ["Arimo"], body: ["Plus Jakarta Sans"], label: ["Plus Jakarta Sans"], display: "Arimo"}, borderRadius: {DEFAULT: "0px", lg: "0px", xl: "0px", full: "0px"}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-secondary-container/30">
+<!-- Top Navigation Bar -->
+<nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center w-full px-8 py-6 max-w-full">
+<div class="font-bold text-on-surface lowercase font-['Plus_Jakarta_Sans'] tracking-tight text-4xl">arada zeynep kömür</div>
+<div class="hidden md:flex items-center space-x-12">
+<a class="text-primary font-bold border-b-2 pb-1 lowercase font-['Plus_Jakarta_Sans'] tracking-tight" href="#" style="border-color: #ffd709;">anasayfa</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 lowercase font-['Plus_Jakarta_Sans'] tracking-tight" href="#">galeri</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 lowercase font-['Plus_Jakarta_Sans'] tracking-tight" href="#">hakkında</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 lowercase font-['Plus_Jakarta_Sans'] tracking-tight" href="#">iletişim</a>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 font-bold tracking-tight hover:bg-primary-dim transition-all duration-300 active:scale-95">
+        KULÜBE KATIL
+    </button>
+</nav>
+<!-- Hero Section -->
+<header class="relative min-h-[921px] flex flex-col items-center justify-center bg-white px-6 py-20 overflow-hidden">
+<div class="max-w-5xl w-full text-center z-10">
+<h1 class="text-6xl md:text-9xl font-light text-on-surface tracking-tighter mb-16 lowercase">
+            Sınırsız Sanat
+        </h1>
+<div class="relative w-full aspect-square md:aspect-[21/9] bg-surface-container-low group">
+<!-- Decorative accents in new palette -->
+<div class="absolute -top-8 -left-8 w-32 h-32 z-0" style="background-color: #ffd709;"></div>
+<div class="absolute -bottom-8 -right-8 w-48 h-48 bg-primary z-0"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[105%] h-32 bg-highlight-pink/20 -rotate-1 pointer-events-none"></div>
+<img alt="Cubist Artwork" class="relative z-10 w-full h-full object-cover grayscale-[0.1] hover:grayscale-0 transition-all duration-1000 cursor-crosshair shadow-2xl" data-alt="abstract cubist painting with bold geometric shapes in vibrant petrol blue, warm yellow, and soft pink against a clean white textured canvas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0aLDVsj7tKuyVmHWlXHRgKWv2a12l1elUbAEzjPd4jeZI3RpKaT2eKlYkGhDOXBIYobLyCvIJgX3PbGOYTzz2cz59yCm1xXEYCfOX4KP7VPmXgOesNLNtcGG_GpkFxhwmKA__nLKU3Dn00GpGqNa56uQQleSIsuMmO2Td9Brk0kNYNzWevA9Fyi2kymt0l55WvADiiXaKcG2PM-Agu1Zgeoh9mvBheRFx1IMgjY5jYlFHIybc8kA-y0C8g2Jgo-cy4-kJKpoXhXI"/>
+</div>
+</div>
+<div class="mt-20 text-on-surface-variant max-w-lg text-center lowercase tracking-[0.2em] font-light italic">
+        modernizmin sınırlarını zorlayan, renk ve formun dansı.
+    </div>
+</header>
+<!-- Asymmetric Bento Grid (Yeni Gelenler) -->
+<section class="py-32 px-8 md:px-16 bg-white">
+<div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+<div>
+<h2 class="text-5xl md:text-7xl font-bold tracking-tighter text-on-surface lowercase">yeni gelenler</h2>
+<div class="h-1.5 w-32 mt-6" style="background-color: #ffd709;"></div>
+</div>
+<p class="text-on-surface-variant max-w-md font-medium text-lg leading-relaxed lowercase">son eklenen eserler ve koleksiyonlar. zeynep kömür seçkisiyle modern sanatın taze soluğu.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-10 h-auto md:h-[1100px]">
+<!-- Large Card -->
+<div class="md:col-span-2 md:row-span-2 relative group overflow-hidden bg-surface-container shadow-sm hover:shadow-xl transition-shadow duration-500">
+<img alt="Eser 1" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="large vibrant abstract painting featuring thick layers of blue and yellow impasto paint on a wide vertical canvas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVcrJPpitUIyae27rRmQAr9i6qrcK7W2xS6IpRfHg3H1kWdSkKAVc8dH0cSxuYNvP_0FT0Pc3hT5bwRYWST_iXItQsn2M6SLqEHhHkgAR1fqAbeH0OhLoRjPwT5eXQL_fAxMauz7UWuvIrubtKKy6-NTkAdflVlU9S7l-ab5Wnfv7a6gBqvj6Nf1Yk7Skuufj0RJ7zLpIv2cy2qmyXIlh3P_s_gXZl_IhHqrM73MMm8ctT_o44gs4lP2LgqQRRrwf9pY99cMcwnyA"/>
+<div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-12 backdrop-blur-[2px]">
+<span class="text-white text-xs font-bold tracking-[0.3em] uppercase mb-4">koleksiyon 01</span>
+<h3 class="text-white text-4xl font-bold lowercase leading-none">geometrinin sessizliği</h3>
+</div>
+</div>
+<!-- Vertical Card -->
+<div class="md:col-span-1 md:row-span-1 relative group overflow-hidden bg-surface-container-low">
+<img alt="Eser 2" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" data-alt="minimalist architectural photograph of a spiral staircase in a modern museum with harsh shadows and bright highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsOy52EAs-x09m7upzdGRY2IsS7I2cSbfCVIF6yEkQyWDJT2Ry9gAFRxj4vabr8wW2O3b0fVtC8Z_6khfjCLqiIht9qBf7Y-LvyyRxT1KWoDqoSkHSpBLZG2ZIgE1v7NXn63ynMxLWq0oN6UOCyguBxT-h5USm5_09lDStSo6LBW6SC7clP-He33LRvb2T0uDnDc5yTUq5SJ9Q9Sj6f2Q13LVjiYBb5DH9ITWksNO3mwsLui77FdEw3NWx6LemAry1WnREgjF2Smg"/>
+<div class="absolute top-0 left-0 bg-secondary px-6 py-2 text-xs font-bold text-on-secondary-container tracking-wider uppercase">yeni</div>
+</div>
+<!-- Pink Highlight Square -->
+<div class="md:col-span-1 md:row-span-1 bg-highlight-pink relative flex items-center justify-center p-12">
+<div class="text-center">
+<span class="material-symbols-outlined text-white text-7xl mb-6" data-icon="brush" data-weight="fill">brush</span>
+<p class="text-white font-bold text-xl leading-tight lowercase">sanatın dijital <br/> formunda kaybolun.</p>
+</div>
+</div>
+<!-- Bottom Card -->
+<div class="md:col-span-2 md:row-span-1 relative group overflow-hidden bg-surface-container-highest">
+<img alt="Eser 3" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" data-alt="contemporary art gallery interior with white walls and a large colorful painting hanging at the center under spotlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdsBuqcP93VB4Nw23b_lX1WSGCoFeY_1MJBwDKjOeQef_r2rGRxmcgmZ0-b3LUwuYdGVv6DB1_PR21pcRtKxVDOPloKvIIwmA2i2dJ8BsMOdriWiwwUjg3FlDPu7Z-lKbCL6stFtwtNnn1dsnSuyatSYlInoqMmEvuefUtqgoCZeAJ83HmXgweXY4XEoxd8ePoaBfOJmDRcssY7-2yaKxzvbOBwXy-vw5FxzGecuOGELRTo8RCtTmaXredZRmqbvMS_5oiyzmp7eg"/>
+<div class="absolute bottom-0 left-0 p-10 bg-white/95 backdrop-blur shadow-2xl text-on-background max-w-sm m-6">
+<h4 class="text-2xl font-bold lowercase mb-2">atölye günlüğü</h4>
+<p class="text-base text-on-surface-variant lowercase leading-snug">süreçten sonuca, her fırça darbesinin bir hikayesi var.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Quote Section -->
+<section class="bg-white py-40 px-6 overflow-hidden">
+<div class="max-w-5xl mx-auto text-center relative">
+<span class="absolute -top-20 left-1/2 -translate-x-1/2 text-[15rem] text-primary/5 font-serif select-none">“</span>
+<blockquote class="relative z-10">
+<p class="text-4xl md:text-6xl font-light text-on-surface leading-[1.1] tracking-tight lowercase">
+                Her çocuk bir sanatçıdır. Sorun, büyüdüğümüzde sanatçı kalmayı nasıl başaracağımızdır.
+            </p>
+<footer class="mt-16 text-highlight-pink font-bold text-xl lowercase tracking-[0.4em]">— Pablo Picasso</footer>
+</blockquote>
+</div>
+</section>
+<!-- Visual Divider in new palette -->
+<div class="h-4 w-full flex">
+<div class="flex-grow bg-primary"></div>
+<div class="flex-grow" style="background-color: #ffd709;"></div>
+<div class="flex-grow bg-highlight-pink"></div>
+</div>
+<!-- Footer -->
+<footer class="bg-white grid grid-cols-1 md:grid-cols-3 gap-12 px-12 py-24 w-full border-t border-outline/20">
+<div class="flex flex-col space-y-6">
+<div class="text-xl font-bold text-on-surface lowercase">
+            arada by zeynep kömür
+        </div>
+<p class="text-on-surface-variant max-w-xs font-['Plus_Jakarta_Sans'] text-sm leading-relaxed tracking-wide lowercase">
+            sanatın herkes için erişilebilir olduğu, sınırların kalktığı dijital bir kürasyon alanı.
+        </p>
+</div>
+<div class="flex flex-col space-y-4 md:items-center">
+<div class="flex flex-col space-y-3">
+<a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-['Plus_Jakarta_Sans'] text-sm tracking-[0.1em] lowercase" href="#">telefon</a>
+<a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-['Plus_Jakarta_Sans'] text-sm tracking-[0.1em] lowercase" href="#">e-posta</a>
+<a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-['Plus_Jakarta_Sans'] text-sm tracking-[0.1em] lowercase" href="#">instagram</a>
+</div>
+</div>
+<div class="flex flex-col space-y-6 md:items-end justify-between">
+<div class="flex space-x-8">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="palette">palette</span>
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="brush" style="font-variation-settings: 'FILL' 1;">brush</span>
+<span class="material-symbols-outlined text-highlight-pink text-3xl" data-icon="gallery_thumbnail">gallery_thumbnail</span>
+</div>
+<div class="text-on-surface-variant font-['Plus_Jakarta_Sans'] text-xs tracking-[0.2em] lowercase opacity-60">
+            © arada by zeynep kömür. all rights reserved.
+        </div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-surface-variant": "#575881", "surface-dim": "#d1d0ff", "on-tertiary-fixed-variant": "#750040", "inverse-primary": "#6889ff", "error-container": "#f74b6d", "on-error-container": "#510017", secondary: "#6c5a00", "primary-fixed": "#819bff", "on-primary": "#f2f1ff", "on-primary-fixed-variant": "#002376", "on-primary-fixed": "#000000", "on-background": "#2a2b51", "surface-bright": "#f8f5ff", "on-primary-container": "#001b61", tertiary: "#b30065", "surface-container": "#e8e6ff", "primary-dim": "#0041c8", primary: "#004be3", "tertiary-container": "#ff8db7", "on-secondary-fixed": "#453900", "on-surface": "#2a2b51", "tertiary-fixed": "#ff8db7", "primary-fixed-dim": "#6c8cff", "surface-container-highest": "#dbd9ff", "on-tertiary-container": "#650036", "on-secondary-fixed-variant": "#665500", "surface-variant": "#dbd9ff", "outline-variant": "#a9a9d7", "on-tertiary-fixed": "#37001b", "tertiary-dim": "#9d0058", "surface-container-lowest": "#ffffff", "tertiary-fixed-dim": "#ff74ac", "on-tertiary": "#ffeff2", "error-dim": "#a70138", "on-error": "#ffefef", outline: "#72739e", "secondary-fixed-dim": "#efc900", "inverse-surface": "#08082f", "inverse-on-surface": "#9999c6", background: "#f8f5ff", "secondary-container": "#ffd709", "secondary-dim": "#5e4e00", "primary-container": "#819bff", "on-secondary-container": "#5b4b00", "surface-tint": "#004be3", "surface-container-high": "#e1e0ff", surface: "#f8f5ff", "secondary-fixed": "#ffd709", "surface-container-low": "#f2efff", "on-secondary": "#fff2cd", error: "#b41340"}, fontFamily: {headline: ["Arimo"], body: ["Plus Jakarta Sans"], label: ["Plus Jakarta Sans"], display: "Arimo"}, borderRadius: {DEFAULT: "0px", lg: "0px", xl: "0px", full: "0px"}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #ffffff; /* Explicit override for the solid white request */
+        }
+    </style>
+</head>
+<body class="text-on-background">
+<!-- Top Navigation Bar -->
+<nav class="flex justify-between items-center w-full px-8 py-6 max-w-none bg-[#f8f5ff] dark:bg-slate-900 docked full-width top-0 z-50 transition-opacity duration-300">
+<div class="text-xl font-medium text-[#2a2b51] dark:text-[#f2f1ff] tracking-tighter lowercase">arada by zeynep kömür</div>
+<div class="hidden md:flex space-x-8 font-['Plus_Jakarta_Sans'] tracking-tight lowercase">
+<a class="text-[#575881] dark:text-[#a9a9d7] hover:text-[#004be3] transition-opacity duration-300" href="#">anasayfa</a>
+<a class="text-[#004be3] font-bold border-b-2 border-[#004be3] pb-1" href="#">galeri</a>
+<a class="text-[#575881] dark:text-[#a9a9d7] hover:text-[#004be3] transition-opacity duration-300" href="#">hakkında</a>
+<a class="text-[#575881] dark:text-[#a9a9d7] hover:text-[#004be3] transition-opacity duration-300" href="#">iletişim</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="hover:opacity-80 transition-opacity duration-300 active:scale-95">
+<span class="material-symbols-outlined text-[#004be3]" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</nav>
+<!-- Hero Header Section -->
+<header class="pt-24 pb-16 px-8 max-w-7xl mx-auto border-b border-surface-container">
+<div class="flex flex-col md:flex-row justify-between items-end gap-8">
+<div class="max-w-2xl">
+<h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter text-on-background mb-6 leading-none"><span class="text-[#002376] italic">30 Gün</span> Mini Koleksiyonu</h1>
+<p class="text-xl text-on-surface-variant font-medium lowercase italic">
+                    '30 gün, 30 eser, bir hikaye'
+                </p>
+</div>
+<div class="bg-secondary-container p-6 w-full md:w-auto min-w-[280px]">
+<p class="text-on-secondary-container text-sm font-bold uppercase tracking-widest mb-2">meydan okuma</p>
+<p class="text-on-secondary-container text-lg font-medium leading-tight">Her gün yeni bir fırça darbesi, her gün yeni bir hikaye. 15x15cm boyutunda sınırlı seri.</p>
+</div>
+</div>
+</header>
+<!-- Gallery Filter / Info Bar -->
+<section class="px-8 py-8 max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-4">
+<span class="text-sm font-bold tracking-widest uppercase text-on-surface-variant">format: 15x15cm</span>
+<div class="h-4 w-[1px] bg-outline-variant opacity-30"></div>
+<span class="text-sm font-bold tracking-widest uppercase text-on-surface-variant">teknik: akrilik</span>
+</div>
+<div class="flex gap-2">
+<div class="w-8 h-8 bg-primary"></div>
+<div class="w-8 h-8 bg-secondary-container"></div>
+<div class="w-8 h-8 bg-tertiary-container"></div>
+</div>
+</section>
+<!-- Painting Grid -->
+<main class="px-8 pb-32 max-w-7xl mx-auto">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
+<!-- Painting Item 1 -->
+<article class="group">
+<div class="aspect-square bg-surface-container-low overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Small colorful cubist painting with geometric shapes in petrol blue, orange and yellow, vibrant acrylic on square canvas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuvuUSnI7pXTnXk5j_w0A9AOiglFrk5H9isZvdtgXyVYQAK6qvgGoM1Ar2n-sMcpIkU3CRY54wuRLEJp1QsuWqfNDPeQ19TIf5gyIH71TTZRf9bZapVw1FyVpKePXwcuP1LABQMSDjesXo7GfHXnhMs7asp71OBryf0qAFKkTkUa_xHI5WATQBrjLiUlK1RALKFy4JmQBvAYk0dsbSJPkotygRsFG8-XxiL60R0N6kZQm_Xx07G_J7VgMgkNzkR-jHFVto80SObZE"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 text-xs font-bold">#1</div>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-lg font-bold lowercase tracking-tight text-on-surface">günün uyanışı</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-xl font-medium text-primary">1.250 TL</span>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-secondary-fixed transition-colors">satın al</button>
+</div>
+</div>
+</article>
+<!-- Painting Item 2 -->
+<article class="group">
+<div class="aspect-square bg-surface-container-low overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Abstract cubist style artwork with strong orange and blue diagonal lines, geometric composition 15x15cm format" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYqGSNucsUjIVNIjx7wvEf7kFbGjAXhbV_BB0NSwta2CkArIpAdOn5PZVTQTFUDmLsirBQDUyyoY7c39anqskcNjAdhNtU8t20YjiJqFw3vM1gP8tpUyEA4jypzvE0mJmx1NbUAeNSZ82tZriMOupu00KIrA9H8cH4yxnavscX5roXhLT-bJR7tQW85tD8xWGBWsVWSOttEwdaAkNg6V6z4Yao8Kn_31bEW30gjN4e7LXbdFp7QZKA7oi-QBGYkjMoTe4C4awb7hw"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 text-xs font-bold">#2</div>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-lg font-bold lowercase tracking-tight text-on-surface">dikey ritim</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-xl font-medium text-primary">1.250 TL</span>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-secondary-fixed transition-colors">satın al</button>
+</div>
+</div>
+</article>
+<!-- Painting Item 3 -->
+<article class="group">
+<div class="aspect-square bg-surface-container-low overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Modern art painting with bright yellow and petrol blue interlocking shapes, cubist inspiration on small square canvas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmX_kuxQ6OG4_VAcLBOOJmBRhAd6AUEtSWaluX0e_8iF0v00Z1GkFFuUMbzmdITi3PsSgKNKJGoWwveuSE8zy0lM_qig1IZIgZ6oI6fsS5xZ_ki9asYP_B25DYdQvLYX6kGlhA8HD98hsYwaTm0OQgDsEc1dJzIsMnOUs17ZDt-UwRWsrC0cY4W3c-JmaieOSk0VaDUsKMC5XBNowuyizhcrwZHLEhHCjH7o8ql0Q6NeOLJQDa17w16EcM7-tGi3xdqcsgOjGINo0"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 text-xs font-bold">#3</div>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-lg font-bold lowercase tracking-tight text-on-surface">sarı sessizlik</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-xl font-medium text-primary">1.250 TL</span>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-secondary-fixed transition-colors">satın al</button>
+</div>
+</div>
+</article>
+<!-- Painting Item 4 -->
+<article class="group">
+<div class="aspect-square bg-surface-container-low overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Colorful cubist abstract with overlapping shapes in orange and deep blue, artistic texture, high contrast" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB912ZTUzxalJ__rFDbKjcu7TllObjDjQ96toRcXsP6K-7KKWQ0m8b9IWEHGF1Wg7wpG-GazlmG2f7HeJzVfdwI1_SnJKZIT52KTqQPU-X6Nos7RXZkM8T0Kcz7LcFYRGHL_A_A0Fxao4gh8SXokjMNGvUChmF5w6D1SLhFlMYlGJXGTj1UQJbbs3OQc_DcRlUoJRKVHEFBP0Z05ocEuBkPpvMj342zY8O0v7GNbwnfKGcyyM419TDQtjgRpS_cKWgTTAyExsjZjyE"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 text-xs font-bold">#4</div>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-lg font-bold lowercase tracking-tight text-on-surface">mavi labirent</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-xl font-medium text-primary">1.250 TL</span>
+<div class="text-on-surface-variant text-xs font-bold uppercase tracking-widest italic">tükendi</div>
+</div>
+</div>
+</article>
+<!-- Painting Item 5 -->
+<article class="group">
+<div class="aspect-square bg-surface-container-low overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Intense orange and petrol blue geometric painting, 15cm x 15cm, acrylic on canvas, minimalist cubism" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzVDOzevvH1r8PEMnSZ61DiwZ8z4EQss1FPm7Ktd6mfzT04j1v6GBIF5jjZOazIz-HVICgZcHt-nZVeo-jS5q-oDRKQSB9V6pFjaFuSKbnOl6S2R5aS_iNNpe9ahj_DJmCndEpdiJGcyyN14iGjIeoYmGm01cnj3Z80C_aUhVxT23gSroTWOOOJwdFDTDwpjV4GavepYSa6qgg38IuBKmA9XrB_URo1UNO8Sr1aF-ffzyVoMRPig1LGgkp3Jt2NgV9qch3DCdp2KY"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 text-xs font-bold">#5</div>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-lg font-bold lowercase tracking-tight text-on-surface">turuncu bakış</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-xl font-medium text-primary">1.250 TL</span>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-secondary-fixed transition-colors">satın al</button>
+</div>
+</div>
+</article>
+<!-- Painting Item 6 -->
+<article class="group">
+<div class="aspect-square bg-surface-container-low overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Dynamic abstract composition with shards of color, cubist influence, petrol blue and orange primary tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1nXSpG4h1au8LWCSsFel4rzYTQdVj_3oyJIqSSErvjZD2ENrvmPGg2yeE6kznYxqjDUPVj9rkdPeh_aCY_jktqG1xip1KQ_A-bdfw7s7GplRwZqgjFl8H8d6plbK8g0nNYDjLl-wSJJIS301piCrAvYO123PPZb45TisdF6rvWhEewUGhtAspqdDuibR_jfn5mqIPkHudxpTo-9kweAG62Eu3jkKhBUKlEl4qg0SWqNqD84BNLBzwBnpHYSWtzq9tIyKu35n-5Dc"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 text-xs font-bold">#6</div>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-lg font-bold lowercase tracking-tight text-on-surface">keskin geçiş</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-xl font-medium text-primary">1.250 TL</span>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-secondary-fixed transition-colors">satın al</button>
+</div>
+</div>
+</article>
+<!-- Painting Item 7 -->
+<article class="group">
+<div class="aspect-square bg-surface-container-low overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Vibrant mini cubist painting featuring intense yellow and dark petrol blue shapes, textured acrylic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzR9SFFeX6YzXYKcXpN3nXrfWYgib5qQzHMwVuvTFNIBqthvMKGgiAuyjfD_cMzLE_d21mBK-eNjlBuVH_BTaPHSYTkwJcbDA1QTST4YQ_T9jJjtzXJy1Ig0Fk6o4g5-59dEvx0WFvCH3dEL7kHoKP38ForRgHJVki0dm6p3oOP3G0jTtQDraYvxIYLtYv_QUUZ21778qbVmheDSI8_qlJke9dYBkLaO535C0HwPkezn2IA3kxQ2EKp_EngHv4HM8RdZASyaxZIm8"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 text-xs font-bold">#7</div>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-lg font-bold lowercase tracking-tight text-on-surface">ışık oyunu</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-xl font-medium text-primary">1.250 TL</span>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-secondary-fixed transition-colors">satın al</button>
+</div>
+</div>
+</article>
+<!-- Painting Item 8 -->
+<article class="group">
+<div class="aspect-square bg-surface-container-low overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Abstract art with geometric blocks of orange, teal and yellow, cubist study 15x15cm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYThJvUWapAoQliiYkT7IPX0JRjh91cAWS8fwpGChI0hgs1ddrwCKnwrVq9uju6kyPnNzNH2djaEtAGgdR5g4R_nWTkaIApzI9IsOL9F5uoZnQSvA3ZzyJWNFYOH9HcghxIZYg_FOvjxUz3ur3qacP6LTpVINv8o_mvYRWg8eXfoEsfXqMNDuGaoccOECbQ9ET0C6Pfo_ZYa-nohnMCPRC1s93Rlp3-hrvzzuHPBUX7p8AzJXRDibOMsEi2lgyQBI2Z_kHgofSOLM"/>
+<div class="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 text-xs font-bold">#8</div>
+</div>
+<div class="mt-4 flex flex-col">
+<h3 class="text-lg font-bold lowercase tracking-tight text-on-surface">akşam üstü</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-xl font-medium text-primary">1.250 TL</span>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-secondary-fixed transition-colors">satın al</button>
+</div>
+</div>
+</article>
+</div>
+<!-- Load More / Next Page -->
+<div class="mt-24 flex justify-center">
+<button class="border-2 border-primary text-primary px-12 py-4 font-bold lowercase tracking-tighter hover:bg-primary hover:text-on-primary transition-all duration-300">
+                diğer eserleri yükle
+            </button>
+</div>
+</main>
+<!-- Call to Action / Artist Quote -->
+<!-- Footer -->
+<footer class="flex flex-col md:flex-row justify-between items-center w-full px-12 py-16 bg-[#004be3] dark:bg-[#002a80] full-width 0px-radius text-white">
+<div class="flex flex-col items-center md:items-start mb-8 md:mb-0">
+<div class="text-lg font-bold text-white mb-4">arada by zeynep kömür</div>
+<p class="font-['Plus_Jakarta_Sans'] text-sm uppercase tracking-widest text-white/80">© arada by zeynep kömür. sade ama vurucu.</p>
+</div>
+<div class="flex space-x-8 font-['Plus_Jakarta_Sans'] text-sm uppercase tracking-widest">
+<a class="text-white/80 hover:text-[#ffd709] transition-colors" href="#">instagram</a>
+<a class="text-white/80 hover:text-[#ffd709] transition-colors" href="#">atölye</a>
+<a class="text-white/80 hover:text-[#ffd709] transition-colors" href="#">gizlilik</a>
+</div>
+</footer>
+</body></html>

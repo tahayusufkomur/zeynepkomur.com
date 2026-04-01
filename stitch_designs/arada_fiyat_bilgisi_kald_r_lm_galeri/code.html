@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {background: "#f8f5ff", "on-tertiary-container": "#650036", "on-error-container": "#510017", "tertiary-container": "#ff8db7", "tertiary-dim": "#9d0058", "surface-tint": "#004be3", "outline-variant": "#a9a9d7", "on-background": "#2a2b51", "secondary-fixed-dim": "#efc900", "on-secondary-fixed-variant": "#665500", "surface-bright": "#f8f5ff", "surface-dim": "#d1d0ff", "primary-container": "#819bff", "inverse-surface": "#08082f", "on-secondary-container": "#5b4b00", "primary-fixed": "#819bff", outline: "#72739e", "on-surface": "#2a2b51", "on-secondary-fixed": "#453900", "tertiary-fixed-dim": "#ff74ac", "surface-container-highest": "#dbd9ff", "on-tertiary-fixed": "#37001b", "secondary-dim": "#5e4e00", "on-primary-fixed": "#000000", "primary-dim": "#0041c8", "on-error": "#ffefef", "surface-container": "#e8e6ff", "primary-fixed-dim": "#6c8cff", "on-secondary": "#fff2cd", "on-surface-variant": "#575881", "surface-variant": "#dbd9ff", "error-dim": "#a70138", error: "#b41340", "inverse-primary": "#6889ff", "on-primary-container": "#001b61", "error-container": "#f74b6d", "surface-container-lowest": "#ffffff", "on-primary": "#f2f1ff", "on-tertiary": "#ffeff2", "secondary-fixed": "#ffd709", "on-primary-fixed-variant": "#002376", tertiary: "#b30065", secondary: "#6c5a00", "secondary-container": "#ffd709", surface: "#f8f5ff", "tertiary-fixed": "#ff8db7", "surface-container-high": "#e1e0ff", "inverse-on-surface": "#9999c6", primary: "#004be3", "surface-container-low": "#f2efff", "on-tertiary-fixed-variant": "#750040"}, fontFamily: {headline: ["Arimo"], body: ["Plus Jakarta Sans"], label: ["Plus Jakarta Sans"], display: "Arimo"}, borderRadius: {DEFAULT: "0px", lg: "0px", xl: "0px", full: "0px"}}}};</script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface lowercase selection:bg-secondary-container">
+<!-- Top Navigation -->
+<nav class="sticky top-0 z-50 bg-background/80 backdrop-blur-md flex justify-between items-center w-full px-8 py-6 max-w-full font-['Plus_Jakarta_Sans'] lowercase tracking-tight border-b border-surface-container">
+<div class="text-xl font-medium text-on-surface">arada by zeynep kömür</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">anasayfa</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">galeri</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">hakkında</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">iletişim</a>
+</div>
+<div class="flex items-center gap-4 text-primary">
+<button class="material-symbols-outlined scale-95 duration-200">shopping_bag</button>
+</div>
+</nav>
+<main class="max-w-[1440px] mx-auto px-8 pb-24">
+<!-- Category Selection - Updated Sophisticated Palette -->
+<section class="mt-12 mb-12">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-1">
+<button class="group relative overflow-hidden h-56 bg-[#004494] flex items-center justify-center">
+<span class="relative z-10 text-white text-3xl font-extrabold tracking-tighter">resim</span>
+<div class="absolute inset-0 bg-primary opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+</button>
+<button class="group relative overflow-hidden h-56 bg-[#FFD700] flex items-center justify-center">
+<span class="relative z-10 text-[#4e4600] text-3xl font-extrabold tracking-tighter">dekorasyon</span>
+<div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+</button>
+<button class="group relative overflow-hidden h-56 bg-[#9d0058] flex items-center justify-center">
+<span class="relative z-10 text-white text-3xl font-extrabold tracking-tighter">posterler</span>
+<div class="absolute inset-0 bg-tertiary-container opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+</button>
+</div>
+</section>
+<!-- Filter Bar - Updated Colors -->
+<section class="flex flex-wrap items-center justify-between gap-6 py-6 mb-12 bg-surface-container-low px-8 rounded-lg">
+<div class="flex flex-wrap items-center gap-12">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-on-surface-variant mb-1 uppercase tracking-widest">renk</span>
+<select class="bg-transparent border-0 border-b border-outline-variant py-2 pr-10 focus:ring-0 focus:border-primary text-sm font-semibold">
+<option>tüm renkler</option>
+<option>monokrom</option>
+<option>vibrant</option>
+<option>pastel</option>
+</select>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-on-surface-variant mb-1 uppercase tracking-widest">boyut</span>
+<select class="bg-transparent border-0 border-b border-outline-variant py-2 pr-10 focus:ring-0 focus:border-primary text-sm font-semibold">
+<option>tüm boyutlar</option>
+<option>50x70 cm</option>
+<option>70x100 cm</option>
+<option>özel boyut</option>
+</select>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-on-surface-variant mb-1 uppercase tracking-widest">koleksiyon</span>
+<select class="bg-transparent border-0 border-b border-outline-variant py-2 pr-10 focus:ring-0 focus:border-primary text-sm font-semibold">
+<option>tüm koleksiyonlar</option>
+<option>yaz 24</option>
+<option>brütalist serisi</option>
+<option>soyut düşler</option>
+</select>
+</div>
+</div>
+<div class="text-xs text-on-surface-variant font-medium">
+                24 eser listeleniyor
+            </div>
+</section>
+<!-- Art Grid -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+<!-- Art Piece 1 -->
+<div class="group flex flex-col bg-background border border-surface-container-highest/50">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover grayscale-0 group-hover:scale-105 transition-transform duration-700" data-alt="vibrant abstract expressionist painting with bold blue and yellow brushstrokes on a large white canvas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJLyJD3v41ZdC6SPmxjg8ZWRSPO8ULxLCT07_Q3hZAW0Lb05FFoWePik4j3oiVegK3nV5mdpTHbYehKLpC-Ojik-914v9G1pMD2l7GoK9zWG-Q9D6N6GXrtSt8Rk5sejlhO_TfM5g5b5WJkz5KfidAxahQyqPem4kdxUoa8FOKJy2nBipHQrVCBGzZyWverR9HiktNrSi-92eMBlLg21E-amnTcSNFyPLmLpBPosxn7rucdNS478PIISEUBiU5g9Kw589MWAEU46g"/>
+</div>
+<div class="p-6 flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-lg font-bold text-on-surface leading-tight">mavi derinlik</h3>
+<p class="text-sm text-on-surface-variant">yağlı boya tablosu</p>
+</div>
+<span class="font-extrabold text-primary text-[10px] uppercase tracking-wider">fiyat için iletişime geçin</span>
+</div>
+</div>
+<!-- Art Piece 2 -->
+<div class="group flex flex-col bg-background border border-surface-container-highest/50">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="modern minimalist decoration piece featuring textured white plaster on a geometric wooden base with pink accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtrOzsScE6z0FCmxqAUv9YbMF8DPqB9OWWb2DvWHzwr3HlrmcUEe6olBFQ2keuR8zcT40NA8Lp9MxS2tE79WSB-k3zFHlXvnbohY8Qf-2uyhskfd3y0LLjPgeoASRA3Wc85ryAPVmTq-r41TeOPwgjPoV8k93lNbfHBeb8yQPb64JoVQhe2IyctLbqweOPzOpLl-y7TNtUSWjPBpEV3WOv4_FGrB1zYA5EBPLJFWgA9mtxWGQhXX6zHINuBtzdCctTnvWGZT20nqA"/>
+</div>
+<div class="p-6 flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-lg font-bold text-on-surface leading-tight">geometrik sükunet</h3>
+<p class="text-sm text-on-surface-variant">dekorasyon objesi</p>
+</div>
+<span class="font-extrabold text-primary text-[10px] uppercase tracking-wider">fiyat için iletişime geçin</span>
+</div>
+</div>
+<!-- Art Piece 3 -->
+<div class="group flex flex-col bg-background border border-surface-container-highest/50">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="contemporary poster art with abstract pink floral shapes and bold yellow typography on a clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5UOEymz2GcxX4OHBCXRyCCH-MSyYjvz154cTDqI4KrW-sMRnbGZISvsUeQxuaFXGBzu6MZhXznRiA0oUD8ndDc8iyhLYukXd_1t5SlpNDNDYxTo4DsQuIBEFICw_frGJZiDStgyIVpGn1j2hT3Gvy8Ahadps2V2yGdrfT_6G28J2I6jAPaiHL12ZltB6IDEyW6S8Fu47v5UlaVhjfkLiqDU8PTJLTu-y2hGFM9_rJA3ijHkzfESC-z0_xN1Onns42ooAoR-EB4wg"/>
+</div>
+<div class="p-6 flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-lg font-bold text-on-surface leading-tight">pembe bahçe</h3>
+<p class="text-sm text-on-surface-variant">sınırlı üretim poster</p>
+</div>
+<span class="font-extrabold text-primary text-[10px] uppercase tracking-wider">fiyat için iletişime geçin</span>
+</div>
+</div>
+<!-- Art Piece 4 -->
+<div class="group flex flex-col bg-background border border-surface-container-highest/50">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="dynamic abstract painting with sweeping lines of primary blue and accents of sunshine yellow and neon pink" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTExzYwS5tQfjIMJHe8nvgPLDbI8-nRnamatRZkf6SCVFuq0DfjRppQsG4m8REVyYQhdz8YXjtVyPu3xFJWpN0rbUD7oVJpEQ45yD1JavcOel59Q0EQ-BlJcmJH-xjo6WaB1FN3ceeGeygZafcYcweY1ZCtodKwg2DDvaF6QUWoOIlbAzyjaq0yzGyTjiGRFFmnCr1HGMFXKj8GEGITrsl7oeqqW1XojAOy85IVK8-BJYdeLFSYNHqwrb2ESguKsu2uVwHAwWKF4Q"/>
+</div>
+<div class="p-6 flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-lg font-bold text-on-surface leading-tight">ritim ve kaos</h3>
+<p class="text-sm text-on-surface-variant">akrilik çalışma</p>
+</div>
+<span class="font-extrabold text-primary text-[10px] uppercase tracking-wider">fiyat için iletişime geçin</span>
+</div>
+</div>
+<!-- Art Piece 5 -->
+<div class="group flex flex-col bg-background border border-surface-container-highest/50">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="minimalist architectural poster with strong shadows and clean lines in shades of blue and white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAafxF5GwG0XgyjE7eDbbhZ38m4c-pUNd1k2pZ-ixtKKMx771Ikj8SZFTzNVjiLPgPjYxCZ3FDsOGA5fJ1UUWJUkMgPaLk5OcZnqsWrPCLhQVd2qS1TdzPk9qYHfDmsAYVrH2Ns_Mijf9JtyyRvKLwONWXPNgcUY9Ga_IPBUHYNEOllF4JP8k8Cl0Gw2Iq_iAAS_8k861AlHNJghbeu0bUrBkFpblr6fHSc7AT6hIMg3rKn9KW8AspOB_UCm_zLjMK8AphaQXoNc4"/>
+</div>
+<div class="p-6 flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-lg font-bold text-on-surface leading-tight">modernist yapı</h3>
+<p class="text-sm text-on-surface-variant">mimari poster</p>
+</div>
+<span class="font-extrabold text-primary text-[10px] uppercase tracking-wider">fiyat için iletişime geçin</span>
+</div>
+</div>
+<!-- Art Piece 6 -->
+<div class="group flex flex-col bg-background border border-surface-container-highest/50">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="vivid abstract canvas with thick impasto texture in yellow and pink hues against a deep blue background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp3I1c76SYSlgGkqSD0GxUC5bWd9cuAT8sqBKFQ_QikZagGc7fzUGTNJxJrN8bywdDDOX3jPReZHGmz_sG0zTnf-G7QpFRq-WHrtfkDoC7PS33vvOMrCO32ZkwB_Ggfr35dwcXQO0zvZIVRLNjKRS4b5bIFo0FOuC_J0P7yNaMtpAdgDoDorEDpOsqnrUNDyDXVFI5g288riALlmgImL-lUFjdlhMplprLJrBdAA5YzRjGzKJtEkrKOBKDl7K2KA-xK0L_9yfweI8"/>
+</div>
+<div class="p-6 flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-lg font-bold text-on-surface leading-tight">dokunsal hisler</h3>
+<p class="text-sm text-on-surface-variant">tekstürlü tablo</p>
+</div>
+<span class="font-extrabold text-primary text-[10px] uppercase tracking-wider">fiyat için iletişime geçin</span>
+</div>
+</div>
+<!-- Custom CTA Card Integration -->
+<div class="col-span-1 sm:col-span-2 flex items-center justify-center bg-secondary-container p-12 text-center relative overflow-hidden group rounded-none">
+<div class="absolute -right-12 -bottom-12 w-48 h-48 bg-primary rounded-full opacity-20 group-hover:scale-125 transition-transform duration-700"></div>
+<div class="absolute -left-12 -top-12 w-64 h-64 bg-tertiary-dim rounded-full opacity-20 group-hover:scale-125 transition-transform duration-700"></div>
+<div class="relative z-10 flex flex-col items-center">
+<h2 class="text-4xl font-extrabold tracking-tighter text-on-secondary-container mb-6 max-w-sm">hayalindeki eseri beraber tasarlayalım</h2>
+<button class="bg-primary text-white px-8 py-4 font-bold uppercase tracking-widest hover:bg-surface-tint transition-colors duration-300 shadow-xl">ÖZELLEŞTİRİLMİŞ RESİM İSTEKLERİ</button>
+</div>
+</div>
+</section>
+<!-- Signature Artist Element -->
+<section class="mt-32 relative flex justify-center py-24 bg-surface-container-low">
+<div class="absolute left-8 -top-8 w-24 h-24 bg-tertiary-fixed opacity-50"></div>
+<div class="max-w-2xl text-center z-10">
+<p class="text-3xl font-light italic text-on-surface leading-relaxed px-8">
+                    "sanat, görünmeyeni görünür kılmaktır. her fırça darbesi, bir hikayenin başlangıcıdır."
+                </p>
+<div class="mt-8 flex justify-center items-center gap-4">
+<div class="w-12 h-[2px] bg-primary"></div>
+<span class="font-bold uppercase tracking-widest text-xs">zeynep kömür</span>
+<div class="w-12 h-[2px] bg-primary"></div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer - Prominent Orange/Yellow Base -->
+<footer class="bg-secondary-container flex flex-col md:flex-row justify-between items-center w-full px-12 py-16 font-['Plus_Jakarta_Sans'] text-sm lowercase">
+<div class="font-bold text-on-secondary-container mb-8 md:mb-0 text-base">
+            © arada by zeynep kömür. sade ama vurucu.
+        </div>
+<div class="flex flex-wrap justify-center gap-12 text-on-secondary-container">
+<a class="hover:text-primary transition-all flex items-center gap-2 font-medium" href="tel:+900000000000">
+<span class="material-symbols-outlined text-base">call</span>
+                telefon
+            </a>
+<a class="hover:text-primary transition-all flex items-center gap-2 font-medium" href="mailto:info@arada.art">
+<span class="material-symbols-outlined text-base">mail</span>
+                e-posta
+            </a>
+<a class="underline font-bold hover:text-primary transition-all flex items-center gap-2" href="https://instagram.com">
+<span class="material-symbols-outlined text-base">camera</span>
+                instagram
+            </a>
+</div>
+</footer>
+</body></html>
