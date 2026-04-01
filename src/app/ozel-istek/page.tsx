@@ -4,6 +4,7 @@ import { pageContent } from "@/lib/db/schema";
 import { and, eq } from "drizzle-orm";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { getFooterContent } from "@/lib/get-footer-content";
 import { CustomRequestForm } from "@/components/forms/custom-request-form";
 import { InlineEdit } from "@/components/admin/inline-edit";
 import { OzelIstekImage } from "./ozel-istek-client";
@@ -22,6 +23,7 @@ async function getContent(sectionKey: string, fallback: string) {
 }
 
 export default async function OzelIstekPage() {
+  const footerContent = await getFooterContent();
   const headline = await getContent("headline", "özelleştirilmiş resim isteği");
   const description = await getContent("description", "mekanınıza ruh katacak, sadece size özel üretilecek bir eser için kürasyon sürecini başlatın.");
   const feature1Title = await getContent("feature_1_title", "renk kürasyonu");
@@ -109,7 +111,7 @@ export default async function OzelIstekPage() {
         </div>
       </main>
 
-      <Footer variant="white" />
+      <Footer variant="white" content={footerContent} />
     </div>
   );
 }

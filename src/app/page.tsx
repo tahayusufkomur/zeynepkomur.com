@@ -6,6 +6,7 @@ import Image from "next/image";
 import { InlineEdit } from "@/components/admin/inline-edit";
 import { Footer } from "@/components/layout/footer";
 import { HomeClient } from "./home-client";
+import { getFooterContent } from "@/lib/get-footer-content";
 
 type ContentMap = Record<string, string>;
 
@@ -21,6 +22,8 @@ const defaults: ContentMap = {
 };
 
 export default async function HomePage() {
+  const footerContent = await getFooterContent();
+
   // Fetch page content
   const rows = await db
     .select()
@@ -242,7 +245,7 @@ export default async function HomePage() {
       </div>
 
       {/* Footer */}
-      <Footer variant="white" />
+      <Footer variant="white" content={footerContent} />
     </HomeClient>
   );
 }

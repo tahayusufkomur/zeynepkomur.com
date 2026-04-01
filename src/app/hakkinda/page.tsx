@@ -3,6 +3,7 @@ import { pageContent } from "@/lib/db/schema";
 import { and, eq } from "drizzle-orm";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { getFooterContent } from "@/lib/get-footer-content";
 import { InlineEdit } from "@/components/admin/inline-edit";
 import { HakkindaPortrait, HakkindaSkills, HakkindaIdentityLabel } from "./hakkinda-client";
 
@@ -22,6 +23,7 @@ async function getContent(sectionKey: string, fallback: string) {
 }
 
 export default async function HakkindaPage() {
+  const footerContent = await getFooterContent();
   const bio1 = await getContent(
     "bio_1",
     "ZEYN'in hikayesi, sanatı sadece seyredilen bir nesne değil, yaşanan bir mekan haline getirme arzusuyla başladı. İstanbul merkezli multidisipliner sanatçı Zeynep Kömür, modern brutalizm ile geleneksel dokuları harmanlayarak dijital kürasyonun sınırlarını yeniden tanımlıyor."
@@ -93,7 +95,7 @@ export default async function HakkindaPage() {
         </div>
       </main>
 
-      <Footer variant="white" />
+      <Footer variant="white" content={footerContent} />
     </div>
   );
 }

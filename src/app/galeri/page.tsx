@@ -3,6 +3,7 @@ import { artworks, pageContent } from "@/lib/db/schema";
 import { and, asc, eq } from "drizzle-orm";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { getFooterContent } from "@/lib/get-footer-content";
 import { GalleryClient } from "./gallery-client";
 import { InlineEdit } from "@/components/admin/inline-edit";
 
@@ -22,6 +23,7 @@ async function getContent(sectionKey: string, fallback: string) {
 }
 
 export default async function GaleriPage() {
+  const footerContent = await getFooterContent();
   const allArtworks = await db
     .select()
     .from(artworks)
@@ -66,7 +68,7 @@ export default async function GaleriPage() {
         </section>
       </main>
 
-      <Footer variant="yellow" />
+      <Footer variant="yellow" content={footerContent} />
     </div>
   );
 }

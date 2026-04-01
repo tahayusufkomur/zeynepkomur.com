@@ -4,6 +4,7 @@ import { pageContent } from "@/lib/db/schema";
 import { and, eq } from "drizzle-orm";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { getFooterContent } from "@/lib/get-footer-content";
 import { ContactForm } from "@/components/forms/contact-form";
 import { QuestionForm } from "@/components/forms/question-form";
 import { InlineEdit } from "@/components/admin/inline-edit";
@@ -22,6 +23,7 @@ async function getContent(sectionKey: string, fallback: string) {
 }
 
 export default async function IletisimPage() {
+  const footerContent = await getFooterContent();
   const headline = await getContent("headline", "arada bağ kuralım");
   const section1Title = await getContent("section_1_title", "beraber çalışalım.");
   const section2Title = await getContent("section_2_title", "bana her şeyi sorabilirsin.");
@@ -137,7 +139,7 @@ export default async function IletisimPage() {
         </div>
       </main>
 
-      <Footer variant="white" />
+      <Footer variant="white" content={footerContent} />
     </div>
   );
 }
