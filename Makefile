@@ -1,0 +1,21 @@
+.PHONY: dev run stop reset build logs
+
+dev:
+	npm run dev
+
+build:
+	docker compose build
+
+run:
+	docker compose up -d
+
+stop:
+	docker compose down
+
+reset:
+	docker compose down -v
+	rm -rf data/*.db data/backups/*
+	docker compose up -d --build
+
+logs:
+	docker compose logs -f

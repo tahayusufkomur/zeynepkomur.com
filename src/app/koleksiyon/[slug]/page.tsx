@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db/index";
 import { collections, collectionArtworks, artworks } from "@/lib/db/schema";
@@ -9,8 +10,6 @@ import { TemplateShowcase } from "@/components/collection/template-showcase";
 import { TemplateChallenge } from "@/components/collection/template-challenge";
 import { CollectionAdminControls } from "./collection-page-client";
 import type { Artwork } from "@/components/artwork/artwork-card";
-
-export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ slug: string }>;

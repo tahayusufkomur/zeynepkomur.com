@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { CustomRequestForm } from "@/components/forms/custom-request-form";

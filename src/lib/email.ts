@@ -1,6 +1,8 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY || "re_placeholder");
+}
 
 type FormEmailData = {
   formType: "contact" | "custom_request" | "question";
@@ -19,7 +21,7 @@ export async function sendFormNotification({ formType, data }: FormEmailData) {
   const { subject, body } = formatEmail(formType, data);
 
   try {
-    await resend.emails.send({ from, to, subject, text: body });
+    await getResend().emails.send({ from, to, subject, text: body });
   } catch (error) {
     console.error("[email] Failed to send notification:", error);
   }

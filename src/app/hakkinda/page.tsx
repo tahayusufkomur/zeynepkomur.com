@@ -43,13 +43,9 @@ export default async function HakkindaPage() {
             <div className="absolute -top-4 -left-4 w-24 h-24 bg-secondary-container z-0 opacity-40" />
             <div className="relative z-10 bg-white p-2 shadow-xl">
               <img
-                src="/images/portrait-placeholder.jpg"
+                src="/uploads/pages/portrait.webp"
                 alt="Zeynep Kömür"
                 className="w-full aspect-[4/5] object-cover grayscale"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23e8e6ff'/%3E%3Ctext x='200' y='250' text-anchor='middle' fill='%23575881' font-size='20'%3Ezeynep kömür%3C/text%3E%3C/svg%3E";
-                }}
               />
             </div>
             {/* Identity label */}
