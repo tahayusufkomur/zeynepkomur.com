@@ -55,11 +55,11 @@ export function InlineEdit({
 
   return (
     <Tag
-      className={`${className} cursor-pointer hover:outline-2 hover:outline-primary/30 hover:outline-dashed group relative`}
+      className={`${className} cursor-pointer outline outline-1 outline-primary/30 hover:outline-2 hover:outline-primary/50 group relative`}
       onClick={() => setEditing(true)}
     >
       {content}
-      <span className="material-symbols-outlined absolute -top-3 -right-3 text-primary text-sm opacity-0 group-hover:opacity-100 transition-opacity bg-white p-1 shadow-sm">
+      <span className="material-symbols-outlined absolute -top-2.5 -right-2.5 text-primary text-xs bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border border-primary/20 opacity-70 group-hover:opacity-100 transition-opacity">
         edit
       </span>
     </Tag>

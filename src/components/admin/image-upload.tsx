@@ -26,8 +26,13 @@ export function ImageUpload({
   if (!isEditing) return <div className={className}>{children}</div>;
 
   return (
-    <div className={`${className} relative group`}>
+    <div className={`${className} relative group outline outline-1 outline-primary/30 hover:outline-2 hover:outline-primary/50`}>
       {children}
+      {/* Always-visible edit badge */}
+      <span className="absolute -top-2.5 -right-2.5 z-10 text-primary text-xs bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border border-primary/20 opacity-70 group-hover:opacity-100 transition-opacity material-symbols-outlined">
+        upload
+      </span>
+      {/* Hover overlay for upload */}
       <div
         className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
         onClick={() => fileRef.current?.click()}
