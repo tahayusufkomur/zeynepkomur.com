@@ -1,6 +1,7 @@
 "use client";
 
 import { useAdmin } from "@/hooks/use-admin";
+import { useEditMode } from "@/providers/edit-mode-provider";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,6 +9,7 @@ import { useEffect, useState } from "react";
 
 export function AdminToolbar() {
   const { isAdmin } = useAdmin();
+  const { isEditing, setIsEditing } = useEditMode();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -30,14 +32,14 @@ export function AdminToolbar() {
 
   return (
     <>
-      {/* Toggle button — always visible */}
+      {/* Toggle button — vertically centered */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed top-4 left-4 z-[200] w-10 h-10 bg-inverse-surface text-inverse-on-surface flex items-center justify-center shadow-lg hover:bg-primary transition-colors"
+        className="fixed top-1/2 -translate-y-1/2 left-0 z-[200] w-10 h-12 bg-inverse-surface text-inverse-on-surface flex items-center justify-center shadow-lg hover:bg-primary transition-colors"
         aria-label="Admin menü"
       >
         <span className="material-symbols-outlined text-xl">
-          {open ? "close" : "admin_panel_settings"}
+          {open ? "chevron_left" : "chevron_right"}
         </span>
       </button>
 
@@ -57,7 +59,7 @@ export function AdminToolbar() {
       >
         {/* Header */}
         <div className="px-6 pt-6 pb-4 border-b border-white/10">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-inverse-on-surface/60">
               admin panel
             </span>
@@ -68,26 +70,47 @@ export function AdminToolbar() {
               <span className="material-symbols-outlined text-xl">close</span>
             </button>
           </div>
-          <p className="text-inverse-on-surface/40 text-xs lowercase truncate">
-            {pathname}
-          </p>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4">
-          <div className="px-4 mb-2">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-inverse-on-surface/40 px-2 mb-2">
-              sayfalar
+        {/* Edit Mode Toggle */}
+        <div className="px-6 py-5 border-b border-white/10">
+          <button
+            onClick={() => setIsEditing(!isEditing)}
+            className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-bold lowercase tracking-tight transition-all ${
+              isEditing
+                ? "bg-primary text-on-primary"
+                : "bg-white/10 text-inverse-on-surface hover:bg-white/20"
+            }`}
+          >
+            <span className="material-symbols-outlined text-lg">
+              {isEditing ? "edit_off" : "edit"}
+            </span>
+            <span className="flex-1 text-left">
+              {isEditing ? "düzenleme aktif" : "düzenlemeyi aç"}
+            </span>
+            <div
+              className={`w-10 h-5 rounded-full relative transition-colors ${
+                isEditing ? "bg-on-primary/30" : "bg-white/20"
+              }`}
+            >
+              <div
+                className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
+                  isEditing ? "translate-x-5" : "translate-x-0.5"
+                }`}
+              />
+            </div>
+          </button>
+          {isEditing && (
+            <p className="text-[10px] text-inverse-on-surface/40 mt-2 px-1">
+              sayfalardaki metin ve görselleri tıklayarak düzenleyebilirsiniz
             </p>
-            <NavItem href="/" icon="home" label="anasayfa" current={pathname} onClick={() => setOpen(false)} />
-            <NavItem href="/galeri" icon="gallery_thumbnail" label="galeri" current={pathname} onClick={() => setOpen(false)} />
-            <NavItem href="/hakkinda" icon="person" label="hakkında" current={pathname} onClick={() => setOpen(false)} />
-            <NavItem href="/iletisim" icon="mail" label="iletişim" current={pathname} onClick={() => setOpen(false)} />
-            <NavItem href="/ozel-istek" icon="brush" label="özel istek" current={pathname} onClick={() => setOpen(false)} />
-          </div>
+          )}
+        </div>
 
-          <div className="px-4 mb-2">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-inverse-on-surface/40 px-2 mb-2 mt-4">
+        {/* Admin Navigation */}
+        <nav className="flex-1 overflow-y-auto py-4">
+          <div className="px-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-inverse-on-surface/40 px-2 mb-2">
               yönetim
             </p>
             <NavItem
@@ -101,7 +124,10 @@ export function AdminToolbar() {
           </div>
 
           {/* Stats */}
-          <div className="px-6 mt-4">
+          <div className="px-6 mt-6">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-inverse-on-surface/40 mb-3">
+              istatistikler
+            </p>
             <div className="bg-white/5 p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-inverse-on-surface/60 flex items-center gap-2">
@@ -124,10 +150,7 @@ export function AdminToolbar() {
         </nav>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-white/10 space-y-3">
-          <div className="text-xs text-inverse-on-surface/40 lowercase">
-            düzenleme modu aktif
-          </div>
+        <div className="px-6 py-4 border-t border-white/10">
           <button
             onClick={() => signOut()}
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-error/80 text-inverse-on-surface text-sm font-bold lowercase tracking-tight transition-colors"

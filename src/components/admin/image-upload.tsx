@@ -19,11 +19,11 @@ export function ImageUpload({
   className = "",
   children,
 }: ImageUploadProps) {
-  const { isAdmin } = useAdmin();
+  const { isEditing } = useAdmin();
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  if (!isAdmin) return <div className={className}>{children}</div>;
+  if (!isEditing) return <div className={className}>{children}</div>;
 
   return (
     <div className={`${className} relative group`}>

@@ -23,11 +23,11 @@ type ArtworkCardProps = {
 };
 
 export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
-  const { isAdmin } = useAdmin();
+  const { isEditing } = useAdmin();
 
   return (
     <div className="group flex flex-col bg-background border border-surface-container-highest/50 relative">
-      {isAdmin && onDelete && (
+      {isEditing && onDelete && (
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -42,8 +42,8 @@ export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
         </button>
       )}
       <div
-        className={`aspect-[3/4] overflow-hidden bg-surface-container ${isAdmin && onEdit ? "cursor-pointer" : ""}`}
-        onClick={() => isAdmin && onEdit?.(artwork)}
+        className={`aspect-[3/4] overflow-hidden bg-surface-container ${isEditing && onEdit ? "cursor-pointer" : ""}`}
+        onClick={() => isEditing && onEdit?.(artwork)}
       >
         <img
           src={artwork.imagePath}

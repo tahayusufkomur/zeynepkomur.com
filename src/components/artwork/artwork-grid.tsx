@@ -12,7 +12,7 @@ type ArtworkGridProps = {
 };
 
 export function ArtworkGrid({ artworks, onEdit, onDelete, onAddNew }: ArtworkGridProps) {
-  const { isAdmin } = useAdmin();
+  const { isEditing } = useAdmin();
 
   return (
     <div className="relative">
@@ -45,7 +45,7 @@ export function ArtworkGrid({ artworks, onEdit, onDelete, onAddNew }: ArtworkGri
       </section>
 
       {/* Admin: Add new artwork button */}
-      {isAdmin && onAddNew && (
+      {isEditing && onAddNew && (
         <button
           onClick={onAddNew}
           className="fixed bottom-8 right-8 z-50 bg-primary text-on-primary px-6 py-4 font-bold shadow-xl hover:bg-primary-dim transition-all duration-300 flex items-center gap-3"

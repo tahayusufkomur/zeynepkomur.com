@@ -21,7 +21,7 @@ export function InlineEdit({
   className = "",
   multiline = false,
 }: InlineEditProps) {
-  const { isAdmin } = useAdmin();
+  const { isEditing: editMode } = useAdmin();
   const [content, setContent] = useState(initialContent);
   const [editing, setEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
@@ -30,7 +30,7 @@ export function InlineEdit({
     if (editing && inputRef.current) inputRef.current.focus();
   }, [editing]);
 
-  if (!isAdmin) return <Tag className={className}>{content}</Tag>;
+  if (!editMode) return <Tag className={className}>{content}</Tag>;
 
   if (editing) {
     const InputTag = multiline ? "textarea" : "input";

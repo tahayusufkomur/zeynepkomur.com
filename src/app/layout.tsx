@@ -3,6 +3,7 @@ import { Arimo, Plus_Jakarta_Sans } from "next/font/google";
 import { AuthProvider } from "@/providers/session-provider";
 import { AdminToolbar } from "@/components/layout/admin-toolbar";
 import { ToastProvider } from "@/components/admin/toast";
+import { EditModeProvider } from "@/providers/edit-mode-provider";
 import "./globals.css";
 
 const arimo = Arimo({
@@ -31,9 +32,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-background text-on-surface font-body">
         <AuthProvider>
-          <AdminToolbar />
-          <ToastProvider />
-          {children}
+          <EditModeProvider>
+            <AdminToolbar />
+            <ToastProvider />
+            {children}
+          </EditModeProvider>
         </AuthProvider>
       </body>
     </html>
