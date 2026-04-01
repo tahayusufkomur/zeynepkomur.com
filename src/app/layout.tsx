@@ -16,7 +16,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "zeyn by zeynep kömür",
+  title: "by zeynep kömür",
   description: "sanatın herkes için erişilebilir olduğu, sınırların kalktığı dijital bir kürasyon alanı.",
 };
 

@@ -24,7 +24,7 @@ export function Navbar({ currentPage, onNewsletterClick }: NavbarProps) {
         href="/"
         className="font-bold text-on-surface lowercase font-body tracking-tight text-4xl"
       >
-        zeyn by zeynep kömür
+        by zeynep kömür
       </Link>
 
       {/* Desktop nav links */}
