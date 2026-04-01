@@ -8,7 +8,7 @@ import { Footer } from "@/components/layout/footer";
 import { TemplateGrid } from "@/components/collection/template-grid";
 import { TemplateShowcase } from "@/components/collection/template-showcase";
 import { TemplateChallenge } from "@/components/collection/template-challenge";
-import { CollectionAdminControls } from "./collection-page-client";
+import { getFooterContent } from "@/lib/get-footer-content";
 import type { Artwork } from "@/components/artwork/artwork-card";
 
 type Props = {
@@ -53,8 +53,7 @@ export default async function KoleksiyonPage({ params }: Props) {
       .filter(Boolean) as (Artwork & { dayNumber?: number | null })[];
   }
 
-  // All artworks for admin picker
-  const allArtworks = await db.select().from(artworks).orderBy(asc(artworks.sortOrder));
+  const footerContent = await getFooterContent();
 
   let metadata: Record<string, string> = {};
   try {
@@ -62,8 +61,6 @@ export default async function KoleksiyonPage({ params }: Props) {
   } catch {
     metadata = {};
   }
-
-  const artworkIds = collectionItems.map((ci) => ci.artworkId);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -94,14 +91,7 @@ export default async function KoleksiyonPage({ params }: Props) {
         )}
       </main>
 
-      <CollectionAdminControls
-        collectionId={collection.id}
-        templateType={collection.templateType}
-        artworkIds={artworkIds}
-        allArtworks={allArtworks}
-      />
-
-      <Footer variant="yellow" />
+      <Footer variant="yellow" content={footerContent} />
     </div>
   );
 }
