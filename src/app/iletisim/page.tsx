@@ -77,9 +77,9 @@ export default function IletisimPage() {
               dijital
             </p>
             <p className="text-2xl text-on-surface lowercase leading-tight">
-              merhaba@arada.art
+              merhaba@zeyn.art
               <br />
-              @arada.art
+              @zeyn.art
             </p>
           </div>
         </div>

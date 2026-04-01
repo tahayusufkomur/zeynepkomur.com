@@ -16,7 +16,7 @@ function WhiteFooter() {
     <footer className="bg-white grid grid-cols-1 md:grid-cols-3 gap-12 px-12 py-24 w-full border-t border-outline/20">
       <div className="flex flex-col space-y-6">
         <div className="text-xl font-bold text-on-surface lowercase">
-          arada by zeynep kömür
+          zeyn by zeynep kömür
         </div>
         <p className="text-on-surface-variant max-w-xs font-body text-sm leading-relaxed tracking-wide lowercase">
           sanatın herkes için erişilebilir olduğu, sınırların kalktığı dijital bir kürasyon alanı.
@@ -31,7 +31,7 @@ function WhiteFooter() {
             telefon
           </Link>
           <Link
-            href="mailto:info@arada.art"
+            href="mailto:info@zeyn.art"
             className="text-on-surface-variant hover:text-primary transition-all duration-300 font-body text-sm tracking-[0.1em] lowercase"
           >
             e-posta
@@ -58,7 +58,7 @@ function WhiteFooter() {
           </span>
         </div>
         <div className="text-on-surface-variant font-body text-xs tracking-[0.2em] lowercase opacity-60">
-          &copy; arada by zeynep kömür. all rights reserved.
+          &copy; zeyn by zeynep kömür. all rights reserved.
         </div>
       </div>
     </footer>
@@ -69,7 +69,7 @@ function YellowFooter() {
   return (
     <footer className="bg-secondary-container flex flex-col md:flex-row justify-between items-center w-full px-12 py-16 font-body text-sm lowercase">
       <div className="font-bold text-on-secondary-container mb-8 md:mb-0 text-base">
-        &copy; arada by zeynep kömür. sade ama vurucu.
+        &copy; zeyn by zeynep kömür. sade ama vurucu.
       </div>
       <div className="flex flex-wrap justify-center gap-12 text-on-secondary-container">
         <Link
@@ -80,7 +80,7 @@ function YellowFooter() {
           telefon
         </Link>
         <Link
-          href="mailto:info@arada.art"
+          href="mailto:info@zeyn.art"
           className="hover:text-primary transition-all flex items-center gap-2 font-medium"
         >
           <span className="material-symbols-outlined text-base">mail</span>

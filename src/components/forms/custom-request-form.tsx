@@ -131,7 +131,7 @@ export function CustomRequestForm() {
           onChange={(e) => setEmail(e.target.value)}
           required
           className="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-petrol-blue px-0 py-3 text-on-surface placeholder:text-outline-variant transition-all lowercase"
-          placeholder="merhaba@arada.art"
+          placeholder="merhaba@zeyn.art"
         />
       </div>
 
