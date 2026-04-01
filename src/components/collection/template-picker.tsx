@@ -36,7 +36,7 @@ export function TemplatePicker({
     setSaving(true);
     setError("");
     try {
-      const res = await fetch(`/api/admin/collections/${collectionId}`, {
+      const res = await fetch(`/api/collections/${collectionId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ templateType: template, artworkIds: selectedIds }),
