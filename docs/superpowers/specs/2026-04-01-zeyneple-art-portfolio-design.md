@@ -29,6 +29,7 @@ Design philosophy: Modern Brutalism mixed with Editorial Sophistication — "Sad
 | `/koleksiyon/[slug]` | Collection Pages | Template-based campaign pages (3 templates) |
 | `/admin/login` | Admin Login | Email + password login |
 | `/admin/submissions` | Form Submissions | View/filter submissions, mark as read |
+| `not-found` | 404 Page | Custom "sayfa bulunamadi" page matching site design (lowercase, branded) |
 
 ## Data Model
 
@@ -42,7 +43,6 @@ Design philosophy: Modern Brutalism mixed with Editorial Sophistication — "Sad
 | category | text (enum) | resim, dekorasyon, posterler |
 | dimensions | text | e.g. "50x70 cm" |
 | technique | text | e.g. "akrilik" |
-| collection | text | nullable |
 | year | integer | e.g. 2024 |
 | availability | text (enum) | available, sold, contact |
 | imagePath | text | relative path to uploaded file |
@@ -56,7 +56,7 @@ Design philosophy: Modern Brutalism mixed with Editorial Sophistication — "Sad
 |---|---|---|
 | id | text (uuid) | PK |
 | pageSlug | text | e.g. "home", "about", "contact" |
-| sectionKey | text | e.g. "hero_title", "quote_text" |
+| sectionKey | text | e.g. "hero_title", "quote_text". UNIQUE(pageSlug, sectionKey) |
 | content | text | the editable text |
 | updatedAt | text (datetime) | |
 
@@ -78,8 +78,8 @@ Design philosophy: Modern Brutalism mixed with Editorial Sophistication — "Sad
 
 | Field | Type | Notes |
 |---|---|---|
-| collectionId | text (uuid) | FK → collections, composite PK |
-| artworkId | text (uuid) | FK → artworks, composite PK |
+| collectionId | text (uuid) | FK → collections (ON DELETE CASCADE), composite PK |
+| artworkId | text (uuid) | FK → artworks (ON DELETE CASCADE), composite PK |
 | sortOrder | integer | |
 | dayNumber | integer | nullable, used by "challenge" template for item numbering |
 
@@ -114,8 +114,8 @@ Design philosophy: Modern Brutalism mixed with Editorial Sophistication — "Sad
 
 When the admin is logged in, every public page gains edit capabilities:
 
-- **Text content** — click to edit. Turns into input/textarea with subtle outline. Save on blur/Enter via API call. Pencil icon on hover.
-- **Images** — hover shows upload overlay button. Click opens file picker. Upload replaces image via API.
+- **Text content** — click to edit. Turns into input/textarea with subtle outline. Save on blur/Enter via API call. Pencil icon on hover. On save: show brief "kaydedildi" toast. On failure: revert to previous value, show error toast "kaydedilemedi, tekrar deneyin".
+- **Images** — hover shows upload overlay button. Click opens file picker. Upload replaces image via API. Show loading spinner during upload. On failure: keep old image, show error toast.
 - **Artwork cards (gallery)** — "+ Yeni Eser Ekle" floating button. Each card gets delete "x" and drag handles. Click card opens metadata edit modal.
 - **Collection pages** — "+ Yeni Koleksiyon" button. Template picker (3 options). Inline editing of title/description. Artwork selector modal.
 - **Admin toolbar** — thin fixed bar at top. Shows: current page, unread submissions count (links to `/admin/submissions`), newsletter subscriber count, logout button.
@@ -148,6 +148,7 @@ Validation: server-side validation on all fields. Email validated with proper re
 - Collects email + optional name
 - Duplicate email shows friendly "zaten kayitlisiniz" message
 - Subscriber count visible in admin toolbar
+- Unsubscribe: out of scope for v1. Admin can manually remove subscribers from the DB. KVKK compliance (unsubscribe link in emails) to be added in a future iteration.
 
 ## Pricing Display
 
@@ -162,7 +163,7 @@ This is critical. The Stitch design HTML files are the source of truth (they sup
 - Preserve all hover effects, transitions, responsive breakpoints
 - Core color palette: primary `#004be3`, secondary-container `#ffd709`, tertiary `#b30065`, highlight-pink `#F28482`, background `#f8f5ff`
 - Additional colors (used on ozel-istek page): petrol-blue `#085F7F`, petrol-dim `#064b65`, warm-yellow `#FFD54F`, warm-orange `#F4A261`
-- Fonts: Arimo for `headline`/`display` tokens, Plus Jakarta Sans for `body`/`label` tokens (matches the HTML tailwind configs)
+- Fonts: Arimo for `headline`/`display` tokens, Plus Jakarta Sans for `body`/`label` tokens. Note: DESIGN.md specifies Public Sans for headlines; the Stitch HTML files use Arimo instead. Stitch HTML takes precedence.
 - No 1px borders — separation via color blocking and whitespace
 - All branding and nav lowercase
 - Material Symbols Outlined for icons
@@ -198,10 +199,10 @@ Reference designs in `stitch_designs/`:
 |---|---|---|
 | `/api/auth/[...nextauth]` | * | NextAuth handlers |
 | `/api/artworks` | GET, POST | List / create artworks |
-| `/api/artworks/[id]` | PUT, DELETE | Update / delete artwork |
+| `/api/artworks/[id]` | GET, PUT, DELETE | Get / update / delete artwork. DELETE also removes image file from disk. |
 | `/api/artworks/reorder` | PUT | Update sortOrder for multiple artworks |
 | `/api/uploads` | POST | Image upload (multipart) |
-| `/api/content` | GET, PUT | Read / update page_content |
+| `/api/content` | GET, PUT | Read / update page_content. GET params: `?page=home` or `?page=home&section=hero_title` |
 | `/api/collections` | GET, POST | List / create collections |
 | `/api/collections/[id]` | PUT, DELETE | Update / delete collection |
 | `/api/collections/[id]/artworks` | PUT | Set artworks for a collection |
@@ -209,6 +210,12 @@ Reference designs in `stitch_designs/`:
 | `/api/submissions/[id]/read` | PUT | Mark submission as read |
 | `/api/newsletter` | POST | Subscribe to newsletter |
 | `/api/newsletter/count` | GET | Subscriber count (admin) |
+
+### API Auth Rules
+
+- **Public (no auth):** GET on `/api/artworks`, `/api/collections`, `/api/content`. POST on `/api/submissions`, `/api/newsletter`.
+- **Admin required:** All other routes (POST/PUT/DELETE on artworks, collections, content, uploads; GET on submissions, newsletter/count).
+- Admin auth checked via NextAuth session middleware. Unauthorized requests return 401.
 
 ## Deployment
 
@@ -237,6 +244,7 @@ Two services:
 
 - Daily cron inside app container: copies SQLite DB to `data/backups/` with timestamp
 - Keep last 30 days
+- On backup failure: log error to stdout (visible via `docker logs`)
 
 ## Image Upload Constraints
 
