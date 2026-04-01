@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get("category");
 
   const results = category
-    ? await db.select().from(artworks).where(eq(artworks.category, category)).orderBy(asc(artworks.sortOrder))
+    ? await db.select().from(artworks).where(eq(artworks.category, category as "resim" | "dekorasyon" | "posterler")).orderBy(asc(artworks.sortOrder))
     : await db.select().from(artworks).orderBy(asc(artworks.sortOrder));
 
   return NextResponse.json(results);
