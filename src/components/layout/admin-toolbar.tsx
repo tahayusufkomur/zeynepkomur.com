@@ -2,6 +2,7 @@
 
 import { useAdmin } from "@/hooks/use-admin";
 import { useEditMode } from "@/providers/edit-mode-provider";
+import { CollectionManagerModal } from "@/components/admin/collection-manager-modal";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,6 +15,7 @@ export function AdminToolbar() {
   const [open, setOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [subscriberCount, setSubscriberCount] = useState(0);
+  const [showCollections, setShowCollections] = useState(false);
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -121,6 +123,16 @@ export function AdminToolbar() {
               onClick={() => setOpen(false)}
               badge={unreadCount > 0 ? unreadCount : undefined}
             />
+            <button
+              onClick={() => {
+                setOpen(false);
+                setShowCollections(true);
+              }}
+              className="flex items-center gap-3 px-3 py-2.5 text-sm lowercase tracking-tight text-inverse-on-surface/80 hover:bg-white/10 hover:text-white transition-colors w-full"
+            >
+              <span className="material-symbols-outlined text-lg">collections_bookmark</span>
+              <span className="flex-1 text-left">koleksiyonlar</span>
+            </button>
           </div>
 
           {/* Stats */}
@@ -160,6 +172,9 @@ export function AdminToolbar() {
           </button>
         </div>
       </div>
+      {showCollections && (
+        <CollectionManagerModal onClose={() => setShowCollections(false)} />
+      )}
     </>
   );
 }
