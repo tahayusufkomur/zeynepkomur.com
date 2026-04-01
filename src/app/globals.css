@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-headline: "Arimo", sans-serif;
+  --font-display: "Arimo", sans-serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+  --font-label: "Plus Jakarta Sans", sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: #004be3;
+  --color-primary-dim: #0041c8;
+  --color-primary-container: #819bff;
+  --color-on-primary: #f2f1ff;
+  --color-on-primary-container: #001b61;
+  --color-primary-fixed: #819bff;
+  --color-primary-fixed-dim: #6c8cff;
+  --color-on-primary-fixed: #000000;
+  --color-on-primary-fixed-variant: #002376;
+  --color-inverse-primary: #6889ff;
+
+  --color-secondary: #6c5a00;
+  --color-secondary-dim: #5e4e00;
+  --color-secondary-container: #ffd709;
+  --color-secondary-fixed: #ffd709;
+  --color-secondary-fixed-dim: #efc900;
+  --color-on-secondary: #fff2cd;
+  --color-on-secondary-container: #5b4b00;
+  --color-on-secondary-fixed: #453900;
+  --color-on-secondary-fixed-variant: #665500;
+
+  --color-tertiary: #b30065;
+  --color-tertiary-dim: #9d0058;
+  --color-tertiary-container: #ff8db7;
+  --color-tertiary-fixed: #ff8db7;
+  --color-tertiary-fixed-dim: #ff74ac;
+  --color-on-tertiary: #ffeff2;
+  --color-on-tertiary-container: #650036;
+  --color-on-tertiary-fixed: #37001b;
+  --color-on-tertiary-fixed-variant: #750040;
+
+  --color-highlight-pink: #F28482;
+
+  --color-error: #b41340;
+  --color-error-dim: #a70138;
+  --color-error-container: #f74b6d;
+  --color-on-error: #ffefef;
+  --color-on-error-container: #510017;
+
+  --color-background: #f8f5ff;
+  --color-on-background: #2a2b51;
+  --color-surface: #f8f5ff;
+  --color-surface-bright: #f8f5ff;
+  --color-surface-dim: #d1d0ff;
+  --color-surface-container: #e8e6ff;
+  --color-surface-container-low: #f2efff;
+  --color-surface-container-high: #e1e0ff;
+  --color-surface-container-highest: #dbd9ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-variant: #dbd9ff;
+  --color-surface-tint: #004be3;
+  --color-on-surface: #2a2b51;
+  --color-on-surface-variant: #575881;
+
+  --color-outline: #72739e;
+  --color-outline-variant: #a9a9d7;
+  --color-inverse-surface: #08082f;
+  --color-inverse-on-surface: #9999c6;
+
+  --color-petrol-blue: #085F7F;
+  --color-petrol-dim: #064b65;
+  --color-warm-yellow: #FFD54F;
+  --color-warm-orange: #F4A261;
+
+  --radius-DEFAULT: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-full: 0px;
+  --radius-md: 0px;
+  --radius-sm: 0px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
 }

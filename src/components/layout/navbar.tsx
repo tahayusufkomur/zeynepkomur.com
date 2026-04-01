@@ -37,7 +37,7 @@ export function Navbar({ currentPage, onNewsletterClick }: NavbarProps) {
               href={link.href}
               className={
                 isActive
-                  ? "text-primary font-bold border-b-2 pb-1 lowercase font-body tracking-tight"
+                  ? "text-primary font-bold border-b-2 border-secondary-container pb-1 lowercase font-body tracking-tight"
                   : "text-on-surface-variant hover:text-primary transition-colors duration-300 lowercase font-body tracking-tight"
               }
               style={isActive ? { borderColor: "#ffd709" } : undefined}

@@ -1,0 +1,65 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - link "arada zeynep kömür" [ref=e3] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e4]:
+      - link "anasayfa" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - link "galeri" [ref=e6] [cursor=pointer]:
+        - /url: /galeri
+      - link "hakkında" [ref=e7] [cursor=pointer]:
+        - /url: /hakkinda
+      - link "iletişim" [ref=e8] [cursor=pointer]:
+        - /url: /iletisim
+    - button "KULÜBE KATIL" [ref=e10]
+  - banner [ref=e11]:
+    - generic [ref=e12]:
+      - heading "Sınırsız Sanat" [level=1] [ref=e13]
+      - img "img 8607" [ref=e17]
+    - generic [ref=e18]: modernizmin sınırlarını zorlayan, renk ve formun dansı.
+  - generic [ref=e19]:
+    - generic [ref=e20]:
+      - heading "yeni gelenler" [level=2] [ref=e22]
+      - paragraph [ref=e24]: son eklenen eserler ve koleksiyonlar. zeynep kömür seçkisiyle modern sanatın taze soluğu.
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - img "img 8607" [ref=e27]
+        - generic [ref=e28]:
+          - generic [ref=e29]: koleksiyon 01
+          - heading "img 8607" [level=3] [ref=e30]
+      - generic [ref=e31]:
+        - img "img 8608" [ref=e32]
+        - generic [ref=e33]: yeni
+      - generic [ref=e35]:
+        - generic [ref=e36]: brush
+        - paragraph [ref=e37]:
+          - text: sanatın dijital
+          - text: formunda kaybolun.
+      - generic [ref=e38]:
+        - img "img 8609" [ref=e39]
+        - generic [ref=e40]:
+          - heading "img 8609" [level=4] [ref=e41]
+          - paragraph [ref=e42]: "koleksiyon: BLUE VALENTINE 2"
+  - generic [ref=e44]:
+    - generic [ref=e45]: “
+    - blockquote [ref=e46]:
+      - paragraph [ref=e47]: Her çocuk bir sanatçıdır. Sorun, büyüdüğümüzde sanatçı kalmayı nasıl başaracağımızdır.
+      - generic [ref=e48]: — Pablo Picasso
+  - contentinfo [ref=e53]:
+    - generic [ref=e54]:
+      - generic [ref=e55]: arada by zeynep kömür
+      - paragraph [ref=e56]: sanatın herkes için erişilebilir olduğu, sınırların kalktığı dijital bir kürasyon alanı.
+    - generic [ref=e58]:
+      - link "telefon" [ref=e59] [cursor=pointer]:
+        - /url: tel:+900000000000
+      - link "e-posta" [ref=e60] [cursor=pointer]:
+        - /url: mailto:info@arada.art
+      - link "instagram" [ref=e61] [cursor=pointer]:
+        - /url: https://instagram.com
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - generic [ref=e64]: palette
+        - generic [ref=e65]: brush
+        - generic [ref=e66]: gallery_thumbnail
+      - generic [ref=e67]: © arada by zeynep kömür. all rights reserved.
+  - alert [ref=e68]
