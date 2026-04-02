@@ -18,6 +18,8 @@ ENV AUTH_SECRET=build-only-dummy
 ENV NEXTAUTH_SECRET=build-only-dummy
 ENV AUTH_TRUST_HOST=true
 
+# Create dummy DB with schema so prerendering pages can query it
+RUN mkdir -p data && npx drizzle-kit push
 RUN npm run build
 
 FROM base AS runner
