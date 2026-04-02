@@ -1,11 +1,14 @@
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { getNavbarContent } from "@/lib/get-navbar-content";
 
-export default function NotFound() {
+export default async function NotFound() {
+  const navItems = await getNavbarContent();
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar currentPage="" />
+      <Navbar currentPage="" navItems={navItems} />
 
       <main className="flex-1 flex flex-col items-center justify-center px-8 py-24 text-center">
         {/* 404 number */}

@@ -4,6 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { getFooterContent } from "@/lib/get-footer-content";
+import { getNavbarContent } from "@/lib/get-navbar-content";
 import { InlineEdit } from "@/components/admin/inline-edit";
 import { HakkindaPortrait, HakkindaSkills, HakkindaIdentityLabel } from "./hakkinda-client";
 
@@ -24,6 +25,7 @@ async function getContent(sectionKey: string, fallback: string) {
 
 export default async function HakkindaPage() {
   const footerContent = await getFooterContent();
+  const navItems = await getNavbarContent();
   const bio1 = await getContent(
     "bio_1",
     "ZEYN'in hikayesi, sanatı sadece seyredilen bir nesne değil, yaşanan bir mekan haline getirme arzusuyla başladı. İstanbul merkezli multidisipliner sanatçı Zeynep Kömür, modern brutalizm ile geleneksel dokuları harmanlayarak dijital kürasyonun sınırlarını yeniden tanımlıyor."
@@ -40,7 +42,7 @@ export default async function HakkindaPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <Navbar currentPage="hakkinda" />
+      <Navbar currentPage="hakkinda" navItems={navItems} />
 
       <main className="flex-1 pt-8 pb-24 px-8 md:px-12 max-w-7xl mx-auto w-full">
         {/* Two-column hero */}

@@ -4,6 +4,7 @@ import { and, asc, eq } from "drizzle-orm";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { getFooterContent } from "@/lib/get-footer-content";
+import { getNavbarContent } from "@/lib/get-navbar-content";
 import { GalleryClient } from "./gallery-client";
 import { InlineEdit } from "@/components/admin/inline-edit";
 
@@ -24,6 +25,7 @@ async function getContent(sectionKey: string, fallback: string) {
 
 export default async function GaleriPage() {
   const footerContent = await getFooterContent();
+  const navItems = await getNavbarContent();
   const allArtworks = await db
     .select()
     .from(artworks)
@@ -34,7 +36,7 @@ export default async function GaleriPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar currentPage="galeri" />
+      <Navbar currentPage="galeri" navItems={navItems} />
 
       <main className="flex-1 max-w-[1440px] mx-auto w-full px-8 pb-24">
         <GalleryClient artworks={allArtworks} />

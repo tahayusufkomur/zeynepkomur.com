@@ -7,6 +7,9 @@ import { InlineEdit } from "@/components/admin/inline-edit";
 import { Footer } from "@/components/layout/footer";
 import { HomeClient } from "./home-client";
 import { getFooterContent } from "@/lib/get-footer-content";
+import { getNavbarContent } from "@/lib/get-navbar-content";
+import { HomeArtworkOverlay } from "./home-artwork-overlay";
+import type { Artwork } from "@/components/artwork/artwork-card";
 
 type ContentMap = Record<string, string>;
 
@@ -23,6 +26,7 @@ const defaults: ContentMap = {
 
 export default async function HomePage() {
   const footerContent = await getFooterContent();
+  const navItems = await getNavbarContent();
 
   // Fetch page content
   const rows = await db
@@ -36,14 +40,14 @@ export default async function HomePage() {
   }
 
   // Fetch latest artworks for bento grid
-  const latestArtworks = await db
+  const latestArtworks = (await db
     .select()
     .from(artworks)
     .orderBy(desc(artworks.createdAt))
-    .limit(3);
+    .limit(3)) as Artwork[];
 
   return (
-    <HomeClient>
+    <HomeClient navItems={navItems}>
       {/* Hero Section */}
       <header className="relative min-h-[921px] flex flex-col items-center justify-center bg-white px-6 py-20 overflow-hidden">
         <div className="max-w-5xl w-full text-center z-10">
@@ -55,7 +59,7 @@ export default async function HomePage() {
             className="text-6xl md:text-9xl font-light text-on-surface tracking-tighter mb-16 lowercase"
           />
 
-          <div className="relative w-full aspect-square md:aspect-[21/9] bg-surface-container-low group">
+          <HomeArtworkOverlay artwork={latestArtworks[0] ?? null} className="relative w-full aspect-square md:aspect-[21/9] bg-surface-container-low group">
             {/* Decorative accents */}
             <div
               className="absolute -top-8 -left-8 w-32 h-32 z-0"
@@ -79,7 +83,7 @@ export default async function HomePage() {
                 </span>
               </div>
             )}
-          </div>
+          </HomeArtworkOverlay>
         </div>
 
         <InlineEdit
@@ -118,7 +122,7 @@ export default async function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-10 h-auto md:h-[1100px]">
           {/* Large Card */}
-          <div className="md:col-span-2 md:row-span-2 relative group overflow-hidden bg-surface-container shadow-sm hover:shadow-xl transition-shadow duration-500">
+          <HomeArtworkOverlay artwork={latestArtworks[0] ?? null} className="md:col-span-2 md:row-span-2 relative group overflow-hidden bg-surface-container shadow-sm hover:shadow-xl transition-shadow duration-500">
             {latestArtworks[0] ? (
               <Image
                 src={latestArtworks[0].imagePath}
@@ -141,10 +145,10 @@ export default async function HomePage() {
                 {latestArtworks[0]?.title ?? "geometrinin sessizliği"}
               </h3>
             </div>
-          </div>
+          </HomeArtworkOverlay>
 
           {/* Vertical Card */}
-          <div className="md:col-span-1 md:row-span-1 relative group overflow-hidden bg-surface-container-low">
+          <HomeArtworkOverlay artwork={latestArtworks[1] ?? null} className="md:col-span-1 md:row-span-1 relative group overflow-hidden bg-surface-container-low">
             {latestArtworks[1] ? (
               <Image
                 src={latestArtworks[1].imagePath}
@@ -162,7 +166,7 @@ export default async function HomePage() {
             <div className="absolute top-0 left-0 bg-secondary px-6 py-2 text-xs font-bold text-on-secondary-container tracking-wider uppercase">
               yeni
             </div>
-          </div>
+          </HomeArtworkOverlay>
 
           {/* Pink Highlight Square */}
           <div className="md:col-span-1 md:row-span-1 bg-highlight-pink relative flex items-center justify-center p-12">
@@ -180,7 +184,7 @@ export default async function HomePage() {
           </div>
 
           {/* Bottom Card */}
-          <div className="md:col-span-2 md:row-span-1 relative group overflow-hidden bg-surface-container-highest">
+          <HomeArtworkOverlay artwork={latestArtworks[2] ?? null} className="md:col-span-2 md:row-span-1 relative group overflow-hidden bg-surface-container-highest">
             {latestArtworks[2] ? (
               <Image
                 src={latestArtworks[2].imagePath}
@@ -204,7 +208,7 @@ export default async function HomePage() {
                   "süreçten sonuca, her fırça darbesinin bir hikayesi var."}
               </p>
             </div>
-          </div>
+          </HomeArtworkOverlay>
         </div>
       </section>
 

@@ -44,6 +44,11 @@ const defaults = [
   { pageSlug: "footer", sectionKey: "phone_label", content: "telefon" },
   { pageSlug: "footer", sectionKey: "email_label", content: "e-posta" },
   { pageSlug: "footer", sectionKey: "instagram_label", content: "instagram" },
+  { pageSlug: "footer", sectionKey: "brand", content: "by zeynep kömür" },
+  { pageSlug: "footer", sectionKey: "copyright", content: "by zeynep kömür. all rights reserved." },
+  { pageSlug: "footer", sectionKey: "copyright_yellow", content: "by zeynep kömür. sade ama vurucu." },
+  { pageSlug: "footer", sectionKey: "phone", content: "+900000000000" },
+  { pageSlug: "footer", sectionKey: "instagram_url", content: "https://instagram.com" },
 ];
 
 export async function seedPageContent() {

@@ -10,6 +10,17 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 
 export type UploadCategory = "artworks" | "forms" | "pages";
 
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/\.[^.]+$/, "") // remove extension
+    .replace(/[^a-z0-9ğüşıöçə\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim()
+    .slice(0, 60);
+}
+
 export async function processUpload(
   file: File,
   category: UploadCategory
@@ -27,7 +38,9 @@ export async function processUpload(
     await mkdir(dir, { recursive: true });
   }
 
-  const id = uuidv4();
+  const baseName = slugify(file.name) || "upload";
+  const short = uuidv4().slice(0, 6);
+  const id = `${baseName}-${short}`;
   const buffer = Buffer.from(await file.arrayBuffer());
 
   // Save original as backup

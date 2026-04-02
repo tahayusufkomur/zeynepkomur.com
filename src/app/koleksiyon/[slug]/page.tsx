@@ -9,6 +9,7 @@ import { TemplateGrid } from "@/components/collection/template-grid";
 import { TemplateShowcase } from "@/components/collection/template-showcase";
 import { TemplateChallenge } from "@/components/collection/template-challenge";
 import { getFooterContent } from "@/lib/get-footer-content";
+import { getNavbarContent } from "@/lib/get-navbar-content";
 import type { Artwork } from "@/components/artwork/artwork-card";
 
 type Props = {
@@ -54,6 +55,7 @@ export default async function KoleksiyonPage({ params }: Props) {
   }
 
   const footerContent = await getFooterContent();
+  const navItems = await getNavbarContent();
 
   let metadata: Record<string, string> = {};
   try {
@@ -64,7 +66,7 @@ export default async function KoleksiyonPage({ params }: Props) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar currentPage="galeri" />
+      <Navbar currentPage="galeri" navItems={navItems} />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-8 pb-24">
         {collection.templateType === "grid" && (

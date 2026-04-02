@@ -2,21 +2,48 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useAdmin } from "@/hooks/use-admin";
+import { InlineEdit } from "@/components/admin/inline-edit";
+import { showToast } from "@/components/admin/toast";
+import type { NavItem } from "@/lib/get-navbar-content";
 
 type NavbarProps = {
   currentPage: string;
   onNewsletterClick?: () => void;
+  navItems?: NavItem[];
 };
 
-const navLinks = [
-  { href: "/", label: "anasayfa", page: "anasayfa" },
-  { href: "/galeri", label: "galeri", page: "galeri" },
-  { href: "/hakkinda", label: "hakkında", page: "hakkinda" },
-  { href: "/iletisim", label: "iletişim", page: "iletisim" },
+const DEFAULT_ITEMS: NavItem[] = [
+  { key: "anasayfa", href: "/", label: "anasayfa", page: "anasayfa", hidden: false },
+  { key: "galeri", href: "/galeri", label: "galeri", page: "galeri", hidden: false },
+  { key: "hakkinda", href: "/hakkinda", label: "hakkında", page: "hakkinda", hidden: false },
+  { key: "iletisim", href: "/iletisim", label: "iletişim", page: "iletisim", hidden: false },
 ];
 
-export function Navbar({ currentPage, onNewsletterClick }: NavbarProps) {
+export function Navbar({ currentPage, onNewsletterClick, navItems }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { isEditing } = useAdmin();
+  const items = navItems ?? DEFAULT_ITEMS;
+
+  const visibleItems = isEditing ? items : items.filter((i) => !i.hidden);
+
+  async function toggleHidden(key: string, currentlyHidden: boolean) {
+    try {
+      await fetch("/api/content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pageSlug: "navbar",
+          sectionKey: `${key}_hidden`,
+          content: currentlyHidden ? "false" : "true",
+        }),
+      });
+      showToast(currentlyHidden ? "link gösterildi" : "link gizlendi", "success");
+      window.location.reload();
+    } catch {
+      showToast("kaydedilemedi", "error");
+    }
+  }
 
   return (
     <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center w-full px-8 py-6 max-w-full">
@@ -29,21 +56,51 @@ export function Navbar({ currentPage, onNewsletterClick }: NavbarProps) {
 
       {/* Desktop nav links */}
       <div className="hidden md:flex items-center space-x-12">
-        {navLinks.map((link) => {
+        {visibleItems.map((link) => {
           const isActive = currentPage === link.page;
           return (
-            <Link
-              key={link.page}
-              href={link.href}
-              className={
-                isActive
-                  ? "text-primary font-bold border-b-2 border-secondary-container pb-1 lowercase font-body tracking-tight"
-                  : "text-on-surface-variant hover:text-primary transition-colors duration-300 lowercase font-body tracking-tight"
-              }
-              style={isActive ? { borderColor: "#ffd709" } : undefined}
-            >
-              {link.label}
-            </Link>
+            <div key={link.key} className="flex items-center gap-1 relative">
+              {isEditing ? (
+                <InlineEdit
+                  pageSlug="navbar"
+                  sectionKey={`${link.key}_label`}
+                  initialContent={link.label}
+                  as="span"
+                  className={
+                    isActive
+                      ? "text-primary font-bold border-b-2 border-secondary-container pb-1 lowercase font-body tracking-tight"
+                      : "text-on-surface-variant hover:text-primary transition-colors duration-300 lowercase font-body tracking-tight"
+                  }
+                />
+              ) : (
+                <Link
+                  href={link.href}
+                  className={
+                    isActive
+                      ? "text-primary font-bold border-b-2 border-secondary-container pb-1 lowercase font-body tracking-tight"
+                      : "text-on-surface-variant hover:text-primary transition-colors duration-300 lowercase font-body tracking-tight"
+                  }
+                  style={isActive ? { borderColor: "#ffd709" } : undefined}
+                >
+                  {link.label}
+                </Link>
+              )}
+              {isEditing && (
+                <button
+                  onClick={() => toggleHidden(link.key, link.hidden)}
+                  className={`ml-1 w-5 h-5 flex items-center justify-center rounded-full text-xs transition-colors ${
+                    link.hidden
+                      ? "bg-error/20 text-error"
+                      : "bg-primary/10 text-primary"
+                  }`}
+                  title={link.hidden ? "göster" : "gizle"}
+                >
+                  <span className="material-symbols-outlined text-xs">
+                    {link.hidden ? "visibility_off" : "visibility"}
+                  </span>
+                </button>
+              )}
+            </div>
           );
         })}
       </div>
@@ -71,7 +128,7 @@ export function Navbar({ currentPage, onNewsletterClick }: NavbarProps) {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-md border-t border-surface-container flex flex-col items-center gap-6 py-8 md:hidden z-50">
-          {navLinks.map((link) => {
+          {visibleItems.map((link) => {
             const isActive = currentPage === link.page;
             return (
               <Link
