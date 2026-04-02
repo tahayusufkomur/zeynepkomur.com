@@ -11,6 +11,13 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Provide dummy env vars so Next.js build succeeds (real values come at runtime)
+ENV DATABASE_URL=file:./data/build.db
+ENV AUTH_SECRET=build-only-dummy
+ENV NEXTAUTH_SECRET=build-only-dummy
+ENV AUTH_TRUST_HOST=true
+
 RUN npm run build
 
 FROM base AS runner
