@@ -41,7 +41,8 @@ COPY scripts/entrypoint.sh /app/scripts/entrypoint.sh
 RUN chmod +x /app/scripts/backup.sh /app/scripts/entrypoint.sh
 RUN echo "0 3 * * * /bin/sh /app/scripts/backup.sh >> /proc/1/fd/1 2>&1" > /etc/crontabs/nextjs
 
-RUN chown -R nextjs:nodejs data public/uploads
+RUN mkdir -p .next/cache
+RUN chown -R nextjs:nodejs data public/uploads .next/cache
 
 USER nextjs
 
