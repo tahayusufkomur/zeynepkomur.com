@@ -99,4 +99,5 @@ deploy-backup: ## Download latest database backup from production
 	@echo "Backup downloaded to ./data/"
 
 deploy-seed: ## Seed artworks on production
-	@ssh $(PROD_HOST) "cd $(PROD_DIR) && $(PROD_COMPOSE) exec -T app npx tsx scripts/seed-artworks.ts"
+	@scp scripts/artwork-seed.json scripts/seed-artworks.ts $(PROD_HOST):$(PROD_DIR)/
+	@ssh $(PROD_HOST) "cd $(PROD_DIR) && docker cp artwork-seed.json \$$($(PROD_COMPOSE) ps -q app):/app/scripts/artwork-seed.json && docker cp seed-artworks.ts \$$($(PROD_COMPOSE) ps -q app):/app/scripts/seed-artworks.ts && $(PROD_COMPOSE) exec -T app npx tsx scripts/seed-artworks.ts && rm -f artwork-seed.json seed-artworks.ts"

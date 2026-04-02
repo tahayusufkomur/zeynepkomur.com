@@ -58,6 +58,14 @@ export function migrate() {
       PRIMARY KEY (collection_id, artwork_id)
     );
 
+    CREATE TABLE IF NOT EXISTS artwork_images (
+      id TEXT PRIMARY KEY,
+      artwork_id TEXT NOT NULL REFERENCES artworks(id) ON DELETE CASCADE,
+      image_path TEXT NOT NULL,
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
     CREATE TABLE IF NOT EXISTS form_submissions (
       id TEXT PRIMARY KEY,
       form_type TEXT NOT NULL CHECK(form_type IN ('contact', 'custom_request', 'question')),
