@@ -75,3 +75,16 @@ export const adminUsers = sqliteTable("admin_users", {
   email: text("email").notNull(),
   passwordHash: text("password_hash").notNull(),
 });
+
+export const emailCampaigns = sqliteTable("email_campaigns", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  templateId: text("template_id").notNull(),
+  templateName: text("template_name").notNull(),
+  subject: text("subject").notNull(),
+  recipientCount: integer("recipient_count").notNull(),
+  successCount: integer("success_count").notNull().default(0),
+  recipients: text("recipients").notNull(),
+  status: text("status", { enum: ["sending", "sent", "partial", "failed"] }).notNull().default("sending"),
+  sentAt: text("sent_at"),
+  createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
+});

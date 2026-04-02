@@ -86,6 +86,19 @@ export function migrate() {
       email TEXT NOT NULL,
       password_hash TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS email_campaigns (
+      id TEXT PRIMARY KEY,
+      template_id TEXT NOT NULL,
+      template_name TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      recipient_count INTEGER NOT NULL,
+      success_count INTEGER NOT NULL DEFAULT 0,
+      recipients TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'sending' CHECK(status IN ('sending', 'sent', 'partial', 'failed')),
+      sent_at TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
   `);
 
   sqlite.close();
