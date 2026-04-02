@@ -31,8 +31,8 @@ export default async function IletisimPage() {
   const section2Title = await getContent("section_2_title", "bana her şeyi sorabilirsin.");
   const studioAddress = await getContent("studio_address", "moda, kadıköy, istanbul, türkiye");
   const studioHours = await getContent("studio_hours", "pazartesi - cumartesi, 10:00 - 19:00");
-  const studioEmail = await getContent("studio_email", "merhaba@zeyn.art");
-  const studioSocial = await getContent("studio_social", "@zeyn.art");
+  const studioEmail = await getContent("studio_email", "merhaba@zeynepkomur.com");
+  const studioSocial = await getContent("studio_social", "@zeynepkomur.com");
 
   return (
     <div className="min-h-screen flex flex-col bg-white">

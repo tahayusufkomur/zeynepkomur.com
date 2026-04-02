@@ -47,6 +47,14 @@ export const collectionArtworks = sqliteTable("collection_artworks", {
   primaryKey({ columns: [table.collectionId, table.artworkId] }),
 ]);
 
+export const artworkImages = sqliteTable("artwork_images", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  artworkId: text("artwork_id").notNull().references(() => artworks.id, { onDelete: "cascade" }),
+  imagePath: text("image_path").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
+});
+
 export const formSubmissions = sqliteTable("form_submissions", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   formType: text("form_type", { enum: ["contact", "custom_request", "question"] }).notNull(),

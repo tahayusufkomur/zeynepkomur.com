@@ -16,6 +16,7 @@ type ArtworkSeed = {
   title: string;
   collection: string;
   imagePath: string;
+  additionalImages?: string[];
   originalFile: string;
 };
 
@@ -24,16 +25,23 @@ function main() {
   const db = new Database(DB_PATH);
   db.pragma("foreign_keys = ON");
 
-  const insert = db.prepare(`
+  const insertArtwork = db.prepare(`
     INSERT OR IGNORE INTO artworks (id, title, description, category, dimensions, technique, year, availability, image_path, sort_order, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
   `);
 
-  let count = 0;
+  const insertImage = db.prepare(`
+    INSERT OR IGNORE INTO artwork_images (id, artwork_id, image_path, sort_order, created_at)
+    VALUES (?, ?, ?, ?, datetime('now'))
+  `);
+
+  let artworkCount = 0;
+  let imageCount = 0;
+
   for (let i = 0; i < artworks.length; i++) {
     const a = artworks[i];
     const id = crypto.randomUUID();
-    insert.run(
+    insertArtwork.run(
       id,
       a.title,
       `koleksiyon: ${a.collection}`,
@@ -45,10 +53,19 @@ function main() {
       a.imagePath,
       i               // sort order
     );
-    count++;
+    artworkCount++;
+
+    // Insert additional images
+    if (a.additionalImages) {
+      for (let j = 0; j < a.additionalImages.length; j++) {
+        const imgId = crypto.randomUUID();
+        insertImage.run(imgId, id, a.additionalImages[j], j);
+        imageCount++;
+      }
+    }
   }
 
-  console.log(`✓ Seeded ${count} artworks into database`);
+  console.log(`✓ Seeded ${artworkCount} artworks with ${imageCount} additional images into database`);
   db.close();
 }
 

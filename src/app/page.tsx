@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { pageContent, artworks } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
+import { attachImages } from "@/lib/db/artwork-with-images";
 import Image from "next/image";
 import { InlineEdit } from "@/components/admin/inline-edit";
 import { Footer } from "@/components/layout/footer";
@@ -40,11 +41,12 @@ export default async function HomePage() {
   }
 
   // Fetch latest artworks for bento grid
-  const latestArtworks = (await db
+  const rawLatest = await db
     .select()
     .from(artworks)
     .orderBy(desc(artworks.createdAt))
-    .limit(3)) as Artwork[];
+    .limit(3);
+  const latestArtworks = await attachImages(rawLatest) as Artwork[];
 
   return (
     <HomeClient navItems={navItems}>

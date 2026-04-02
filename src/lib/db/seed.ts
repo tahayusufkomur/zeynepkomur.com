@@ -23,8 +23,8 @@ const defaults = [
   { pageSlug: "contact", sectionKey: "section_2_title", content: "bana her şeyi sorabilirsin." },
   { pageSlug: "contact", sectionKey: "studio_address", content: "moda, kadıköy, istanbul, türkiye" },
   { pageSlug: "contact", sectionKey: "studio_hours", content: "pazartesi - cumartesi, 10:00 - 19:00" },
-  { pageSlug: "contact", sectionKey: "studio_email", content: "merhaba@zeyn.art" },
-  { pageSlug: "contact", sectionKey: "studio_social", content: "@zeyn.art" },
+  { pageSlug: "contact", sectionKey: "studio_email", content: "merhaba@zeynepkomur.com" },
+  { pageSlug: "contact", sectionKey: "studio_social", content: "@zeynepkomur.com" },
   // Galeri
   { pageSlug: "galeri", sectionKey: "quote_text", content: "sanat, görünmeyeni görünür kılmaktır. her fırça darbesi, bir hikayenin başlangıcıdır." },
   { pageSlug: "galeri", sectionKey: "quote_attribution", content: "zeynep kömür" },
@@ -40,7 +40,7 @@ const defaults = [
   { pageSlug: "ozel-istek", sectionKey: "art_image", content: "/images/custom-request-art.jpg" },
   // Footer
   { pageSlug: "footer", sectionKey: "tagline", content: "sanatın herkes için erişilebilir olduğu, sınırların kalktığı dijital bir kürasyon alanı." },
-  { pageSlug: "footer", sectionKey: "email", content: "info@zeyn.art" },
+  { pageSlug: "footer", sectionKey: "email", content: "info@zeynepkomur.com" },
   { pageSlug: "footer", sectionKey: "phone_label", content: "telefon" },
   { pageSlug: "footer", sectionKey: "email_label", content: "e-posta" },
   { pageSlug: "footer", sectionKey: "instagram_label", content: "instagram" },

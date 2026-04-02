@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db/index";
 import { collections, collectionArtworks, artworks } from "@/lib/db/schema";
 import { eq, inArray, asc } from "drizzle-orm";
+import { attachImages } from "@/lib/db/artwork-with-images";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { TemplateGrid } from "@/components/collection/template-grid";
@@ -43,11 +44,12 @@ export default async function KoleksiyonPage({ params }: Props) {
       .select()
       .from(artworks)
       .where(inArray(artworks.id, artworkIds));
+    const artworkRowsWithImages = await attachImages(artworkRows);
 
     // Preserve order from collectionItems + attach dayNumber
     collectionArtworkList = collectionItems
       .map((ci) => {
-        const artwork = artworkRows.find((a) => a.id === ci.artworkId);
+        const artwork = artworkRowsWithImages.find((a) => a.id === ci.artworkId);
         if (!artwork) return null;
         return { ...artwork, dayNumber: ci.dayNumber };
       })

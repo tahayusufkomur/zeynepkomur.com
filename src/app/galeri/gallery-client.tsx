@@ -6,6 +6,7 @@ import { CategoryBar } from "@/components/artwork/category-bar";
 import { FilterBar } from "@/components/artwork/filter-bar";
 import { ArtworkGrid } from "@/components/artwork/artwork-grid";
 import { ArtworkFormModal } from "@/components/artwork/artwork-form-modal";
+import { ArtworkLightbox } from "@/components/artwork/artwork-lightbox";
 import type { Artwork } from "@/components/artwork/artwork-card";
 
 type GalleryClientProps = {
@@ -15,6 +16,7 @@ type GalleryClientProps = {
 export function GalleryClient({ artworks }: GalleryClientProps) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [editingArtwork, setEditingArtwork] = useState<Artwork | null>(null);
+  const [viewingArtwork, setViewingArtwork] = useState<Artwork | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const router = useRouter();
 
@@ -37,6 +39,7 @@ export function GalleryClient({ artworks }: GalleryClientProps) {
       <FilterBar totalCount={filtered.length} />
       <ArtworkGrid
         artworks={filtered}
+        onClick={(artwork) => setViewingArtwork(artwork)}
         onEdit={(artwork) => setEditingArtwork(artwork)}
         onDelete={async (id) => {
           if (!confirm("Bu eseri silmek istediğinize emin misiniz?")) return;
@@ -45,6 +48,13 @@ export function GalleryClient({ artworks }: GalleryClientProps) {
         }}
         onAddNew={() => setShowCreate(true)}
       />
+
+      {viewingArtwork && (
+        <ArtworkLightbox
+          artwork={viewingArtwork}
+          onClose={() => setViewingArtwork(null)}
+        />
+      )}
 
       {editingArtwork && (
         <ArtworkFormModal

@@ -3,6 +3,12 @@
 import { useAdmin } from "@/hooks/use-admin";
 import Image from "next/image";
 
+export type ArtworkImage = {
+  id: string;
+  imagePath: string;
+  sortOrder: number;
+};
+
 export type Artwork = {
   id: string;
   title: string;
@@ -13,16 +19,18 @@ export type Artwork = {
   year: number | null;
   availability: "available" | "sold" | "contact";
   imagePath: string;
+  images: ArtworkImage[];
   sortOrder: number;
 };
 
 type ArtworkCardProps = {
   artwork: Artwork;
+  onClick?: (artwork: Artwork) => void;
   onEdit?: (artwork: Artwork) => void;
   onDelete?: (id: string) => void;
 };
 
-export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
+export function ArtworkCard({ artwork, onClick, onEdit, onDelete }: ArtworkCardProps) {
   const { isEditing } = useAdmin();
 
   return (
@@ -41,9 +49,21 @@ export function ArtworkCard({ artwork, onEdit, onDelete }: ArtworkCardProps) {
           <span className="material-symbols-outlined text-sm">delete</span>
         </button>
       )}
+      {artwork.images.length > 0 && (
+        <div className="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-sm text-on-surface px-2 py-1 flex items-center gap-1 shadow-sm">
+          <span className="material-symbols-outlined text-xs">photo_library</span>
+          <span className="text-[10px] font-bold">{artwork.images.length + 1}</span>
+        </div>
+      )}
       <div
-        className={`aspect-[3/4] overflow-hidden bg-surface-container ${isEditing && onEdit ? "cursor-pointer" : ""}`}
-        onClick={() => isEditing && onEdit?.(artwork)}
+        className={`aspect-[3/4] overflow-hidden bg-surface-container ${isEditing && onEdit ? "cursor-pointer" : onClick ? "cursor-pointer" : ""}`}
+        onClick={() => {
+          if (isEditing && onEdit) {
+            onEdit(artwork);
+          } else if (onClick) {
+            onClick(artwork);
+          }
+        }}
       >
         <img
           src={artwork.imagePath}

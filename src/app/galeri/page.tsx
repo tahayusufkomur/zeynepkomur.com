@@ -1,6 +1,7 @@
 import { db } from "@/lib/db/index";
 import { artworks, pageContent } from "@/lib/db/schema";
 import { and, asc, eq } from "drizzle-orm";
+import { attachImages } from "@/lib/db/artwork-with-images";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { getFooterContent } from "@/lib/get-footer-content";
@@ -26,10 +27,11 @@ async function getContent(sectionKey: string, fallback: string) {
 export default async function GaleriPage() {
   const footerContent = await getFooterContent();
   const navItems = await getNavbarContent();
-  const allArtworks = await db
+  const rawArtworks = await db
     .select()
     .from(artworks)
     .orderBy(asc(artworks.sortOrder));
+  const allArtworks = await attachImages(rawArtworks);
 
   const quoteText = await getContent("quote_text", "sanat, görünmeyeni görünür kılmaktır. her fırça darbesi, bir hikayenin başlangıcıdır.");
   const quoteAttribution = await getContent("quote_attribution", "zeynep kömür");

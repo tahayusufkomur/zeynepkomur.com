@@ -6,12 +6,13 @@ import Link from "next/link";
 
 type ArtworkGridProps = {
   artworks: Artwork[];
+  onClick?: (artwork: Artwork) => void;
   onEdit?: (artwork: Artwork) => void;
   onDelete?: (id: string) => void;
   onAddNew?: () => void;
 };
 
-export function ArtworkGrid({ artworks, onEdit, onDelete, onAddNew }: ArtworkGridProps) {
+export function ArtworkGrid({ artworks, onClick, onEdit, onDelete, onAddNew }: ArtworkGridProps) {
   const { isEditing } = useAdmin();
 
   return (
@@ -21,6 +22,7 @@ export function ArtworkGrid({ artworks, onEdit, onDelete, onAddNew }: ArtworkGri
           <ArtworkCard
             key={artwork.id}
             artwork={artwork}
+            onClick={onClick}
             onEdit={onEdit}
             onDelete={onDelete}
           />

@@ -13,7 +13,7 @@ const DEFAULTS: Record<string, string> = {
   brand: "by zeynep kömür",
   copyright: "by zeynep kömür. all rights reserved.",
   copyright_yellow: "by zeynep kömür. sade ama vurucu.",
-  email: "info@zeyn.art",
+  email: "info@zeynepkomur.com",
   phone: "+900000000000",
   phone_label: "telefon",
   email_label: "e-posta",

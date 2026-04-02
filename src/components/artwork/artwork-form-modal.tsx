@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { showToast } from "@/components/admin/toast";
-import type { Artwork } from "./artwork-card";
+import type { Artwork, ArtworkImage } from "./artwork-card";
 
 type ArtworkFormModalProps = {
   artwork?: Artwork | null;
@@ -19,30 +19,81 @@ export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModal
   const [year, setYear] = useState(artwork?.year?.toString() ?? "");
   const [availability, setAvailability] = useState<"available" | "sold" | "contact">(artwork?.availability ?? "available");
   const [imagePath, setImagePath] = useState(artwork?.imagePath ?? "");
+  const [additionalImages, setAdditionalImages] = useState<ArtworkImage[]>(artwork?.images ?? []);
   const [uploading, setUploading] = useState(false);
+  const [uploadingAdditional, setUploadingAdditional] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const additionalFileRef = useRef<HTMLInputElement>(null);
 
   const isEditing = !!artwork;
 
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  async function uploadFile(file: File): Promise<string | null> {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("category", "artworks");
+    const res = await fetch("/api/uploads", { method: "POST", body: formData });
+    if (!res.ok) return null;
+    const { path } = await res.json();
+    return path;
+  }
+
+  async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("category", "artworks");
-      const res = await fetch("/api/uploads", { method: "POST", body: formData });
-      if (!res.ok) throw new Error();
-      const { path } = await res.json();
+      const path = await uploadFile(file);
+      if (!path) throw new Error();
       setImagePath(path);
     } catch {
       showToast("görsel yüklenemedi", "error");
     } finally {
       setUploading(false);
     }
+  }
+
+  async function handleAdditionalUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploadingAdditional(true);
+    try {
+      const newImages: ArtworkImage[] = [];
+      for (const file of Array.from(files)) {
+        const path = await uploadFile(file);
+        if (path) {
+          newImages.push({
+            id: crypto.randomUUID(),
+            imagePath: path,
+            sortOrder: additionalImages.length + newImages.length,
+          });
+        }
+      }
+      setAdditionalImages((prev) => [...prev, ...newImages]);
+    } catch {
+      showToast("görseller yüklenemedi", "error");
+    } finally {
+      setUploadingAdditional(false);
+      if (additionalFileRef.current) additionalFileRef.current.value = "";
+    }
+  }
+
+  function removeAdditionalImage(index: number) {
+    setAdditionalImages((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function promoteTocover(index: number) {
+    const img = additionalImages[index];
+    const oldCover = imagePath;
+    setImagePath(img.imagePath);
+    setAdditionalImages((prev) => {
+      const next = prev.filter((_, i) => i !== index);
+      if (oldCover) {
+        next.unshift({ id: crypto.randomUUID(), imagePath: oldCover, sortOrder: 0 });
+      }
+      return next.map((item, i) => ({ ...item, sortOrder: i }));
+    });
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -62,6 +113,10 @@ export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModal
         year: year ? parseInt(year) : null,
         availability,
         imagePath,
+        images: additionalImages.map((img, i) => ({
+          imagePath: img.imagePath,
+          sortOrder: i,
+        })),
       };
       const url = isEditing ? `/api/artworks/${artwork.id}` : "/api/artworks";
       const method = isEditing ? "PUT" : "POST";
@@ -96,6 +151,8 @@ export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModal
     }
   }
 
+  const totalImages = (imagePath ? 1 : 0) + additionalImages.length;
+
   return (
     <div className="fixed inset-0 z-[300] flex items-center justify-center bg-on-surface/60 backdrop-blur-sm p-4">
       <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -109,10 +166,10 @@ export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModal
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-8">
-          {/* Image upload zone */}
+          {/* Cover image upload */}
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-widest text-primary mb-2">
-              Görsel
+              Kapak Görseli
             </label>
             <div
               className="relative flex flex-col items-center justify-center w-full h-48 bg-surface-container-low border-2 border-dashed border-outline-variant hover:border-primary transition-colors cursor-pointer overflow-hidden"
@@ -126,7 +183,7 @@ export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModal
                     {uploading ? "progress_activity" : "upload_file"}
                   </span>
                   <span className="text-xs text-on-surface-variant lowercase">
-                    görsel yüklemek için tıklayın
+                    kapak görseli yüklemek için tıklayın
                   </span>
                 </>
               )}
@@ -136,7 +193,65 @@ export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModal
                 </div>
               )}
             </div>
-            <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleImageUpload} />
+            <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleCoverUpload} />
+          </div>
+
+          {/* Additional images */}
+          <div>
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-primary mb-2">
+              Ek Görseller ({totalImages} görsel)
+            </label>
+            <div className="grid grid-cols-4 gap-3 mb-3">
+              {additionalImages.map((img, i) => (
+                <div key={img.id} className="relative group aspect-square bg-surface-container overflow-hidden">
+                  <img src={img.imagePath} alt={`Görsel ${i + 2}`} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100">
+                    <button
+                      type="button"
+                      onClick={() => promoteTocover(i)}
+                      className="bg-white text-primary w-7 h-7 flex items-center justify-center shadow-md"
+                      title="Kapak yap"
+                    >
+                      <span className="material-symbols-outlined text-sm">star</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeAdditionalImage(i)}
+                      className="bg-white text-error w-7 h-7 flex items-center justify-center shadow-md"
+                      title="Kaldır"
+                    >
+                      <span className="material-symbols-outlined text-sm">close</span>
+                    </button>
+                  </div>
+                  <div className="absolute bottom-1 left-1 bg-white/80 text-[9px] font-bold px-1 rounded">
+                    {i + 2}
+                  </div>
+                </div>
+              ))}
+
+              {/* Add more button */}
+              <div
+                className="aspect-square bg-surface-container-low border-2 border-dashed border-outline-variant hover:border-primary transition-colors cursor-pointer flex flex-col items-center justify-center"
+                onClick={() => additionalFileRef.current?.click()}
+              >
+                {uploadingAdditional ? (
+                  <span className="material-symbols-outlined text-primary text-2xl animate-spin">progress_activity</span>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-2xl text-outline-variant">add_photo_alternate</span>
+                    <span className="text-[9px] text-on-surface-variant mt-1">ekle</span>
+                  </>
+                )}
+              </div>
+            </div>
+            <input
+              ref={additionalFileRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              className="hidden"
+              onChange={handleAdditionalUpload}
+            />
           </div>
 
           {/* Title */}

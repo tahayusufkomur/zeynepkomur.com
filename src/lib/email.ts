@@ -11,7 +11,7 @@ type FormEmailData = {
 
 export async function sendFormNotification({ formType, data }: FormEmailData) {
   const to = process.env.NOTIFICATION_EMAIL;
-  const from = process.env.EMAIL_FROM || "noreply@zeyn.art";
+  const from = process.env.EMAIL_FROM || "noreply@zeynepkomur.com";
 
   if (!to) {
     console.warn("[email] NOTIFICATION_EMAIL not set, skipping");
