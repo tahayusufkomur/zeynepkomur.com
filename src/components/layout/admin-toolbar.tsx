@@ -123,6 +123,14 @@ export function AdminToolbar() {
               onClick={() => setOpen(false)}
               badge={unreadCount > 0 ? unreadCount : undefined}
             />
+            <NavItem
+              href="/admin/members"
+              icon="group"
+              label="kulüp üyeleri"
+              current={pathname}
+              onClick={() => setOpen(false)}
+              badge={subscriberCount > 0 ? subscriberCount : undefined}
+            />
             <button
               onClick={() => {
                 setOpen(false);
