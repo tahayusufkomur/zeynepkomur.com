@@ -58,7 +58,7 @@ function validateFormData(formType: string, data: Record<string, string>): strin
   switch (formType) {
     case "contact":
       if (!data.name || data.name.length > 100) return "İsim gerekli (max 100 karakter)";
-      if (!data.description || data.description.length > 2000) return "Açıklama gerekli (max 2000 karakter)";
+      if (!data.message || data.message.length > 2000) return "Mesaj gerekli (max 2000 karakter)";
       break;
     case "question":
       if (!data.question || data.question.length > 2000) return "Soru gerekli (max 2000 karakter)";

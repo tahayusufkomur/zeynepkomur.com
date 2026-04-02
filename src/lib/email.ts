@@ -32,7 +32,7 @@ function formatEmail(formType: string, data: Record<string, string>) {
     case "contact":
       return {
         subject: `[zeyn] Yeni iletişim: ${data.name || ""}`,
-        body: `İsim: ${data.name}\nE-posta: ${data.email}\n\nMesaj:\n${data.description}`,
+        body: `İsim: ${data.name}\nE-posta: ${data.email}\n\nMesaj:\n${data.message}`,
       };
     case "question":
       return {
