@@ -27,6 +27,8 @@ export async function POST(request: NextRequest) {
   const authError = await requireAdmin();
   if (authError) return authError;
 
+  let campaignId: string | undefined;
+
   try {
     const { templateId, templateName, subject, recipients } = await request.json();
 
@@ -45,7 +47,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create campaign record
-    const campaignId = crypto.randomUUID();
+    campaignId = crypto.randomUUID();
     await db.insert(emailCampaigns).values({
       id: campaignId,
       templateId,
@@ -109,6 +111,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ campaignId, status, successCount: totalSuccess });
   } catch (error) {
     console.error("[email/send] Error:", error);
+    if (campaignId) {
+      await db
+        .update(emailCampaigns)
+        .set({
+          status: "failed",
+          sentAt: new Date().toISOString().replace("T", " ").slice(0, 19),
+        })
+        .where(eq(emailCampaigns.id, campaignId));
+    }
     return NextResponse.json(
       { error: "Kampanya gönderilemedi" },
       { status: 500 }
