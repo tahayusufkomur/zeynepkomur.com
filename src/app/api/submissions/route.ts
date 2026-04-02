@@ -65,7 +65,7 @@ function validateFormData(formType: string, data: Record<string, string>): strin
       break;
     case "custom_request":
       if (!data.firstName || data.firstName.length > 50) return "Ad gerekli (max 50 karakter)";
-      if (!data.lastName || data.lastName.length > 50) return "Soyad gerekli (max 50 karakter)";
+      if (data.lastName && data.lastName.length > 50) return "Soyad max 50 karakter";
       if (!data.description || data.description.length > 2000) return "Açıklama gerekli (max 2000 karakter)";
       break;
   }
