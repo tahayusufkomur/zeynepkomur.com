@@ -98,6 +98,12 @@ deploy-backup: ## Download latest database backup from production
 	@scp $(PROD_HOST):$(PROD_DIR)/data/backups/$$(ssh $(PROD_HOST) "ls -t $(PROD_DIR)/data/backups/ | head -1") ./data/
 	@echo "Backup downloaded to ./data/"
 
+deploy-uploads: ## Upload local images to production
+	@UPLOAD_VOL=$$(ssh $(PROD_HOST) "docker inspect \$$(cd $(PROD_DIR) && $(PROD_COMPOSE) ps -q app) --format='{{range .Mounts}}{{if eq .Destination \"/app/public/uploads\"}}{{.Source}}{{end}}{{end}}'") && \
+	ssh $(PROD_HOST) "mkdir -p $$UPLOAD_VOL/artworks $$UPLOAD_VOL/pages $$UPLOAD_VOL/forms" && \
+	rsync -avz --progress public/uploads/ $(PROD_HOST):$$UPLOAD_VOL/ && \
+	echo "Uploads synced to production."
+
 deploy-seed: ## Seed artworks on production
 	@scp scripts/artwork-seed.json scripts/seed-artworks.ts $(PROD_HOST):$(PROD_DIR)/
 	@ssh $(PROD_HOST) "cd $(PROD_DIR) && docker cp artwork-seed.json \$$($(PROD_COMPOSE) ps -q app):/app/scripts/artwork-seed.json && docker cp seed-artworks.ts \$$($(PROD_COMPOSE) ps -q app):/app/scripts/seed-artworks.ts && $(PROD_COMPOSE) exec -T app npx tsx scripts/seed-artworks.ts && rm -f artwork-seed.json seed-artworks.ts"
