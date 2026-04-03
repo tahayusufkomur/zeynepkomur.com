@@ -11,6 +11,7 @@ export const artworks = sqliteTable("artworks", {
   year: integer("year"),
   availability: text("availability", { enum: ["available", "sold", "contact"] }).notNull().default("available"),
   imagePath: text("image_path").notNull(),
+  slug: text("slug").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
   updatedAt: text("updated_at").notNull().default(sql`(datetime('now'))`),

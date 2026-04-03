@@ -1,6 +1,7 @@
 import Database from "better-sqlite3";
 import { existsSync, mkdirSync } from "fs";
 import { dirname } from "path";
+import { slugifyTitle } from "../utils";
 
 export function migrate() {
   const dbPath = process.env.DATABASE_URL?.replace("file:", "") || "./data/zeyneple.db";
@@ -100,6 +101,27 @@ export function migrate() {
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
   `);
+
+  // Add slug column to artworks (idempotent)
+  const columns = sqlite.pragma("table_info(artworks)") as { name: string }[];
+  if (!columns.some((c) => c.name === "slug")) {
+    sqlite.exec(`ALTER TABLE artworks ADD COLUMN slug TEXT DEFAULT ''`);
+    const rows = sqlite.prepare("SELECT id, title FROM artworks").all() as { id: string; title: string }[];
+    const update = sqlite.prepare("UPDATE artworks SET slug = ? WHERE id = ?");
+    const seen = new Set<string>();
+    for (const row of rows) {
+      let slug = slugifyTitle(row.title);
+      if (!slug) slug = "eser";
+      const base = slug;
+      let i = 1;
+      while (seen.has(slug)) {
+        slug = `${base}-${i++}`;
+      }
+      seen.add(slug);
+      update.run(slug, row.id);
+    }
+    sqlite.exec(`CREATE UNIQUE INDEX IF NOT EXISTS artworks_slug_unique ON artworks(slug)`);
+  }
 
   sqlite.close();
   console.log("[migrate] Tables created/verified");
