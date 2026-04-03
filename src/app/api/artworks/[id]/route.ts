@@ -3,9 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { artworks, artworkImages } from "@/lib/db/schema";
 import { requireAdmin } from "@/lib/auth-guard";
-import { eq, sql } from "drizzle-orm";
+import { eq, ne, sql } from "drizzle-orm";
 import { deleteUpload } from "@/lib/upload";
 import { attachImages } from "@/lib/db/artwork-with-images";
+import { slugifyTitle } from "@/lib/utils";
 
 export async function GET(
   request: NextRequest,
@@ -30,6 +31,21 @@ export async function PUT(
 
   // Separate images from artwork fields
   const { images, ...artworkFields } = body;
+
+  if (artworkFields.title) {
+    let slug = slugifyTitle(artworkFields.title) || "eser";
+    const existing = await db
+      .select({ slug: artworks.slug })
+      .from(artworks)
+      .where(ne(artworks.id, id));
+    const taken = new Set(existing.map((r) => r.slug));
+    const base = slug;
+    let i = 1;
+    while (taken.has(slug)) {
+      slug = `${base}-${i++}`;
+    }
+    artworkFields.slug = slug;
+  }
 
   const [updated] = await db
     .update(artworks)

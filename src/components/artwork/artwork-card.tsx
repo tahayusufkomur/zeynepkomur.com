@@ -19,6 +19,7 @@ export type Artwork = {
   year: number | null;
   availability: "available" | "sold" | "contact";
   imagePath: string;
+  slug: string;
   images: ArtworkImage[];
   sortOrder: number;
 };
