@@ -2,10 +2,12 @@
 
 import { useAdmin } from "@/hooks/use-admin";
 import { useEditMode } from "@/providers/edit-mode-provider";
+import { ArtworkReorderModal } from "@/components/admin/artwork-reorder-modal";
 import { CollectionManagerModal } from "@/components/admin/collection-manager-modal";
+import type { Artwork } from "@/components/artwork/artwork-card";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function AdminToolbar() {
@@ -16,6 +18,9 @@ export function AdminToolbar() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [subscriberCount, setSubscriberCount] = useState(0);
   const [showCollections, setShowCollections] = useState(false);
+  const [showReorder, setShowReorder] = useState(false);
+  const [reorderArtworks, setReorderArtworks] = useState<Artwork[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -148,6 +153,19 @@ export function AdminToolbar() {
               <span className="material-symbols-outlined text-lg">collections_bookmark</span>
               <span className="flex-1 text-left">koleksiyonlar</span>
             </button>
+            <button
+              onClick={async () => {
+                setOpen(false);
+                const res = await fetch("/api/artworks");
+                const data = await res.json();
+                setReorderArtworks(data);
+                setShowReorder(true);
+              }}
+              className="flex items-center gap-3 px-3 py-2.5 text-sm lowercase tracking-tight text-inverse-on-surface/80 hover:bg-white/10 hover:text-white transition-colors w-full"
+            >
+              <span className="material-symbols-outlined text-lg">swap_vert</span>
+              <span className="flex-1 text-left">eserleri sırala</span>
+            </button>
           </div>
 
           {/* Stats */}
@@ -189,6 +207,16 @@ export function AdminToolbar() {
       </div>
       {showCollections && (
         <CollectionManagerModal onClose={() => setShowCollections(false)} />
+      )}
+      {showReorder && (
+        <ArtworkReorderModal
+          artworks={reorderArtworks}
+          onClose={() => setShowReorder(false)}
+          onSaved={() => {
+            setShowReorder(false);
+            router.refresh();
+          }}
+        />
       )}
     </>
   );
