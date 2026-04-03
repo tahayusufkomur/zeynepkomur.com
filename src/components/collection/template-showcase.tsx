@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Artwork } from "@/components/artwork/artwork-card";
 
 type TemplateShowcaseProps = {
@@ -32,7 +33,7 @@ export function TemplateShowcase({ artworks, title, description }: TemplateShowc
         <>
           {/* Hero artwork */}
           {hero && (
-            <div className="mb-10 relative group overflow-hidden">
+            <Link href={`/eser/${hero.slug}`} className="block mb-10 relative group overflow-hidden">
               <img
                 src={hero.imagePath}
                 alt={hero.title}
@@ -44,15 +45,16 @@ export function TemplateShowcase({ artworks, title, description }: TemplateShowc
                 </h2>
                 <p className="text-white/80 lowercase">{hero.description}</p>
               </div>
-            </div>
+            </Link>
           )}
 
           {/* Bento grid for remaining artworks */}
           {rest.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {rest.map((artwork, i) => (
-                <div
+                <Link
                   key={artwork.id}
+                  href={`/eser/${artwork.slug}`}
                   className={`group overflow-hidden bg-surface-container relative ${
                     i === 0 ? "col-span-2 row-span-2" : ""
                   }`}
@@ -67,7 +69,7 @@ export function TemplateShowcase({ artworks, title, description }: TemplateShowc
                       {artwork.title}
                     </span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}

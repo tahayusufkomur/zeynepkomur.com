@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Artwork } from "@/components/artwork/artwork-card";
 
 type ChallengeArtwork = Artwork & { dayNumber?: number | null };
@@ -78,33 +79,35 @@ export function TemplateChallenge({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16 pb-24">
             {artworks.map((artwork) => (
               <article key={artwork.id} className="group">
-                <div className="aspect-square bg-surface-container-low overflow-hidden relative">
-                  <img
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    src={artwork.imagePath}
-                    alt={artwork.title}
-                  />
-                  {artwork.dayNumber != null && (
-                    <div className="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 text-xs font-bold">
-                      #{artwork.dayNumber}
-                    </div>
-                  )}
-                </div>
-                <div className="mt-4 flex flex-col">
-                  <h3 className="text-lg font-bold lowercase tracking-tight text-on-surface">
-                    {artwork.title}
-                  </h3>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="font-extrabold text-primary text-[10px] uppercase tracking-wider">
-                      fiyat için iletişime geçin
-                    </span>
-                    {artwork.availability === "sold" && (
-                      <div className="text-on-surface-variant text-xs font-bold uppercase tracking-widest italic">
-                        tükendi
+                <Link href={`/eser/${artwork.slug}`} className="block">
+                  <div className="aspect-square bg-surface-container-low overflow-hidden relative">
+                    <img
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      src={artwork.imagePath}
+                      alt={artwork.title}
+                    />
+                    {artwork.dayNumber != null && (
+                      <div className="absolute top-4 right-4 bg-primary text-on-primary px-3 py-1 text-xs font-bold">
+                        #{artwork.dayNumber}
                       </div>
                     )}
                   </div>
-                </div>
+                  <div className="mt-4 flex flex-col">
+                    <h3 className="text-lg font-bold lowercase tracking-tight text-on-surface">
+                      {artwork.title}
+                    </h3>
+                    <div className="flex justify-between items-center mt-2">
+                      <span className="font-extrabold text-primary text-[10px] uppercase tracking-wider">
+                        fiyat için iletişime geçin
+                      </span>
+                      {artwork.availability === "sold" && (
+                        <div className="text-on-surface-variant text-xs font-bold uppercase tracking-widest italic">
+                          tükendi
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Link>
               </article>
             ))}
           </div>

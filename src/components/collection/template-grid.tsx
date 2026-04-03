@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Artwork } from "@/components/artwork/artwork-card";
 
 type TemplateGridProps = {
@@ -28,8 +29,9 @@ export function TemplateGrid({ artworks, title, description }: TemplateGridProps
       ) : (
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
           {artworks.map((artwork) => (
-            <div
+            <Link
               key={artwork.id}
+              href={`/eser/${artwork.slug}`}
               className="group flex flex-col bg-background border border-surface-container-highest/50"
             >
               <div className="aspect-[3/4] overflow-hidden bg-surface-container">
@@ -50,7 +52,7 @@ export function TemplateGrid({ artworks, title, description }: TemplateGridProps
                   fiyat için iletişime geçin
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </section>
       )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useAdmin } from "@/hooks/use-admin";
+import Link from "next/link";
 import Image from "next/image";
 
 export type ArtworkImage = {
@@ -34,8 +35,13 @@ type ArtworkCardProps = {
 export function ArtworkCard({ artwork, onClick, onEdit, onDelete }: ArtworkCardProps) {
   const { isEditing } = useAdmin();
 
-  return (
-    <div className="group flex flex-col bg-background border border-surface-container-highest/50 relative">
+  const cardClassName = "group flex flex-col bg-background border border-surface-container-highest/50 relative";
+
+  const content = (
+    <>
+      {isEditing && onEdit && (
+        <div className="absolute inset-0 z-30 cursor-pointer" onClick={() => onEdit(artwork)} />
+      )}
       {isEditing && onDelete && (
         <button
           onClick={(e) => {
@@ -56,16 +62,7 @@ export function ArtworkCard({ artwork, onClick, onEdit, onDelete }: ArtworkCardP
           <span className="text-[10px] font-bold">{artwork.images.length + 1}</span>
         </div>
       )}
-      <div
-        className={`aspect-[3/4] overflow-hidden bg-surface-container ${isEditing && onEdit ? "cursor-pointer" : onClick ? "cursor-pointer" : ""}`}
-        onClick={() => {
-          if (isEditing && onEdit) {
-            onEdit(artwork);
-          } else if (onClick) {
-            onClick(artwork);
-          }
-        }}
-      >
+      <div className="aspect-[3/4] overflow-hidden bg-surface-container">
         <img
           src={artwork.imagePath}
           alt={artwork.title}
@@ -83,6 +80,12 @@ export function ArtworkCard({ artwork, onClick, onEdit, onDelete }: ArtworkCardP
           fiyat için iletişime geçin
         </span>
       </div>
-    </div>
+    </>
   );
+
+  if (isEditing) {
+    return <div className={cardClassName}>{content}</div>;
+  }
+
+  return <Link href={`/eser/${artwork.slug}`} className={cardClassName}>{content}</Link>;
 }

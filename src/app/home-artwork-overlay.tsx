@@ -5,6 +5,7 @@ import { useAdmin } from "@/hooks/use-admin";
 import { ArtworkFormModal } from "@/components/artwork/artwork-form-modal";
 import type { Artwork } from "@/components/artwork/artwork-card";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type HomeArtworkOverlayProps = {
   artwork: Artwork | null;
@@ -18,6 +19,9 @@ export function HomeArtworkOverlay({ artwork, children, className = "" }: HomeAr
   const router = useRouter();
 
   if (!isEditing || !artwork) {
+    if (artwork) {
+      return <Link href={`/eser/${artwork.slug}`} className={className}>{children}</Link>;
+    }
     return <div className={className}>{children}</div>;
   }
 

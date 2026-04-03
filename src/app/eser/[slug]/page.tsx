@@ -90,7 +90,7 @@ export default async function EserPage({ params }: Props) {
         </nav>
         <ArtworkDetailClient artwork={artwork} related={related} />
       </main>
-      <Footer content={footerContent} />
+      <Footer variant="white" content={footerContent} />
     </div>
   );
 }

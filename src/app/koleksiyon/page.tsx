@@ -83,7 +83,7 @@ export default async function KoleksiyonlarPage() {
           </div>
         )}
       </main>
-      <Footer content={footerContent} />
+      <Footer variant="white" content={footerContent} />
     </div>
   );
 }
