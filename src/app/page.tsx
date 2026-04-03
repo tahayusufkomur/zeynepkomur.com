@@ -75,6 +75,7 @@ export default async function HomePage() {
                 src={latestArtworks[0].imagePath}
                 alt={latestArtworks[0].title}
                 fill
+                unoptimized
                 className="relative z-10 object-cover grayscale-[0.1] hover:grayscale-0 transition-all duration-1000 cursor-crosshair shadow-2xl"
                 priority
               />
@@ -130,6 +131,7 @@ export default async function HomePage() {
                 src={latestArtworks[0].imagePath}
                 alt={latestArtworks[0].title}
                 fill
+                unoptimized
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
               />
             ) : (
@@ -156,6 +158,7 @@ export default async function HomePage() {
                 src={latestArtworks[1].imagePath}
                 alt={latestArtworks[1].title}
                 fill
+                unoptimized
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
               />
             ) : (
@@ -192,6 +195,7 @@ export default async function HomePage() {
                 src={latestArtworks[2].imagePath}
                 alt={latestArtworks[2].title}
                 fill
+                unoptimized
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
               />
             ) : (

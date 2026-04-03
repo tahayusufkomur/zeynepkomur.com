@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git init:*)"
+      "Bash(git init:*)",
+      "Bash(npx drizzle-kit:*)",
+      "WebFetch(domain:mailcraft.contentor.app)",
+      "Bash(node -e \"console.log\\(require\\('next/package.json'\\).version\\)\")"
     ]
   }
 }
