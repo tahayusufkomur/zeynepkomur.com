@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { pageContent, artworks } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and, inArray } from "drizzle-orm";
 import { attachImages } from "@/lib/db/artwork-with-images";
 import Image from "next/image";
 import { InlineEdit } from "@/components/admin/inline-edit";
@@ -40,13 +40,28 @@ export default async function HomePage() {
     content[row.sectionKey] = row.content;
   }
 
-  // Fetch latest artworks for bento grid
-  const rawLatest = await db
+  // Fetch hero artworks (from admin selection or fallback to latest 3)
+  let latestArtworks: Artwork[] = [];
+  const [heroRow] = await db
     .select()
-    .from(artworks)
-    .orderBy(desc(artworks.createdAt))
-    .limit(3);
-  const latestArtworks = await attachImages(rawLatest) as Artwork[];
+    .from(pageContent)
+    .where(and(eq(pageContent.pageSlug, "home"), eq(pageContent.sectionKey, "hero_artworks")));
+
+  if (heroRow) {
+    try {
+      const heroIds: string[] = JSON.parse(heroRow.content);
+      if (heroIds.length === 3) {
+        const rows2 = await db.select().from(artworks).where(inArray(artworks.id, heroIds));
+        const withImages = (await attachImages(rows2)) as Artwork[];
+        latestArtworks = heroIds.map((id) => withImages.find((a) => a.id === id)).filter(Boolean) as Artwork[];
+      }
+    } catch {}
+  }
+
+  if (latestArtworks.length < 3) {
+    const rawLatest = await db.select().from(artworks).orderBy(desc(artworks.createdAt)).limit(3);
+    latestArtworks = (await attachImages(rawLatest)) as Artwork[];
+  }
 
   return (
     <HomeClient navItems={navItems}>

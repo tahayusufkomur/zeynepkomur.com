@@ -3,9 +3,10 @@
 import { useAdmin } from "@/hooks/use-admin";
 import { useEditMode } from "@/providers/edit-mode-provider";
 import { CollectionManagerModal } from "@/components/admin/collection-manager-modal";
+import { HeroPickerModal } from "@/components/admin/hero-picker-modal";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function AdminToolbar() {
@@ -16,6 +17,8 @@ export function AdminToolbar() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [subscriberCount, setSubscriberCount] = useState(0);
   const [showCollections, setShowCollections] = useState(false);
+  const [showHeroPicker, setShowHeroPicker] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -148,6 +151,16 @@ export function AdminToolbar() {
               <span className="material-symbols-outlined text-lg">collections_bookmark</span>
               <span className="flex-1 text-left">koleksiyonlar</span>
             </button>
+            <button
+              onClick={() => {
+                setOpen(false);
+                setShowHeroPicker(true);
+              }}
+              className="flex items-center gap-3 px-3 py-2.5 text-sm lowercase tracking-tight text-inverse-on-surface/80 hover:bg-white/10 hover:text-white transition-colors w-full"
+            >
+              <span className="material-symbols-outlined text-lg">home</span>
+              <span className="flex-1 text-left">ana sayfa görselleri</span>
+            </button>
           </div>
 
           {/* Stats */}
@@ -189,6 +202,15 @@ export function AdminToolbar() {
       </div>
       {showCollections && (
         <CollectionManagerModal onClose={() => setShowCollections(false)} />
+      )}
+      {showHeroPicker && (
+        <HeroPickerModal
+          onClose={() => setShowHeroPicker(false)}
+          onSaved={() => {
+            setShowHeroPicker(false);
+            router.refresh();
+          }}
+        />
       )}
     </>
   );
