@@ -59,12 +59,15 @@ export async function POST(request: NextRequest) {
     });
 
     // Render template once with placeholder values
+    console.log("[email/send] Rendering template:", templateId);
     const { html: baseHtml } = await renderTemplate(templateId, {
       name: "{{name}}",
       email: "{{email}}",
     });
+    console.log("[email/send] Rendered HTML length:", baseHtml?.length || 0);
 
     const from = process.env.EMAIL_FROM || "noreply@zeynepkomur.com";
+    console.log("[email/send] From:", from, "Recipients:", recipients.length);
     const resend = getResend();
     let totalSuccess = 0;
 
@@ -82,7 +85,8 @@ export async function POST(request: NextRequest) {
       }));
 
       try {
-        await resend.batch.send(emails);
+        const result = await resend.batch.send(emails);
+        console.log(`[email/send] Batch ${i / BATCH_SIZE + 1} result:`, JSON.stringify(result));
         totalSuccess += batch.length;
       } catch (error) {
         console.error(`[email/send] Batch ${i / BATCH_SIZE + 1} failed:`, error);

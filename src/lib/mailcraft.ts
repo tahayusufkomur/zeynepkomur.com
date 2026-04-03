@@ -31,12 +31,24 @@ export type MailcraftTemplate = {
   json_data?: unknown;
 };
 
+function extractArray(data: unknown): MailcraftTemplate[] {
+  if (Array.isArray(data)) return data;
+  if (data && typeof data === "object") {
+    // Handle wrapped responses like { results: [...] } or { templates: [...] }
+    for (const val of Object.values(data)) {
+      if (Array.isArray(val)) return val;
+    }
+  }
+  return [];
+}
+
 export async function listTemplates() {
   const res = await fetch(apiUrl("/templates"), { headers: headers() });
   if (!res.ok) {
     throw new Error(`Mailcraft templates error: ${res.status}`);
   }
-  return res.json() as Promise<MailcraftTemplate[]>;
+  const data = await res.json();
+  return extractArray(data);
 }
 
 export async function listGallery() {
@@ -44,7 +56,58 @@ export async function listGallery() {
   if (!res.ok) {
     throw new Error(`Mailcraft gallery error: ${res.status}`);
   }
-  return res.json() as Promise<MailcraftTemplate[]>;
+  const data = await res.json();
+  return extractArray(data);
+}
+
+export async function getTemplate(id: string) {
+  const res = await fetch(apiUrl(`/templates/${id}`), { headers: headers() });
+  if (!res.ok) {
+    throw new Error(`Mailcraft get template error: ${res.status}`);
+  }
+  return res.json() as Promise<MailcraftTemplate>;
+}
+
+export async function getTemplatePreview(id: string) {
+  const res = await fetch(apiUrl(`/templates/${id}/preview`), { headers: headers() });
+  if (!res.ok) {
+    throw new Error(`Mailcraft preview error: ${res.status}`);
+  }
+  return res.json() as Promise<{ html: string }>;
+}
+
+export async function createTemplate(name: string, json_data: unknown) {
+  const res = await fetch(apiUrl("/templates"), {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify({ name, json_data }),
+  });
+  if (!res.ok) {
+    throw new Error(`Mailcraft create template error: ${res.status}`);
+  }
+  return res.json() as Promise<MailcraftTemplate>;
+}
+
+export async function updateTemplate(id: string, name: string, json_data: unknown) {
+  const res = await fetch(apiUrl(`/templates/${id}`), {
+    method: "PUT",
+    headers: headers(),
+    body: JSON.stringify({ name, json_data }),
+  });
+  if (!res.ok) {
+    throw new Error(`Mailcraft update template error: ${res.status}`);
+  }
+  return res.json() as Promise<MailcraftTemplate>;
+}
+
+export async function deleteTemplate(id: string) {
+  const res = await fetch(apiUrl(`/templates/${id}`), {
+    method: "DELETE",
+    headers: headers(),
+  });
+  if (!res.ok) {
+    throw new Error(`Mailcraft delete template error: ${res.status}`);
+  }
 }
 
 export async function renderTemplate(templateId: string, variables: Record<string, string>) {

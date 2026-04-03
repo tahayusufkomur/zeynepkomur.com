@@ -11,7 +11,7 @@ type Template = {
   id: string;
   name: string;
   category: string | null;
-  isGallery: boolean;
+  json_data: unknown | null;
 };
 
 type Campaign = {
@@ -99,11 +99,13 @@ export function EmailClient({
       </div>
 
       {/* Content */}
-      <div className="max-w-5xl mx-auto px-8 py-8">
+      <div className="px-8 py-8">
         {activeTab === "new" ? (
           <NewEmailWizard members={members} onSent={() => setActiveTab("history")} />
         ) : (
-          <SendHistory />
+          <div className="max-w-5xl mx-auto">
+            <SendHistory />
+          </div>
         )}
       </div>
     </div>
@@ -184,15 +186,16 @@ function NewEmailWizard({
           selectedTemplate={selectedTemplate}
           subject={subject}
           onSubjectChange={setSubject}
-          onSaved={(id, name) => {
-            setTemplateId(id);
-            setTemplateName(name);
+          onContinue={() => {
+            setTemplateId(selectedTemplate?.id || "");
+            setTemplateName(selectedTemplate?.name || "Untitled");
             setStep(3);
           }}
           onBack={() => setStep(1)}
         />
       )}
       {step === 3 && (
+        <div className="max-w-5xl mx-auto">
         <RecipientsStep
           members={members}
           selectedMembers={selectedMembers}
@@ -200,8 +203,10 @@ function NewEmailWizard({
           onContinue={() => setStep(4)}
           onBack={() => setStep(2)}
         />
+        </div>
       )}
       {step === 4 && (
+        <div className="max-w-5xl mx-auto">
         <ReviewStep
           templateName={templateName}
           subject={subject}
@@ -238,6 +243,7 @@ function NewEmailWizard({
           onBack={() => setStep(3)}
           onGoToHistory={onSent}
         />
+        </div>
       )}
     </div>
   );
@@ -250,7 +256,8 @@ function TemplateStep({ onSelect }: { onSelect: (t: Template) => void }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  const fetchTemplates = useCallback(() => {
+    setLoading(true);
     fetch("/api/email/templates")
       .then((r) => {
         if (!r.ok) throw new Error("Şablonlar yüklenemedi");
@@ -260,6 +267,10 @@ function TemplateStep({ onSelect }: { onSelect: (t: Template) => void }) {
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    fetchTemplates();
+  }, [fetchTemplates]);
 
   if (loading) {
     return (
@@ -275,14 +286,11 @@ function TemplateStep({ onSelect }: { onSelect: (t: Template) => void }) {
     );
   }
 
-  const saved = templates.filter((t) => !t.isGallery);
-  const gallery = templates.filter((t) => t.isGallery);
-
   return (
-    <div className="space-y-8">
+    <div className="max-w-5xl mx-auto space-y-8">
       {/* Start blank */}
       <button
-        onClick={() => onSelect({ id: "", name: "Boş Şablon", category: null, isGallery: false })}
+        onClick={() => onSelect({ id: "", name: "Boş Şablon", category: null, json_data: null })}
         className="w-full border-2 border-dashed border-surface-container hover:border-primary py-12 text-on-surface-variant hover:text-primary transition-colors lowercase font-bold tracking-tight"
       >
         <span className="material-symbols-outlined text-3xl block mb-2">add</span>
@@ -290,28 +298,14 @@ function TemplateStep({ onSelect }: { onSelect: (t: Template) => void }) {
       </button>
 
       {/* Saved templates */}
-      {saved.length > 0 && (
+      {templates.length > 0 && (
         <div>
           <h3 className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">
             kayıtlı şablonlar
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {saved.map((t) => (
-              <TemplateCard key={t.id} template={t} onSelect={onSelect} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Gallery */}
-      {gallery.length > 0 && (
-        <div>
-          <h3 className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">
-            galeri
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {gallery.map((t) => (
-              <TemplateCard key={t.id} template={t} onSelect={onSelect} />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {templates.map((t) => (
+              <TemplateCard key={t.id} template={t} onSelect={onSelect} onDeleted={fetchTemplates} />
             ))}
           </div>
         </div>
@@ -329,27 +323,63 @@ function TemplateStep({ onSelect }: { onSelect: (t: Template) => void }) {
 function TemplateCard({
   template,
   onSelect,
+  onDeleted,
 }: {
   template: Template;
   onSelect: (t: Template) => void;
+  onDeleted: () => void;
 }) {
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Bu şablonu silmek istediğinize emin misiniz?")) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/email/templates/${template.id}`, { method: "DELETE" });
+      if (res.ok) onDeleted();
+    } catch {
+      // silent
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return (
-    <button
-      onClick={() => onSelect(template)}
-      className="border border-surface-container hover:border-primary bg-white p-6 text-left transition-colors group"
-    >
-      <span className="material-symbols-outlined text-3xl text-on-surface-variant/30 group-hover:text-primary/50 transition-colors block mb-3">
-        mail
-      </span>
-      <p className="text-sm font-semibold text-on-surface lowercase truncate">
-        {template.name}
-      </p>
-      {template.category && (
-        <p className="text-xs text-on-surface-variant mt-1 lowercase">
-          {template.category}
-        </p>
-      )}
-    </button>
+    <div className="border border-surface-container hover:border-primary bg-white text-left transition-colors group overflow-hidden relative">
+      <button onClick={() => onSelect(template)} className="w-full text-left">
+        {/* Thumbnail preview */}
+        <div className="w-full h-48 bg-surface-container-low overflow-hidden">
+          <iframe
+            src={`/api/email/templates/${template.id}/preview`}
+            className="w-[600px] h-[800px] origin-top-left pointer-events-none"
+            style={{ transform: "scale(0.28)" }}
+            tabIndex={-1}
+            aria-hidden
+          />
+        </div>
+        <div className="p-4">
+          <p className="text-sm font-semibold text-on-surface lowercase truncate">
+            {template.name}
+          </p>
+          {template.category && (
+            <p className="text-xs text-on-surface-variant mt-1 lowercase">
+              {template.category}
+            </p>
+          )}
+        </div>
+      </button>
+      {/* Delete button */}
+      <button
+        onClick={handleDelete}
+        disabled={deleting}
+        className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-white/80 hover:bg-error hover:text-on-error text-on-surface-variant transition-colors opacity-0 group-hover:opacity-100"
+      >
+        <span className="material-symbols-outlined text-base">
+          {deleting ? "hourglass_empty" : "delete"}
+        </span>
+      </button>
+    </div>
   );
 }
 
@@ -359,24 +389,53 @@ function EditorStep({
   selectedTemplate,
   subject,
   onSubjectChange,
-  onSaved,
+  onContinue,
   onBack,
 }: {
   selectedTemplate: Template | null;
   subject: string;
   onSubjectChange: (s: string) => void;
-  onSaved: (templateId: string, templateName: string) => void;
+  onContinue: () => void;
   onBack: () => void;
 }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [templateJson, setTemplateJson] = useState<unknown | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [saving, setSaving] = useState(false);
 
-  const fetchSession = useCallback(async () => {
+  // Fetch session token and full template data in parallel
+  useEffect(() => {
     setLoading(true);
     setError("");
+
+    const promises: Promise<void>[] = [
+      fetch("/api/email/session")
+        .then((r) => {
+          if (!r.ok) throw new Error("Oturum oluşturulamadı");
+          return r.json();
+        })
+        .then((data) => setSessionToken(data.sessionToken)),
+    ];
+
+    // Fetch full template json_data if we have an ID
+    if (selectedTemplate?.id) {
+      promises.push(
+        fetch(`/api/email/templates/${selectedTemplate.id}`)
+          .then((r) => {
+            if (!r.ok) throw new Error("Şablon yüklenemedi");
+            return r.json();
+          })
+          .then((data) => setTemplateJson(data.json_data || null))
+      );
+    }
+
+    Promise.all(promises)
+      .catch((e: any) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, [selectedTemplate?.id]);
+
+  const fetchSession = useCallback(async () => {
     try {
       const res = await fetch("/api/email/session");
       if (!res.ok) throw new Error("Oturum oluşturulamadı");
@@ -384,41 +443,25 @@ function EditorStep({
       setSessionToken(data.sessionToken);
     } catch (e: any) {
       setError(e.message);
-    } finally {
-      setLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    fetchSession();
-  }, [fetchSession]);
 
   useEffect(() => {
     const handle = (e: MessageEvent) => {
       if (e.data?.source !== "mailcraft") return;
 
-      if (e.data.type === "MAILCRAFT_TEMPLATE_SAVED") {
-        setSaving(false);
-        onSaved(
-          e.data.payload.templateId,
-          e.data.payload.templateName
-        );
-      }
-
       if (e.data.type === "MAILCRAFT_ERROR") {
-        setSaving(false);
         if (e.data.payload?.code === "AUTH_ERROR") {
           fetchSession();
         }
       }
 
-      if (e.data.type === "MAILCRAFT_READY" && selectedTemplate?.id) {
-        // Load the selected template into the builder
+      if (e.data.type === "MAILCRAFT_READY" && templateJson) {
         iframeRef.current?.contentWindow?.postMessage(
           {
             source: "mailcraft-host",
             type: "MAILCRAFT_LOAD_TEMPLATE",
-            payload: { templateId: selectedTemplate.id },
+            payload: { json: templateJson },
           },
           MAILCRAFT_ORIGIN
         );
@@ -427,15 +470,7 @@ function EditorStep({
 
     window.addEventListener("message", handle);
     return () => window.removeEventListener("message", handle);
-  }, [selectedTemplate, onSaved, fetchSession]);
-
-  const requestSave = () => {
-    setSaving(true);
-    iframeRef.current?.contentWindow?.postMessage(
-      { source: "mailcraft-host", type: "MAILCRAFT_REQUEST_SAVE" },
-      MAILCRAFT_ORIGIN
-    );
-  };
+  }, [templateJson, fetchSession]);
 
   if (loading) {
     return (
@@ -495,11 +530,11 @@ function EditorStep({
           geri
         </button>
         <button
-          onClick={requestSave}
-          disabled={saving || !subject.trim()}
+          onClick={onContinue}
+          disabled={!subject.trim()}
           className="bg-primary text-on-primary px-6 py-3 text-sm font-bold lowercase tracking-tight hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {saving ? "kaydediliyor..." : "kaydet ve devam"}
+          devam
         </button>
       </div>
     </div>

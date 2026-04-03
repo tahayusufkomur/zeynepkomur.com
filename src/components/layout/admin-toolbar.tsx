@@ -131,6 +131,13 @@ export function AdminToolbar() {
               onClick={() => setOpen(false)}
               badge={subscriberCount > 0 ? subscriberCount : undefined}
             />
+            <NavItem
+              href="/admin/email"
+              icon="campaign"
+              label="e-posta"
+              current={pathname}
+              onClick={() => setOpen(false)}
+            />
             <button
               onClick={() => {
                 setOpen(false);

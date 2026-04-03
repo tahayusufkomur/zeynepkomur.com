@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "dev:reset": "rm -f ./data/zeyneple.db && npx tsx scripts/dev-reset.ts && npm run dev"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.1",

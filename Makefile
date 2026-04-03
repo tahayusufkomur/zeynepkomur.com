@@ -1,4 +1,4 @@
-.PHONY: help dev build run stop reset logs convert-media seed-artworks \
+.PHONY: help dev dev-reset build run stop reset logs convert-media seed-artworks \
        infra-init infra-plan infra-apply infra-destroy infra-output \
        setup deploy deploy-logs deploy-shell deploy-env deploy-backup
 
@@ -8,6 +8,11 @@ help: ## Show all available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 dev: ## Run Next.js dev server
+	npm run dev
+
+dev-reset: ## Reset dev database and restart dev server
+	rm -f data/zeyneple.db
+	npx tsx scripts/dev-reset.ts
 	npm run dev
 
 build: ## Build Docker images (local)
