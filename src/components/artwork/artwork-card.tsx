@@ -23,6 +23,7 @@ export type Artwork = {
   slug: string;
   images: ArtworkImage[];
   sortOrder: number;
+  collectionIds?: string[];
 };
 
 type ArtworkCardProps = {

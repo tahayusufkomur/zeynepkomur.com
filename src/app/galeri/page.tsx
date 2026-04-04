@@ -1,5 +1,5 @@
 import { db } from "@/lib/db/index";
-import { artworks, pageContent } from "@/lib/db/schema";
+import { artworks, pageContent, collections, collectionArtworks } from "@/lib/db/schema";
 import { and, asc, eq } from "drizzle-orm";
 import { attachImages } from "@/lib/db/artwork-with-images";
 import { Navbar } from "@/components/layout/navbar";
@@ -8,6 +8,7 @@ import { getFooterContent } from "@/lib/get-footer-content";
 import { getNavbarContent } from "@/lib/get-navbar-content";
 import { GalleryClient } from "./gallery-client";
 import { InlineEdit } from "@/components/admin/inline-edit";
+import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,37 @@ export default async function GaleriPage() {
     .orderBy(asc(artworks.sortOrder));
   const allArtworks = await attachImages(rawArtworks);
 
+  // Fetch distinct dimensions for filter
+  const distinctDimensions = [...new Set(
+    rawArtworks.map((a) => a.dimensions).filter((d) => d && d.trim() !== "")
+  )].sort();
+
+  // Fetch published collections for filter
+  const publishedCollections = await db
+    .select({ id: collections.id, title: collections.title })
+    .from(collections)
+    .where(eq(collections.isPublished, true));
+
+  // Attach collectionIds to each artwork
+  const allCollectionLinks = await db
+    .select({
+      artworkId: collectionArtworks.artworkId,
+      collectionId: collectionArtworks.collectionId,
+    })
+    .from(collectionArtworks);
+
+  const collectionMap = new Map<string, string[]>();
+  for (const link of allCollectionLinks) {
+    const ids = collectionMap.get(link.artworkId) ?? [];
+    ids.push(link.collectionId);
+    collectionMap.set(link.artworkId, ids);
+  }
+
+  const artworksWithCollections = allArtworks.map((a) => ({
+    ...a,
+    collectionIds: collectionMap.get(a.id) ?? [],
+  }));
+
   const quoteText = await getContent("quote_text", "sanat, görünmeyeni görünür kılmaktır. her fırça darbesi, bir hikayenin başlangıcıdır.");
   const quoteAttribution = await getContent("quote_attribution", "zeynep kömür");
 
@@ -41,7 +73,13 @@ export default async function GaleriPage() {
       <Navbar currentPage="galeri" navItems={navItems} />
 
       <main className="flex-1 max-w-[1440px] mx-auto w-full px-8 pb-24">
-        <GalleryClient artworks={allArtworks} />
+        <Suspense fallback={null}>
+          <GalleryClient
+            artworks={artworksWithCollections}
+            dimensions={distinctDimensions}
+            collections={publishedCollections}
+          />
+        </Suspense>
 
         {/* Artist Quote Section */}
         <section className="mt-32 relative flex justify-center py-24 bg-surface-container-low">
