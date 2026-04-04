@@ -42,7 +42,8 @@ yarn-error.log*
 next-env.d.ts
 
 # project specific
-data/
+/data/
+!src/data/
 /public/uploads/
 .env
 .env.prod
