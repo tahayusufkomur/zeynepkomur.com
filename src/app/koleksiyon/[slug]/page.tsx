@@ -12,6 +12,7 @@ import { TemplateChallenge } from "@/components/collection/template-challenge";
 import { getFooterContent } from "@/lib/get-footer-content";
 import { getNavbarContent } from "@/lib/get-navbar-content";
 import type { Artwork } from "@/components/artwork/artwork-card";
+import { getEntityFonts, buildGoogleFontsUrl } from "@/lib/fonts";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -56,6 +57,11 @@ export default async function KoleksiyonPage({ params }: Props) {
       .filter(Boolean) as (Artwork & { dayNumber?: number | null })[];
   }
 
+  // Preload custom fonts
+  const artworkIds = collectionArtworkList.map((a) => a.id);
+  const entityFonts = await getEntityFonts("artwork", artworkIds);
+  const fontsUrl = buildGoogleFontsUrl(entityFonts);
+
   const footerContent = await getFooterContent();
   const navItems = await getNavbarContent();
 
@@ -68,6 +74,7 @@ export default async function KoleksiyonPage({ params }: Props) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      {fontsUrl && <link rel="stylesheet" href={fontsUrl} />}
       <Navbar currentPage="galeri" navItems={navItems} />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-8 pb-24">

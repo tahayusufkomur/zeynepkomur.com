@@ -12,6 +12,7 @@ import { getNavbarContent } from "@/lib/get-navbar-content";
 import type { Artwork } from "@/components/artwork/artwork-card";
 import type { Metadata } from "next";
 import { ArtworkDetailClient } from "./artwork-detail-client";
+import { getEntityFonts, buildGoogleFontsUrl } from "@/lib/fonts";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -74,11 +75,17 @@ export default async function EserPage({ params }: Props) {
   }
   related = related.slice(0, 4);
 
+  // Preload custom fonts for artwork text
+  const allArtworkIds = [artwork.id, ...related.map((r) => r.id)];
+  const entityFonts = await getEntityFonts("artwork", allArtworkIds);
+  const fontsUrl = buildGoogleFontsUrl(entityFonts);
+
   const footerContent = await getFooterContent();
   const navItems = await getNavbarContent();
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      {fontsUrl && <link rel="stylesheet" href={fontsUrl} />}
       <Navbar currentPage="" navItems={navItems} />
       <main className="flex-1 max-w-[1440px] mx-auto w-full px-8 pb-24">
         <nav className="py-6 text-sm text-on-surface-variant lowercase tracking-wider">
