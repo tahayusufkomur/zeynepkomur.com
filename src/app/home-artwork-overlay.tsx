@@ -20,7 +20,7 @@ export function HomeArtworkOverlay({ artwork, children, className = "" }: HomeAr
 
   if (!isEditing || !artwork) {
     if (artwork) {
-      return <Link href={`/eser/${artwork.slug}`} className={className}>{children}</Link>;
+      return <Link href={`/eser/${artwork.slug}`} className={`block ${className}`}>{children}</Link>;
     }
     return <div className={className}>{children}</div>;
   }
