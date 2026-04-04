@@ -8,6 +8,7 @@ import { getFooterContent } from "@/lib/get-footer-content";
 import { getNavbarContent } from "@/lib/get-navbar-content";
 import { CustomRequestForm } from "@/components/forms/custom-request-form";
 import { InlineEdit } from "@/components/admin/inline-edit";
+import { parseStyleMap, collectFonts, buildGoogleFontsUrl } from "@/lib/fonts";
 import { OzelIstekImage } from "./ozel-istek-client";
 
 async function getContent(sectionKey: string, fallback: string) {
@@ -36,8 +37,17 @@ export default async function OzelIstekPage() {
   const feature3Desc = await getContent("feature_3_desc", "her eser, sürecin hikayesini anlatan ıslak imzalı sertifika ile gelir.");
   const artImage = await getContent("art_image", "/images/custom-request-art.jpg");
 
+  // Fetch all page content rows for style map
+  const allRows = await db
+    .select()
+    .from(pageContent)
+    .where(eq(pageContent.pageSlug, "ozel-istek"));
+  const styleMap = parseStyleMap(allRows);
+  const fontsUrl = buildGoogleFontsUrl(collectFonts(styleMap));
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      {fontsUrl && <link rel="stylesheet" href={fontsUrl} />}
       <Navbar currentPage="ozel-istek" navItems={navItems} />
 
       <main className="flex-1 pt-48 pb-24 px-6 md:px-12 max-w-7xl mx-auto w-full">
@@ -47,6 +57,7 @@ export default async function OzelIstekPage() {
             pageSlug="ozel-istek"
             sectionKey="headline"
             initialContent={headline}
+            initialStyle={styleMap["headline"]}
             as="h1"
             className="text-5xl md:text-7xl font-extrabold tracking-tighter text-on-surface lowercase mb-6 leading-none"
           />
@@ -54,6 +65,7 @@ export default async function OzelIstekPage() {
             pageSlug="ozel-istek"
             sectionKey="description"
             initialContent={description}
+            initialStyle={styleMap["description"]}
             as="p"
             multiline
             className="text-on-surface-variant max-w-2xl text-lg lowercase"
@@ -82,8 +94,8 @@ export default async function OzelIstekPage() {
                   <span className="material-symbols-outlined text-white text-sm">palette</span>
                 </div>
                 <div>
-                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_1_title" initialContent={feature1Title} as="h3" className="font-bold text-on-surface lowercase mb-1 text-sm" />
-                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_1_desc" initialContent={feature1Desc} as="p" className="text-xs text-on-surface-variant lowercase" />
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_1_title" initialContent={feature1Title} initialStyle={styleMap["feature_1_title"]} as="h3" className="font-bold text-on-surface lowercase mb-1 text-sm" />
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_1_desc" initialContent={feature1Desc} initialStyle={styleMap["feature_1_desc"]} as="p" className="text-xs text-on-surface-variant lowercase" />
                 </div>
               </div>
 
@@ -93,8 +105,8 @@ export default async function OzelIstekPage() {
                   <span className="material-symbols-outlined text-on-secondary-container text-sm">aspect_ratio</span>
                 </div>
                 <div>
-                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_2_title" initialContent={feature2Title} as="h3" className="font-bold text-on-surface lowercase mb-1 text-sm" />
-                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_2_desc" initialContent={feature2Desc} as="p" className="text-xs text-on-surface-variant lowercase" />
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_2_title" initialContent={feature2Title} initialStyle={styleMap["feature_2_title"]} as="h3" className="font-bold text-on-surface lowercase mb-1 text-sm" />
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_2_desc" initialContent={feature2Desc} initialStyle={styleMap["feature_2_desc"]} as="p" className="text-xs text-on-surface-variant lowercase" />
                 </div>
               </div>
 
@@ -104,8 +116,8 @@ export default async function OzelIstekPage() {
                   <span className="material-symbols-outlined text-white text-sm">history_edu</span>
                 </div>
                 <div>
-                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_3_title" initialContent={feature3Title} as="h3" className="font-bold text-on-surface lowercase mb-1 text-sm" />
-                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_3_desc" initialContent={feature3Desc} as="p" className="text-xs text-on-surface-variant lowercase" />
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_3_title" initialContent={feature3Title} initialStyle={styleMap["feature_3_title"]} as="h3" className="font-bold text-on-surface lowercase mb-1 text-sm" />
+                  <InlineEdit pageSlug="ozel-istek" sectionKey="feature_3_desc" initialContent={feature3Desc} initialStyle={styleMap["feature_3_desc"]} as="p" className="text-xs text-on-surface-variant lowercase" />
                 </div>
               </div>
             </div>

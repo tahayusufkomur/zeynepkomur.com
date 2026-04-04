@@ -10,6 +10,7 @@ import { HomeClient } from "./home-client";
 import { getFooterContent } from "@/lib/get-footer-content";
 import { getNavbarContent } from "@/lib/get-navbar-content";
 import { HomeArtworkOverlay } from "./home-artwork-overlay";
+import { parseStyleMap, collectFonts, buildGoogleFontsUrl } from "@/lib/fonts";
 import type { Artwork } from "@/components/artwork/artwork-card";
 
 type ContentMap = Record<string, string>;
@@ -39,6 +40,8 @@ export default async function HomePage() {
   for (const row of rows) {
     content[row.sectionKey] = row.content;
   }
+  const styleMap = parseStyleMap(rows);
+  const fontsUrl = buildGoogleFontsUrl(collectFonts(styleMap));
 
   // Fetch hero artworks (from admin selection or fallback to latest 3)
   let latestArtworks: Artwork[] = [];
@@ -65,6 +68,7 @@ export default async function HomePage() {
 
   return (
     <HomeClient navItems={navItems}>
+      {fontsUrl && <link rel="stylesheet" href={fontsUrl} />}
       {/* Hero Section */}
       <header className="relative min-h-[921px] flex flex-col items-center justify-center bg-white px-6 py-20 overflow-hidden">
         <div className="max-w-5xl w-full text-center z-10">
@@ -72,6 +76,7 @@ export default async function HomePage() {
             pageSlug="home"
             sectionKey="hero_title"
             initialContent={content.hero_title}
+            initialStyle={styleMap["hero_title"]}
             as="h1"
             className="text-6xl md:text-9xl font-light text-on-surface tracking-tighter mb-16 lowercase"
           />
@@ -108,6 +113,7 @@ export default async function HomePage() {
           pageSlug="home"
           sectionKey="hero_subtitle"
           initialContent={content.hero_subtitle}
+          initialStyle={styleMap["hero_subtitle"]}
           as="div"
           className="mt-20 text-on-surface-variant max-w-lg text-center lowercase tracking-[0.2em] font-light italic"
         />
@@ -121,6 +127,7 @@ export default async function HomePage() {
               pageSlug="home"
               sectionKey="new_arrivals_title"
               initialContent={content.new_arrivals_title}
+              initialStyle={styleMap["new_arrivals_title"]}
               as="h2"
               className="text-5xl md:text-7xl font-bold tracking-tighter text-on-surface lowercase"
             />
@@ -133,6 +140,7 @@ export default async function HomePage() {
             pageSlug="home"
             sectionKey="new_arrivals_description"
             initialContent={content.new_arrivals_description}
+            initialStyle={styleMap["new_arrivals_description"]}
             as="p"
             className="text-on-surface-variant max-w-md font-medium text-lg leading-relaxed lowercase"
           />
@@ -244,6 +252,7 @@ export default async function HomePage() {
               pageSlug="home"
               sectionKey="quote_text"
               initialContent={content.quote_text}
+              initialStyle={styleMap["quote_text"]}
               as="p"
               className="text-4xl md:text-6xl font-light text-on-surface leading-[1.1] tracking-tight lowercase"
               multiline
@@ -254,6 +263,7 @@ export default async function HomePage() {
                 pageSlug="home"
                 sectionKey="quote_attribution"
                 initialContent={content.quote_attribution}
+                initialStyle={styleMap["quote_attribution"]}
                 as="span"
                 className="text-highlight-pink font-bold text-xl lowercase tracking-[0.4em]"
               />

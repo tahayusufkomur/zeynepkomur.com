@@ -8,6 +8,7 @@ import { getFooterContent } from "@/lib/get-footer-content";
 import { getNavbarContent } from "@/lib/get-navbar-content";
 import { GalleryClient } from "./gallery-client";
 import { InlineEdit } from "@/components/admin/inline-edit";
+import { parseStyleMap, collectFonts, buildGoogleFontsUrl } from "@/lib/fonts";
 import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
@@ -68,8 +69,17 @@ export default async function GaleriPage() {
   const quoteText = await getContent("quote_text", "sanat, görünmeyeni görünür kılmaktır. her fırça darbesi, bir hikayenin başlangıcıdır.");
   const quoteAttribution = await getContent("quote_attribution", "zeynep kömür");
 
+  // Fetch all page content rows for style map
+  const allRows = await db
+    .select()
+    .from(pageContent)
+    .where(eq(pageContent.pageSlug, "galeri"));
+  const styleMap = parseStyleMap(allRows);
+  const fontsUrl = buildGoogleFontsUrl(collectFonts(styleMap));
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      {fontsUrl && <link rel="stylesheet" href={fontsUrl} />}
       <Navbar currentPage="galeri" navItems={navItems} />
 
       <main className="flex-1 max-w-[1440px] mx-auto w-full px-8 pb-24">
@@ -90,6 +100,7 @@ export default async function GaleriPage() {
                 pageSlug="galeri"
                 sectionKey="quote_text"
                 initialContent={quoteText}
+                initialStyle={styleMap["quote_text"]}
                 as="span"
                 className="text-3xl font-light italic text-on-surface leading-relaxed"
                 multiline
@@ -101,6 +112,7 @@ export default async function GaleriPage() {
                 pageSlug="galeri"
                 sectionKey="quote_attribution"
                 initialContent={quoteAttribution}
+                initialStyle={styleMap["quote_attribution"]}
                 as="span"
                 className="font-bold uppercase tracking-widest text-xs"
               />

@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/footer";
 import { getFooterContent } from "@/lib/get-footer-content";
 import { getNavbarContent } from "@/lib/get-navbar-content";
 import { InlineEdit } from "@/components/admin/inline-edit";
+import { parseStyleMap, collectFonts, buildGoogleFontsUrl } from "@/lib/fonts";
 import { HakkindaPortrait, HakkindaSkills, HakkindaIdentityLabel } from "./hakkinda-client";
 
 export const dynamic = "force-dynamic";
@@ -40,8 +41,17 @@ export default async function HakkindaPage() {
   const identityLabel = await getContent("identity_label", "kurucu & küratör");
   const portraitImage = await getContent("portrait_image", "/uploads/pages/portrait.webp");
 
+  // Fetch all page content rows for style map
+  const allRows = await db
+    .select()
+    .from(pageContent)
+    .where(eq(pageContent.pageSlug, "hakkinda"));
+  const styleMap = parseStyleMap(allRows);
+  const fontsUrl = buildGoogleFontsUrl(collectFonts(styleMap));
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      {fontsUrl && <link rel="stylesheet" href={fontsUrl} />}
       <Navbar currentPage="hakkinda" navItems={navItems} />
 
       <main className="flex-1 pt-8 pb-24 px-8 md:px-12 max-w-7xl mx-auto w-full">
@@ -56,7 +66,7 @@ export default async function HakkindaPage() {
             </div>
             {/* Identity label */}
             <div className="absolute -bottom-4 right-4 bg-tertiary text-on-tertiary px-6 py-3 z-20 shadow-lg">
-              <HakkindaIdentityLabel initialContent={identityLabel} />
+              <HakkindaIdentityLabel initialContent={identityLabel} initialStyle={styleMap["identity_label"]} />
             </div>
           </div>
 
@@ -76,6 +86,7 @@ export default async function HakkindaPage() {
                   pageSlug="hakkinda"
                   sectionKey="bio_1"
                   initialContent={bio1}
+                  initialStyle={styleMap["bio_1"]}
                   as="p"
                   multiline
                   className="text-2xl font-light leading-relaxed text-on-surface"
@@ -84,6 +95,7 @@ export default async function HakkindaPage() {
                   pageSlug="hakkinda"
                   sectionKey="bio_2"
                   initialContent={bio2}
+                  initialStyle={styleMap["bio_2"]}
                   as="p"
                   multiline
                   className="text-base text-on-surface-variant leading-relaxed font-normal"
@@ -91,7 +103,7 @@ export default async function HakkindaPage() {
               </div>
 
               {/* Skill tags */}
-              <HakkindaSkills skill1={skill1} skill2={skill2} skill3={skill3} />
+              <HakkindaSkills skill1={skill1} skill2={skill2} skill3={skill3} styleMap={styleMap} />
             </section>
           </div>
         </div>

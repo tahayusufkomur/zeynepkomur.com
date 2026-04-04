@@ -9,6 +9,7 @@ import { getNavbarContent } from "@/lib/get-navbar-content";
 import { ContactForm } from "@/components/forms/contact-form";
 import { QuestionForm } from "@/components/forms/question-form";
 import { InlineEdit } from "@/components/admin/inline-edit";
+import { parseStyleMap, collectFonts, buildGoogleFontsUrl } from "@/lib/fonts";
 
 async function getContent(sectionKey: string, fallback: string) {
   const [row] = await db
@@ -34,8 +35,17 @@ export default async function IletisimPage() {
   const studioEmail = await getContent("studio_email", "merhaba@zeynepkomur.com");
   const studioSocial = await getContent("studio_social", "@zeynepkomur.com");
 
+  // Fetch all page content rows for style map
+  const allRows = await db
+    .select()
+    .from(pageContent)
+    .where(eq(pageContent.pageSlug, "contact"));
+  const styleMap = parseStyleMap(allRows);
+  const fontsUrl = buildGoogleFontsUrl(collectFonts(styleMap));
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      {fontsUrl && <link rel="stylesheet" href={fontsUrl} />}
       <Navbar currentPage="iletisim" navItems={navItems} />
 
       <main className="flex-1 pt-48 pb-24 px-8 md:px-16 max-w-[1440px] mx-auto w-full">
@@ -46,6 +56,7 @@ export default async function IletisimPage() {
               pageSlug="contact"
               sectionKey="headline"
               initialContent={headline}
+              initialStyle={styleMap["headline"]}
               as="span"
               className="text-8xl md:text-[10rem] font-extrabold tracking-tighter text-on-surface lowercase leading-none"
             />
@@ -60,6 +71,7 @@ export default async function IletisimPage() {
                 pageSlug="contact"
                 sectionKey="section_1_title"
                 initialContent={section1Title}
+                initialStyle={styleMap["section_1_title"]}
                 as="h2"
                 className="text-7xl md:text-[9rem] font-extrabold tracking-tighter text-on-surface lowercase leading-[0.85] mb-8"
               />
@@ -84,6 +96,7 @@ export default async function IletisimPage() {
                 pageSlug="contact"
                 sectionKey="section_2_title"
                 initialContent={section2Title}
+                initialStyle={styleMap["section_2_title"]}
                 as="h2"
                 className="text-7xl md:text-[9rem] font-extrabold tracking-tighter text-on-surface lowercase leading-[0.85] mb-8"
               />
@@ -101,6 +114,7 @@ export default async function IletisimPage() {
               pageSlug="contact"
               sectionKey="studio_address"
               initialContent={studioAddress}
+              initialStyle={styleMap["studio_address"]}
               as="p"
               multiline
               className="text-2xl text-on-surface lowercase leading-tight"
@@ -114,6 +128,7 @@ export default async function IletisimPage() {
               pageSlug="contact"
               sectionKey="studio_hours"
               initialContent={studioHours}
+              initialStyle={styleMap["studio_hours"]}
               as="p"
               multiline
               className="text-2xl text-on-surface lowercase leading-tight"
@@ -127,6 +142,7 @@ export default async function IletisimPage() {
               pageSlug="contact"
               sectionKey="studio_email"
               initialContent={studioEmail}
+              initialStyle={styleMap["studio_email"]}
               as="p"
               className="text-2xl text-on-surface lowercase leading-tight"
             />
@@ -134,6 +150,7 @@ export default async function IletisimPage() {
               pageSlug="contact"
               sectionKey="studio_social"
               initialContent={studioSocial}
+              initialStyle={styleMap["studio_social"]}
               as="p"
               className="text-2xl text-on-surface lowercase leading-tight mt-1"
             />
