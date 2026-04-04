@@ -56,6 +56,17 @@ export const artworkImages = sqliteTable("artwork_images", {
   createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
 });
 
+export const fieldStyles = sqliteTable("field_styles", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  entityType: text("entity_type").notNull(),
+  entityId: text("entity_id").notNull(),
+  fieldName: text("field_name").notNull(),
+  fontFamily: text("font_family").notNull(),
+  fontSize: integer("font_size").notNull(),
+}, (table) => [
+  uniqueIndex("field_styles_unique").on(table.entityType, table.entityId, table.fieldName),
+]);
+
 export const formSubmissions = sqliteTable("form_submissions", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   formType: text("form_type", { enum: ["contact", "custom_request", "question"] }).notNull(),

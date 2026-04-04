@@ -123,6 +123,18 @@ export function migrate() {
     sqlite.exec(`CREATE UNIQUE INDEX IF NOT EXISTS artworks_slug_unique ON artworks(slug)`);
   }
 
+  sqlite.exec(`
+    CREATE TABLE IF NOT EXISTS field_styles (
+      id TEXT PRIMARY KEY,
+      entity_type TEXT NOT NULL,
+      entity_id TEXT NOT NULL,
+      field_name TEXT NOT NULL,
+      font_family TEXT NOT NULL,
+      font_size INTEGER NOT NULL,
+      UNIQUE(entity_type, entity_id, field_name)
+    );
+  `);
+
   sqlite.close();
   console.log("[migrate] Tables created/verified");
 }
