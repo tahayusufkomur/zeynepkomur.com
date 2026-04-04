@@ -3,6 +3,7 @@
 import { useAdmin } from "@/hooks/use-admin";
 import Link from "next/link";
 import Image from "next/image";
+import { StyleableText } from "@/components/admin/styleable-text";
 
 export type ArtworkImage = {
   id: string;
@@ -72,10 +73,12 @@ export function ArtworkCard({ artwork, onClick, onEdit, onDelete }: ArtworkCardP
       </div>
       <div className="p-6 flex justify-between items-start">
         <div className="flex flex-col">
-          <h3 className="text-lg font-bold text-on-surface leading-tight">
+          <StyleableText entityType="artwork" entityId={artwork.id} fieldName="title" as="h3" className="text-lg font-bold text-on-surface leading-tight">
             {artwork.title}
-          </h3>
-          <p className="text-sm text-on-surface-variant">{artwork.description}</p>
+          </StyleableText>
+          <StyleableText entityType="artwork" entityId={artwork.id} fieldName="description" as="p" className="text-sm text-on-surface-variant">
+            {artwork.description}
+          </StyleableText>
         </div>
         <span className="font-extrabold text-primary text-[10px] uppercase tracking-wider whitespace-nowrap ml-4">
           fiyat için iletişime geçin

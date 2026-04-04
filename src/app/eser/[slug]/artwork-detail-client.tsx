@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Artwork } from "@/components/artwork/artwork-card";
+import { StyleableText } from "@/components/admin/styleable-text";
 
 type Props = {
   artwork: Artwork;
@@ -38,8 +39,12 @@ export function ArtworkDetailClient({ artwork, related }: Props) {
           )}
         </div>
         <div className="flex flex-col justify-center">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-on-surface lowercase mb-4">{artwork.title}</h1>
-          <p className="text-lg text-on-surface-variant lowercase mb-8">{artwork.description}</p>
+          <StyleableText entityType="artwork" entityId={artwork.id} fieldName="title" as="h1" className="text-4xl md:text-5xl font-bold tracking-tighter text-on-surface lowercase mb-4">
+            {artwork.title}
+          </StyleableText>
+          <StyleableText entityType="artwork" entityId={artwork.id} fieldName="description" as="p" className="text-lg text-on-surface-variant lowercase mb-8">
+            {artwork.description}
+          </StyleableText>
           <dl className="space-y-4 mb-10">
             {artwork.dimensions && (
               <div className="flex gap-4">

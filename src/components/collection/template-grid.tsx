@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Artwork } from "@/components/artwork/artwork-card";
+import { StyleableText } from "@/components/admin/styleable-text";
 
 type TemplateGridProps = {
   artworks: Artwork[];
@@ -43,10 +44,12 @@ export function TemplateGrid({ artworks, title, description }: TemplateGridProps
               </div>
               <div className="p-6 flex justify-between items-start">
                 <div className="flex flex-col">
-                  <h3 className="text-lg font-bold text-on-surface leading-tight">
+                  <StyleableText entityType="artwork" entityId={artwork.id} fieldName="title" as="h3" className="text-lg font-bold text-on-surface leading-tight">
                     {artwork.title}
-                  </h3>
-                  <p className="text-sm text-on-surface-variant">{artwork.description}</p>
+                  </StyleableText>
+                  <StyleableText entityType="artwork" entityId={artwork.id} fieldName="description" as="p" className="text-sm text-on-surface-variant">
+                    {artwork.description}
+                  </StyleableText>
                 </div>
                 <span className="font-extrabold text-primary text-[10px] uppercase tracking-wider whitespace-nowrap ml-4">
                   fiyat için iletişime geçin

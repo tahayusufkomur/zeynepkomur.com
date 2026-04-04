@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Artwork } from "@/components/artwork/artwork-card";
+import { StyleableText } from "@/components/admin/styleable-text";
 
 type ChallengeArtwork = Artwork & { dayNumber?: number | null };
 
@@ -93,9 +94,9 @@ export function TemplateChallenge({
                     )}
                   </div>
                   <div className="mt-4 flex flex-col">
-                    <h3 className="text-lg font-bold lowercase tracking-tight text-on-surface">
+                    <StyleableText entityType="artwork" entityId={artwork.id} fieldName="title" as="h3" className="text-lg font-bold lowercase tracking-tight text-on-surface">
                       {artwork.title}
-                    </h3>
+                    </StyleableText>
                     <div className="flex justify-between items-center mt-2">
                       <span className="font-extrabold text-primary text-[10px] uppercase tracking-wider">
                         fiyat için iletişime geçin

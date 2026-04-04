@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Artwork } from "@/components/artwork/artwork-card";
+import { StyleableText } from "@/components/admin/styleable-text";
 
 type TemplateShowcaseProps = {
   artworks: Artwork[];
@@ -40,10 +41,12 @@ export function TemplateShowcase({ artworks, title, description }: TemplateShowc
                 className="w-full h-[60vh] object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-8">
-                <h2 className="text-white text-4xl font-extrabold tracking-tighter lowercase">
+                <StyleableText entityType="artwork" entityId={hero.id} fieldName="title" as="h2" className="text-white text-4xl font-extrabold tracking-tighter lowercase">
                   {hero.title}
-                </h2>
-                <p className="text-white/80 lowercase">{hero.description}</p>
+                </StyleableText>
+                <StyleableText entityType="artwork" entityId={hero.id} fieldName="description" as="p" className="text-white/80 lowercase">
+                  {hero.description}
+                </StyleableText>
               </div>
             </Link>
           )}
@@ -65,9 +68,9 @@ export function TemplateShowcase({ artworks, title, description }: TemplateShowc
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 min-h-[200px]"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-end p-4 opacity-0 group-hover:opacity-100">
-                    <span className="text-white font-bold lowercase text-sm">
+                    <StyleableText entityType="artwork" entityId={artwork.id} fieldName="title" as="span" className="text-white font-bold lowercase text-sm">
                       {artwork.title}
-                    </span>
+                    </StyleableText>
                   </div>
                 </Link>
               ))}
