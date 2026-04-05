@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useAdmin } from "@/hooks/use-admin";
 import { TextStyleToolbar } from "./text-style-toolbar";
 import { showToast } from "./toast";
@@ -17,6 +17,8 @@ type StyleableTextProps = {
   children: React.ReactNode;
 };
 
+const DEFAULT_STYLE: FieldStyle = { fontFamily: null, fontSize: null, color: null };
+
 export function StyleableText({
   entityType,
   entityId,
@@ -28,22 +30,41 @@ export function StyleableText({
 }: StyleableTextProps) {
   const { isEditing } = useAdmin();
   const [showToolbar, setShowToolbar] = useState(false);
-  const [style, setStyle] = useState<FieldStyle>(
-    initialStyle ?? { fontFamily: null, fontSize: null, color: null }
-  );
+  const [style, setStyle] = useState<FieldStyle>(initialStyle ?? DEFAULT_STYLE);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  // Auto-save style with debounce
+  const saveStyle = useCallback(async (s: FieldStyle) => {
+    try {
+      await fetch("/api/field-styles", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          entityType,
+          entityId,
+          fieldName,
+          fontFamily: s.fontFamily ?? "",
+          fontSize: s.fontSize ?? 16,
+          color: s.color ?? null,
+        }),
+      });
+    } catch {}
+  }, [entityType, entityId, fieldName]);
 
   useEffect(() => {
-    if (!showToolbar) return;
-    function handleClick(e: MouseEvent) {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setShowToolbar(false);
-        saveStyle(style);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [showToolbar, style]);
+    if (!isEditing) return;
+    const isDefault = !style.fontFamily && !style.fontSize && !style.color;
+    const isInitial = style.fontFamily === (initialStyle?.fontFamily ?? null)
+      && style.fontSize === (initialStyle?.fontSize ?? null)
+      && style.color === (initialStyle?.color ?? null);
+    if (isDefault && !initialStyle) return;
+    if (isInitial) return;
+
+    clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => saveStyle(style), 400);
+    return () => clearTimeout(saveTimerRef.current);
+  }, [style, isEditing, saveStyle, initialStyle]);
 
   const inlineStyle: React.CSSProperties = {};
   if (style.fontFamily) inlineStyle.fontFamily = style.fontFamily;
@@ -62,11 +83,7 @@ export function StyleableText({
           fontSize={style.fontSize}
           color={style.color}
           onChange={(s) => setStyle(s)}
-          onReset={() => {
-            setStyle({ fontFamily: null, fontSize: null, color: null });
-            resetStyle();
-            setShowToolbar(false);
-          }}
+          onReset={handleReset}
         />
       )}
       <Tag
@@ -79,7 +96,6 @@ export function StyleableText({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (showToolbar) saveStyle(style);
             setShowToolbar(!showToolbar);
           }}
         >
@@ -89,25 +105,9 @@ export function StyleableText({
     </div>
   );
 
-  async function saveStyle(s: FieldStyle) {
-    if (!s.fontFamily && !s.fontSize && !s.color) return;
-    try {
-      await fetch("/api/field-styles", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          entityType,
-          entityId,
-          fieldName,
-          fontFamily: s.fontFamily ?? "",
-          fontSize: s.fontSize ?? 16,
-          color: s.color ?? null,
-        }),
-      });
-    } catch {}
-  }
-
-  async function resetStyle() {
+  async function handleReset() {
+    setStyle(DEFAULT_STYLE);
+    setShowToolbar(false);
     try {
       await fetch("/api/field-styles", {
         method: "DELETE",

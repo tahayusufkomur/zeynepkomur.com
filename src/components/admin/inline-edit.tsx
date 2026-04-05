@@ -1,7 +1,7 @@
 "use client";
 
 import { useAdmin } from "@/hooks/use-admin";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { showToast } from "./toast";
 import { TextStyleToolbar } from "./text-style-toolbar";
 
@@ -17,6 +17,8 @@ type InlineEditProps = {
   multiline?: boolean;
 };
 
+const DEFAULT_STYLE: FieldStyle = { fontFamily: null, fontSize: null, color: null };
+
 export function InlineEdit({
   pageSlug,
   sectionKey,
@@ -30,25 +32,45 @@ export function InlineEdit({
   const [content, setContent] = useState(initialContent);
   const [editing, setEditing] = useState(false);
   const [showToolbar, setShowToolbar] = useState(false);
-  const [style, setStyle] = useState<FieldStyle>(initialStyle ?? { fontFamily: null, fontSize: null, color: null });
+  const [style, setStyle] = useState<FieldStyle>(initialStyle ?? DEFAULT_STYLE);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     if (editing && inputRef.current) inputRef.current.focus();
   }, [editing]);
 
+  // Auto-save style with debounce
+  const saveStyle = useCallback(async (s: FieldStyle) => {
+    const payload = {
+      pageSlug,
+      sectionKey: `${sectionKey}_style`,
+      content: JSON.stringify({ fontFamily: s.fontFamily, fontSize: s.fontSize, color: s.color }),
+    };
+    try {
+      await fetch("/api/content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch {}
+  }, [pageSlug, sectionKey]);
+
   useEffect(() => {
-    if (!showToolbar) return;
-    function handleClick(e: MouseEvent) {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setShowToolbar(false);
-        saveStyle(style);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [showToolbar, style]);
+    if (!editMode) return;
+    // Skip initial render
+    const isDefault = !style.fontFamily && !style.fontSize && !style.color;
+    const isInitial = style.fontFamily === (initialStyle?.fontFamily ?? null)
+      && style.fontSize === (initialStyle?.fontSize ?? null)
+      && style.color === (initialStyle?.color ?? null);
+    if (isDefault && !initialStyle) return;
+    if (isInitial) return;
+
+    clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => saveStyle(style), 400);
+    return () => clearTimeout(saveTimerRef.current);
+  }, [style, editMode, saveStyle, initialStyle]);
 
   const inlineStyle: React.CSSProperties = {};
   if (style.fontFamily) inlineStyle.fontFamily = style.fontFamily;
@@ -67,11 +89,7 @@ export function InlineEdit({
             fontSize={style.fontSize}
             color={style.color}
             onChange={(s) => setStyle(s)}
-            onReset={() => {
-              setStyle({ fontFamily: null, fontSize: null, color: null });
-              resetStyle();
-              setShowToolbar(false);
-            }}
+            onReset={handleReset}
           />
         )}
         <InputTag
@@ -103,11 +121,7 @@ export function InlineEdit({
           fontSize={style.fontSize}
           color={style.color}
           onChange={(s) => setStyle(s)}
-          onReset={() => {
-            setStyle({ fontFamily: null, fontSize: null, color: null });
-            resetStyle();
-            setShowToolbar(false);
-          }}
+          onReset={handleReset}
         />
       )}
       <Tag
@@ -120,10 +134,9 @@ export function InlineEdit({
           edit
         </span>
         <span
-          className="material-symbols-outlined absolute -top-2.5 -left-2.5 text-primary text-xs bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border border-primary/20 opacity-70 transition-opacity"
+          className="material-symbols-outlined absolute -top-2.5 -left-2.5 text-primary text-xs bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border border-primary/20 opacity-70 transition-opacity cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
-            if (showToolbar) saveStyle(style);
             setShowToolbar(!showToolbar);
           }}
         >
@@ -150,25 +163,11 @@ export function InlineEdit({
       }
     }
     setEditing(false);
-    saveStyle(style);
   }
 
-  async function saveStyle(s: FieldStyle) {
-    if (!s.fontFamily && !s.fontSize && !s.color) return;
-    try {
-      await fetch("/api/content", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pageSlug,
-          sectionKey: `${sectionKey}_style`,
-          content: JSON.stringify({ fontFamily: s.fontFamily, fontSize: s.fontSize, color: s.color }),
-        }),
-      });
-    } catch {}
-  }
-
-  async function resetStyle() {
+  async function handleReset() {
+    setStyle(DEFAULT_STYLE);
+    setShowToolbar(false);
     try {
       await fetch("/api/content", {
         method: "PUT",

@@ -162,10 +162,11 @@ export function TextStyleToolbar({ fontFamily, fontSize, color, onChange, onRese
       {/* Reset all */}
       <button
         onClick={onReset}
-        className="w-7 h-7 flex items-center justify-center text-on-surface-variant hover:text-error transition-colors"
-        title="Stili sıfırla"
+        className="flex items-center gap-1 text-xs text-on-surface-variant hover:text-error transition-colors border border-outline-variant px-2 py-1 rounded hover:border-error"
+        title="Tüm stili sıfırla"
       >
-        <span className="material-symbols-outlined text-sm">close</span>
+        <span className="material-symbols-outlined text-sm">restart_alt</span>
+        sıfırla
       </button>
     </div>
   );
