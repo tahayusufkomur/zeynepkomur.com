@@ -63,6 +63,7 @@ export const fieldStyles = sqliteTable("field_styles", {
   fieldName: text("field_name").notNull(),
   fontFamily: text("font_family").notNull(),
   fontSize: integer("font_size").notNull(),
+  color: text("color"),
 }, (table) => [
   uniqueIndex("field_styles_unique").on(table.entityType, table.entityId, table.fieldName),
 ]);

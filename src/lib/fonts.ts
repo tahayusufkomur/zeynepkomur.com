@@ -5,6 +5,7 @@ import { eq, and, inArray } from "drizzle-orm";
 export type FieldStyle = {
   fontFamily: string | null;
   fontSize: number | null;
+  color: string | null;
 };
 
 export function buildGoogleFontsUrl(families: string[]): string | null {
@@ -47,7 +48,7 @@ export async function getFieldStyle(entityType: string, entityId: string, fieldN
     .from(fieldStyles)
     .where(and(eq(fieldStyles.entityType, entityType), eq(fieldStyles.entityId, entityId), eq(fieldStyles.fieldName, fieldName)));
   if (!row) return null;
-  return { fontFamily: row.fontFamily, fontSize: row.fontSize };
+  return { fontFamily: row.fontFamily, fontSize: row.fontSize, color: row.color ?? null };
 }
 
 export function parseStyleMap(rows: { sectionKey: string; content: string }[]): Record<string, FieldStyle> {
@@ -56,9 +57,9 @@ export function parseStyleMap(rows: { sectionKey: string; content: string }[]): 
     if (row.sectionKey.endsWith("_style")) {
       try {
         const parsed = JSON.parse(row.content);
-        if (parsed.fontFamily || parsed.fontSize) {
+        if (parsed.fontFamily || parsed.fontSize || parsed.color) {
           const baseKey = row.sectionKey.replace(/_style$/, "");
-          map[baseKey] = { fontFamily: parsed.fontFamily || null, fontSize: parsed.fontSize || null };
+          map[baseKey] = { fontFamily: parsed.fontFamily || null, fontSize: parsed.fontSize || null, color: parsed.color || null };
         }
       } catch {}
     }

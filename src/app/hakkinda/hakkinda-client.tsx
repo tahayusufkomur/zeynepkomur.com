@@ -27,7 +27,7 @@ export function HakkindaPortrait({ initialSrc }: { initialSrc: string }) {
   );
 }
 
-type FieldStyle = { fontFamily: string | null; fontSize: number | null };
+type FieldStyle = { fontFamily: string | null; fontSize: number | null; color: string | null };
 
 export function HakkindaSkills({
   skill1,

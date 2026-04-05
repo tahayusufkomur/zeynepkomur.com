@@ -131,9 +131,16 @@ export function migrate() {
       field_name TEXT NOT NULL,
       font_family TEXT NOT NULL,
       font_size INTEGER NOT NULL,
+      color TEXT,
       UNIQUE(entity_type, entity_id, field_name)
     );
   `);
+
+  // Add color column to field_styles (idempotent)
+  const fsColumns = sqlite.pragma("table_info(field_styles)") as { name: string }[];
+  if (fsColumns.length > 0 && !fsColumns.some((c) => c.name === "color")) {
+    sqlite.exec(`ALTER TABLE field_styles ADD COLUMN color TEXT`);
+  }
 
   sqlite.close();
   console.log("[migrate] Tables created/verified");

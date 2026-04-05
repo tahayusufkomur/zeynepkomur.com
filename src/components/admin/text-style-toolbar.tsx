@@ -7,11 +7,12 @@ type FontEntry = { family: string; category: string };
 type TextStyleToolbarProps = {
   fontFamily: string | null;
   fontSize: number | null;
-  onChange: (style: { fontFamily: string | null; fontSize: number | null }) => void;
+  color: string | null;
+  onChange: (style: { fontFamily: string | null; fontSize: number | null; color: string | null }) => void;
   onReset: () => void;
 };
 
-export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: TextStyleToolbarProps) {
+export function TextStyleToolbar({ fontFamily, fontSize, color, onChange, onReset }: TextStyleToolbarProps) {
   const [fonts, setFonts] = useState<FontEntry[]>([]);
   const [search, setSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -54,7 +55,7 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
 
   function selectFont(family: string) {
     loadFont(family);
-    onChange({ fontFamily: family, fontSize });
+    onChange({ fontFamily: family, fontSize, color });
     setShowDropdown(false);
     setSearch("");
   }
@@ -71,7 +72,6 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
         position === "above" ? "bottom-full mb-2" : "top-full mt-2"
       }`}
       onMouseDown={(e) => {
-        // Prevent blur on parent input, but allow range slider interaction
         if ((e.target as HTMLElement).tagName !== "INPUT") e.preventDefault();
       }}
     >
@@ -98,7 +98,7 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
             <div className="overflow-y-auto flex-1">
               <button
                 onClick={() => {
-                  onChange({ fontFamily: null, fontSize });
+                  onChange({ fontFamily: null, fontSize, color });
                   setShowDropdown(false);
                 }}
                 className="w-full px-3 py-2 text-sm text-left hover:bg-surface-container-low text-on-surface-variant"
@@ -132,7 +132,7 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
           min={12}
           max={120}
           value={fontSize ?? 16}
-          onChange={(e) => onChange({ fontFamily, fontSize: parseInt(e.target.value) })}
+          onChange={(e) => onChange({ fontFamily, fontSize: parseInt(e.target.value), color })}
           className="w-24 h-1.5 accent-primary"
         />
         <span className="text-xs font-bold text-on-surface-variant w-8 text-center">
@@ -140,7 +140,26 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
         </span>
       </div>
 
-      {/* Reset */}
+      {/* Color picker */}
+      <div className="flex items-center gap-1">
+        <input
+          type="color"
+          value={color || "#000000"}
+          onChange={(e) => onChange({ fontFamily, fontSize, color: e.target.value })}
+          className="w-7 h-7 border border-outline-variant rounded cursor-pointer p-0"
+        />
+        {color && (
+          <button
+            onClick={() => onChange({ fontFamily, fontSize, color: null })}
+            className="text-xs text-on-surface-variant hover:text-error"
+            title="Rengi sıfırla"
+          >
+            <span className="material-symbols-outlined text-sm">format_color_reset</span>
+          </button>
+        )}
+      </div>
+
+      {/* Reset all */}
       <button
         onClick={onReset}
         className="w-7 h-7 flex items-center justify-center text-on-surface-variant hover:text-error transition-colors"

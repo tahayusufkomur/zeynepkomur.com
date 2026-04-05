@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { showToast } from "./toast";
 import { TextStyleToolbar } from "./text-style-toolbar";
 
-type FieldStyle = { fontFamily: string | null; fontSize: number | null };
+type FieldStyle = { fontFamily: string | null; fontSize: number | null; color: string | null };
 
 type InlineEditProps = {
   pageSlug: string;
@@ -30,7 +30,7 @@ export function InlineEdit({
   const [content, setContent] = useState(initialContent);
   const [editing, setEditing] = useState(false);
   const [showToolbar, setShowToolbar] = useState(false);
-  const [style, setStyle] = useState<FieldStyle>(initialStyle ?? { fontFamily: null, fontSize: null });
+  const [style, setStyle] = useState<FieldStyle>(initialStyle ?? { fontFamily: null, fontSize: null, color: null });
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -53,6 +53,7 @@ export function InlineEdit({
   const inlineStyle: React.CSSProperties = {};
   if (style.fontFamily) inlineStyle.fontFamily = style.fontFamily;
   if (style.fontSize) inlineStyle.fontSize = `${style.fontSize}px`;
+  if (style.color) inlineStyle.color = style.color;
 
   if (!editMode) return <Tag className={className} style={inlineStyle}>{content}</Tag>;
 
@@ -64,9 +65,10 @@ export function InlineEdit({
           <TextStyleToolbar
             fontFamily={style.fontFamily}
             fontSize={style.fontSize}
+            color={style.color}
             onChange={(s) => setStyle(s)}
             onReset={() => {
-              setStyle({ fontFamily: null, fontSize: null });
+              setStyle({ fontFamily: null, fontSize: null, color: null });
               resetStyle();
               setShowToolbar(false);
             }}
@@ -99,9 +101,10 @@ export function InlineEdit({
         <TextStyleToolbar
           fontFamily={style.fontFamily}
           fontSize={style.fontSize}
+          color={style.color}
           onChange={(s) => setStyle(s)}
           onReset={() => {
-            setStyle({ fontFamily: null, fontSize: null });
+            setStyle({ fontFamily: null, fontSize: null, color: null });
             resetStyle();
             setShowToolbar(false);
           }}
@@ -113,13 +116,14 @@ export function InlineEdit({
         onClick={() => setEditing(true)}
       >
         {content}
-        <span className="material-symbols-outlined absolute -top-2.5 -right-2.5 text-primary text-xs bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border border-primary/20 opacity-70 group-hover:opacity-100 transition-opacity">
+        <span className="material-symbols-outlined absolute -top-2.5 -right-2.5 text-primary text-xs bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border border-primary/20 opacity-70 transition-opacity">
           edit
         </span>
         <span
-          className="material-symbols-outlined absolute -top-2.5 -left-2.5 text-primary text-xs bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border border-primary/20 opacity-0 group-hover:opacity-70 transition-opacity"
+          className="material-symbols-outlined absolute -top-2.5 -left-2.5 text-primary text-xs bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border border-primary/20 opacity-70 transition-opacity"
           onClick={(e) => {
             e.stopPropagation();
+            if (showToolbar) saveStyle(style);
             setShowToolbar(!showToolbar);
           }}
         >
@@ -150,7 +154,7 @@ export function InlineEdit({
   }
 
   async function saveStyle(s: FieldStyle) {
-    if (!s.fontFamily && !s.fontSize) return;
+    if (!s.fontFamily && !s.fontSize && !s.color) return;
     try {
       await fetch("/api/content", {
         method: "PUT",
@@ -158,7 +162,7 @@ export function InlineEdit({
         body: JSON.stringify({
           pageSlug,
           sectionKey: `${sectionKey}_style`,
-          content: JSON.stringify({ fontFamily: s.fontFamily, fontSize: s.fontSize }),
+          content: JSON.stringify({ fontFamily: s.fontFamily, fontSize: s.fontSize, color: s.color }),
         }),
       });
     } catch {}
