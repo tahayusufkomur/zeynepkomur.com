@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useAdmin } from "@/hooks/use-admin";
 import { TextStyleToolbar } from "./text-style-toolbar";
 import { showToast } from "./toast";
@@ -32,12 +32,29 @@ export function StyleableText({
   const [showToolbar, setShowToolbar] = useState(false);
   const [style, setStyle] = useState<FieldStyle>(initialStyle ?? DEFAULT_STYLE);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Auto-save style with debounce
-  const saveStyle = useCallback(async (s: FieldStyle) => {
-    try {
-      await fetch("/api/field-styles", {
+  // Fetch saved style on mount if not provided via props
+  useEffect(() => {
+    if (initialStyle) return;
+    fetch(`/api/field-styles?entityType=${entityType}&entityId=${entityId}&fieldName=${fieldName}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && (data.fontFamily || data.fontSize || data.color)) {
+          setStyle({
+            fontFamily: data.fontFamily || null,
+            fontSize: data.fontSize || null,
+            color: data.color || null,
+          });
+        }
+      })
+      .catch(() => {});
+  }, [entityType, entityId, fieldName, initialStyle]);
+
+  function saveStyleDebounced(s: FieldStyle) {
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      fetch("/api/field-styles", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -48,23 +65,14 @@ export function StyleableText({
           fontSize: s.fontSize ?? 16,
           color: s.color ?? null,
         }),
-      });
-    } catch {}
-  }, [entityType, entityId, fieldName]);
+      }).catch(() => {});
+    }, 400);
+  }
 
-  useEffect(() => {
-    if (!isEditing) return;
-    const isDefault = !style.fontFamily && !style.fontSize && !style.color;
-    const isInitial = style.fontFamily === (initialStyle?.fontFamily ?? null)
-      && style.fontSize === (initialStyle?.fontSize ?? null)
-      && style.color === (initialStyle?.color ?? null);
-    if (isDefault && !initialStyle) return;
-    if (isInitial) return;
-
-    clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => saveStyle(style), 400);
-    return () => clearTimeout(saveTimerRef.current);
-  }, [style, isEditing, saveStyle, initialStyle]);
+  function handleStyleChange(s: FieldStyle) {
+    setStyle(s);
+    saveStyleDebounced(s);
+  }
 
   const inlineStyle: React.CSSProperties = {};
   if (style.fontFamily) inlineStyle.fontFamily = style.fontFamily;
@@ -82,7 +90,7 @@ export function StyleableText({
           fontFamily={style.fontFamily}
           fontSize={style.fontSize}
           color={style.color}
-          onChange={(s) => setStyle(s)}
+          onChange={handleStyleChange}
           onReset={handleReset}
         />
       )}

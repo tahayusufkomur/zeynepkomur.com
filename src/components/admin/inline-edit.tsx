@@ -1,7 +1,7 @@
 "use client";
 
 import { useAdmin } from "@/hooks/use-admin";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { showToast } from "./toast";
 import { TextStyleToolbar } from "./text-style-toolbar";
 
@@ -35,42 +35,53 @@ export function InlineEdit({
   const [style, setStyle] = useState<FieldStyle>(initialStyle ?? DEFAULT_STYLE);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (editing && inputRef.current) inputRef.current.focus();
   }, [editing]);
 
-  // Auto-save style with debounce
-  const saveStyle = useCallback(async (s: FieldStyle) => {
-    const payload = {
-      pageSlug,
-      sectionKey: `${sectionKey}_style`,
-      content: JSON.stringify({ fontFamily: s.fontFamily, fontSize: s.fontSize, color: s.color }),
-    };
-    try {
-      await fetch("/api/content", {
+  // Fetch saved style on mount if not provided via props
+  useEffect(() => {
+    if (initialStyle) return;
+    fetch(`/api/content?page=${pageSlug}&section=${sectionKey}_style`)
+      .then((r) => r.json())
+      .then((rows: { content: string }[]) => {
+        if (rows.length > 0) {
+          try {
+            const parsed = JSON.parse(rows[0].content);
+            if (parsed.fontFamily || parsed.fontSize || parsed.color) {
+              setStyle({
+                fontFamily: parsed.fontFamily || null,
+                fontSize: parsed.fontSize || null,
+                color: parsed.color || null,
+              });
+            }
+          } catch {}
+        }
+      })
+      .catch(() => {});
+  }, [pageSlug, sectionKey, initialStyle]);
+
+  function saveStyleDebounced(s: FieldStyle) {
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      fetch("/api/content", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    } catch {}
-  }, [pageSlug, sectionKey]);
+        body: JSON.stringify({
+          pageSlug,
+          sectionKey: `${sectionKey}_style`,
+          content: JSON.stringify({ fontFamily: s.fontFamily, fontSize: s.fontSize, color: s.color }),
+        }),
+      }).catch(() => {});
+    }, 400);
+  }
 
-  useEffect(() => {
-    if (!editMode) return;
-    // Skip initial render
-    const isDefault = !style.fontFamily && !style.fontSize && !style.color;
-    const isInitial = style.fontFamily === (initialStyle?.fontFamily ?? null)
-      && style.fontSize === (initialStyle?.fontSize ?? null)
-      && style.color === (initialStyle?.color ?? null);
-    if (isDefault && !initialStyle) return;
-    if (isInitial) return;
-
-    clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => saveStyle(style), 400);
-    return () => clearTimeout(saveTimerRef.current);
-  }, [style, editMode, saveStyle, initialStyle]);
+  function handleStyleChange(s: FieldStyle) {
+    setStyle(s);
+    saveStyleDebounced(s);
+  }
 
   const inlineStyle: React.CSSProperties = {};
   if (style.fontFamily) inlineStyle.fontFamily = style.fontFamily;
@@ -88,7 +99,7 @@ export function InlineEdit({
             fontFamily={style.fontFamily}
             fontSize={style.fontSize}
             color={style.color}
-            onChange={(s) => setStyle(s)}
+            onChange={handleStyleChange}
             onReset={handleReset}
           />
         )}
@@ -120,7 +131,7 @@ export function InlineEdit({
           fontFamily={style.fontFamily}
           fontSize={style.fontSize}
           color={style.color}
-          onChange={(s) => setStyle(s)}
+          onChange={handleStyleChange}
           onReset={handleReset}
         />
       )}

@@ -12,7 +12,7 @@ import { getNavbarContent } from "@/lib/get-navbar-content";
 import type { Artwork } from "@/components/artwork/artwork-card";
 import type { Metadata } from "next";
 import { ArtworkDetailClient } from "./artwork-detail-client";
-import { getEntityFonts, buildGoogleFontsUrl } from "@/lib/fonts";
+import { getEntityFonts, getEntityStyleMap, buildGoogleFontsUrl } from "@/lib/fonts";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -75,10 +75,11 @@ export default async function EserPage({ params }: Props) {
   }
   related = related.slice(0, 4);
 
-  // Preload custom fonts for artwork text
+  // Preload custom fonts and fetch style map for artwork text
   const allArtworkIds = [artwork.id, ...related.map((r) => r.id)];
   const entityFonts = await getEntityFonts("artwork", allArtworkIds);
   const fontsUrl = buildGoogleFontsUrl(entityFonts);
+  const fieldStyleMap = await getEntityStyleMap("artwork", allArtworkIds);
 
   const footerContent = await getFooterContent();
   const navItems = await getNavbarContent();
@@ -95,7 +96,7 @@ export default async function EserPage({ params }: Props) {
           <span className="mx-2">/</span>
           <span className="text-on-surface">{artwork.title}</span>
         </nav>
-        <ArtworkDetailClient artwork={artwork} related={related} />
+        <ArtworkDetailClient artwork={artwork} related={related} fieldStyleMap={fieldStyleMap} />
       </main>
       <Footer variant="white" content={footerContent} />
     </div>

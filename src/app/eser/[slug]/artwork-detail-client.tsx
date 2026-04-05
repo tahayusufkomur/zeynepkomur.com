@@ -5,12 +5,15 @@ import Link from "next/link";
 import type { Artwork } from "@/components/artwork/artwork-card";
 import { StyleableText } from "@/components/admin/styleable-text";
 
+type FieldStyle = { fontFamily: string | null; fontSize: number | null; color: string | null };
+
 type Props = {
   artwork: Artwork;
   related: Artwork[];
+  fieldStyleMap?: Record<string, FieldStyle>;
 };
 
-export function ArtworkDetailClient({ artwork, related }: Props) {
+export function ArtworkDetailClient({ artwork, related, fieldStyleMap = {} }: Props) {
   const allImages = [
     { imagePath: artwork.imagePath, id: "cover" },
     ...artwork.images,
@@ -39,10 +42,10 @@ export function ArtworkDetailClient({ artwork, related }: Props) {
           )}
         </div>
         <div className="flex flex-col justify-center">
-          <StyleableText entityType="artwork" entityId={artwork.id} fieldName="title" as="h1" className="text-4xl md:text-5xl font-bold tracking-tighter text-on-surface lowercase mb-4">
+          <StyleableText entityType="artwork" entityId={artwork.id} fieldName="title" initialStyle={fieldStyleMap[`${artwork.id}:title`]} as="h1" className="text-4xl md:text-5xl font-bold tracking-tighter text-on-surface lowercase mb-4">
             {artwork.title}
           </StyleableText>
-          <StyleableText entityType="artwork" entityId={artwork.id} fieldName="description" as="p" className="text-lg text-on-surface-variant lowercase mb-8">
+          <StyleableText entityType="artwork" entityId={artwork.id} fieldName="description" initialStyle={fieldStyleMap[`${artwork.id}:description`]} as="p" className="text-lg text-on-surface-variant lowercase mb-8">
             {artwork.description}
           </StyleableText>
           <dl className="space-y-4 mb-10">

@@ -51,6 +51,24 @@ export async function getFieldStyle(entityType: string, entityId: string, fieldN
   return { fontFamily: row.fontFamily, fontSize: row.fontSize, color: row.color ?? null };
 }
 
+/** Fetch all field styles for given entities, keyed by `${entityId}:${fieldName}` */
+export async function getEntityStyleMap(entityType: string, entityIds: string[]): Promise<Record<string, FieldStyle>> {
+  if (entityIds.length === 0) return {};
+  const rows = await db
+    .select()
+    .from(fieldStyles)
+    .where(and(eq(fieldStyles.entityType, entityType), inArray(fieldStyles.entityId, entityIds)));
+  const map: Record<string, FieldStyle> = {};
+  for (const row of rows) {
+    map[`${row.entityId}:${row.fieldName}`] = {
+      fontFamily: row.fontFamily || null,
+      fontSize: row.fontSize || null,
+      color: row.color ?? null,
+    };
+  }
+  return map;
+}
+
 export function parseStyleMap(rows: { sectionKey: string; content: string }[]): Record<string, FieldStyle> {
   const map: Record<string, FieldStyle> = {};
   for (const row of rows) {
