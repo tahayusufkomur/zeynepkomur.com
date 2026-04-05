@@ -11,7 +11,7 @@ export function buildGoogleFontsUrl(families: string[]): string | null {
   const unique = [...new Set(families)];
   if (unique.length === 0) return null;
   const params = unique.map((f) => `family=${encodeURIComponent(f)}`).join("&");
-  return `https://fonts.googleapis.com/css2?${params}&display=swap`;
+  return `https://fonts.googleapis.com/css2?${params}&subset=latin,latin-ext&display=swap`;
 }
 
 export async function getPageFonts(pageSlug: string): Promise<string[]> {

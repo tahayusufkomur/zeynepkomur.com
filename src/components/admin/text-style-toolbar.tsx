@@ -16,7 +16,15 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
   const [search, setSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [loadedFonts, setLoadedFonts] = useState<Set<string>>(new Set());
+  const [position, setPosition] = useState<"above" | "below">("above");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!toolbarRef.current) return;
+    const rect = toolbarRef.current.getBoundingClientRect();
+    if (rect.top < 0) setPosition("below");
+  }, []);
 
   useEffect(() => {
     fetch("/api/fonts")
@@ -38,7 +46,7 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
   function loadFont(family: string) {
     if (loadedFonts.has(family)) return;
     const link = document.createElement("link");
-    link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}&display=swap`;
+    link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}&subset=latin,latin-ext&display=swap`;
     link.rel = "stylesheet";
     document.head.appendChild(link);
     setLoadedFonts((prev) => new Set(prev).add(family));
@@ -57,28 +65,34 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
 
   return (
     <div
-      className="absolute -top-14 left-0 z-50 flex items-center gap-2 bg-white shadow-lg border border-surface-container px-3 py-2 rounded-sm"
-      onMouseDown={(e) => e.preventDefault()}
+      ref={toolbarRef}
+      style={{ fontSize: "14px", lineHeight: "1.4", letterSpacing: "normal", fontWeight: "normal", textTransform: "none" as const }}
+      className={`absolute left-0 z-50 flex items-center gap-3 bg-white shadow-xl border border-surface-container px-4 py-3 rounded-md ${
+        position === "above" ? "bottom-full mb-2" : "top-full mt-2"
+      }`}
+      onMouseDown={(e) => {
+        // Prevent blur on parent input, but allow range slider interaction
+        if ((e.target as HTMLElement).tagName !== "INPUT") e.preventDefault();
+      }}
     >
       {/* Font picker */}
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className="flex items-center gap-1 text-xs border border-outline-variant px-2 py-1 hover:border-primary transition-colors min-w-[140px] text-left truncate"
-          style={fontFamily ? { fontFamily } : undefined}
+          className="flex items-center gap-1 text-sm border border-outline-variant px-3 py-1.5 hover:border-primary transition-colors min-w-[160px] text-left truncate"
         >
           {fontFamily || "varsayılan"}
           <span className="material-symbols-outlined text-sm ml-auto">expand_more</span>
         </button>
 
         {showDropdown && (
-          <div className="absolute top-full left-0 mt-1 bg-white shadow-xl border border-surface-container w-64 max-h-64 flex flex-col z-50">
+          <div className="absolute top-full left-0 mt-1 bg-white shadow-xl border border-surface-container w-72 max-h-72 flex flex-col z-50">
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="font ara..."
-              className="w-full px-3 py-2 text-xs border-b border-surface-container outline-none"
+              className="w-full px-3 py-2.5 text-sm border-b border-surface-container outline-none"
               autoFocus
             />
             <div className="overflow-y-auto flex-1">
@@ -87,7 +101,7 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
                   onChange({ fontFamily: null, fontSize });
                   setShowDropdown(false);
                 }}
-                className="w-full px-3 py-2 text-xs text-left hover:bg-surface-container-low text-on-surface-variant"
+                className="w-full px-3 py-2 text-sm text-left hover:bg-surface-container-low text-on-surface-variant"
               >
                 varsayılan
               </button>
@@ -97,12 +111,12 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
                   <button
                     key={font.family}
                     onClick={() => selectFont(font.family)}
-                    className={`w-full px-3 py-2 text-xs text-left hover:bg-surface-container-low truncate ${
+                    className={`w-full px-3 py-2 text-left hover:bg-surface-container-low flex items-center justify-between gap-2 ${
                       fontFamily === font.family ? "bg-primary/10 text-primary font-bold" : ""
                     }`}
-                    style={{ fontFamily: font.family }}
                   >
-                    {font.family}
+                    <span className="text-sm truncate">{font.family}</span>
+                    <span className="text-base text-on-surface-variant shrink-0" style={{ fontFamily: font.family }}>Aa</span>
                   </button>
                 );
               })}
@@ -119,9 +133,9 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
           max={120}
           value={fontSize ?? 16}
           onChange={(e) => onChange({ fontFamily, fontSize: parseInt(e.target.value) })}
-          className="w-20 h-1 accent-primary"
+          className="w-24 h-1.5 accent-primary"
         />
-        <span className="text-[10px] font-bold text-on-surface-variant w-8 text-center">
+        <span className="text-xs font-bold text-on-surface-variant w-8 text-center">
           {fontSize ?? "—"}
         </span>
       </div>
@@ -129,7 +143,7 @@ export function TextStyleToolbar({ fontFamily, fontSize, onChange, onReset }: Te
       {/* Reset */}
       <button
         onClick={onReset}
-        className="w-6 h-6 flex items-center justify-center text-on-surface-variant hover:text-error transition-colors"
+        className="w-7 h-7 flex items-center justify-center text-on-surface-variant hover:text-error transition-colors"
         title="Stili sıfırla"
       >
         <span className="material-symbols-outlined text-sm">close</span>
