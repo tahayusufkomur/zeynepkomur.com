@@ -87,9 +87,12 @@ export function ArtworkCard({ artwork, onClick, onEdit, onDelete }: ArtworkCardP
     </>
   );
 
-  if (isEditing) {
-    return <div className={cardClassName}>{content}</div>;
-  }
-
-  return <Link href={`/eser/${artwork.slug}`} className={cardClassName}>{content}</Link>;
+  return (
+    <div className={cardClassName}>
+      {!isEditing && (
+        <Link href={`/eser/${artwork.slug}`} className="absolute inset-0 z-0" aria-label={artwork.title} />
+      )}
+      {content}
+    </div>
+  );
 }

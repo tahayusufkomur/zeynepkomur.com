@@ -19,6 +19,9 @@ type StyleableTextProps = {
 
 const DEFAULT_STYLE: FieldStyle = { fontFamily: null, fontSize: null, color: null };
 
+// Module-level cache so styles survive component remounts
+const styleCache = new Map<string, FieldStyle>();
+
 export function StyleableText({
   entityType,
   entityId,
@@ -30,47 +33,60 @@ export function StyleableText({
 }: StyleableTextProps) {
   const { isEditing } = useAdmin();
   const [showToolbar, setShowToolbar] = useState(false);
-  const [style, setStyle] = useState<FieldStyle>(initialStyle ?? DEFAULT_STYLE);
+  const cacheKey = `${entityType}:${entityId}:${fieldName}`;
+  const [style, setStyle] = useState<FieldStyle>(
+    initialStyle ?? styleCache.get(cacheKey) ?? DEFAULT_STYLE
+  );
   const wrapperRef = useRef<HTMLDivElement>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Fetch saved style on mount if not provided via props
+  // Fetch saved style on mount if not provided via props and not in cache
   useEffect(() => {
-    if (initialStyle) return;
+    if (initialStyle || styleCache.has(cacheKey)) return;
     fetch(`/api/field-styles?entityType=${entityType}&entityId=${entityId}&fieldName=${fieldName}`)
       .then((r) => r.json())
       .then((data) => {
         if (data && (data.fontFamily || data.fontSize || data.color)) {
-          setStyle({
+          const s: FieldStyle = {
             fontFamily: data.fontFamily || null,
             fontSize: data.fontSize || null,
             color: data.color || null,
-          });
+          };
+          styleCache.set(cacheKey, s);
+          setStyle(s);
         }
       })
       .catch(() => {});
-  }, [entityType, entityId, fieldName, initialStyle]);
+  }, [entityType, entityId, fieldName, initialStyle, cacheKey]);
 
   function saveStyleDebounced(s: FieldStyle) {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => {
-      fetch("/api/field-styles", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          entityType,
-          entityId,
-          fieldName,
-          fontFamily: s.fontFamily ?? "",
-          fontSize: s.fontSize ?? 16,
-          color: s.color ?? null,
-        }),
-      }).catch(() => {});
+    saveTimerRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch("/api/field-styles", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            entityType,
+            entityId,
+            fieldName,
+            fontFamily: s.fontFamily ?? "",
+            fontSize: s.fontSize ?? 16,
+            color: s.color ?? null,
+          }),
+        });
+        if (!res.ok) {
+          console.error("[StyleableText] save failed:", res.status, await res.text());
+        }
+      } catch (err) {
+        console.error("[StyleableText] save error:", err);
+      }
     }, 400);
   }
 
   function handleStyleChange(s: FieldStyle) {
     setStyle(s);
+    styleCache.set(cacheKey, s);
     saveStyleDebounced(s);
   }
 
@@ -115,6 +131,7 @@ export function StyleableText({
 
   async function handleReset() {
     setStyle(DEFAULT_STYLE);
+    styleCache.delete(cacheKey);
     setShowToolbar(false);
     try {
       await fetch("/api/field-styles", {

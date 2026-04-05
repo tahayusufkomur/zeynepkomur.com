@@ -60,31 +60,24 @@ export function Navbar({ currentPage, onNewsletterClick, navItems }: NavbarProps
           const isActive = currentPage === link.page;
           return (
             <div key={link.key} className="flex items-center gap-1 relative">
-              {isEditing ? (
-                <InlineEdit
-                  pageSlug="navbar"
-                  sectionKey={`${link.key}_label`}
-                  initialContent={link.label}
-                  as="span"
-                  className={
-                    isActive
-                      ? "text-primary font-bold border-b-2 border-secondary-container pb-1 lowercase font-body tracking-tight"
-                      : "text-on-surface-variant hover:text-primary transition-colors duration-300 lowercase font-body tracking-tight"
-                  }
-                />
-              ) : (
+              {!isEditing && (
                 <Link
                   href={link.href}
-                  className={
-                    isActive
-                      ? "text-primary font-bold border-b-2 border-secondary-container pb-1 lowercase font-body tracking-tight"
-                      : "text-on-surface-variant hover:text-primary transition-colors duration-300 lowercase font-body tracking-tight"
-                  }
-                  style={isActive ? { borderColor: "#ffd709" } : undefined}
-                >
-                  {link.label}
-                </Link>
+                  className="absolute inset-0 z-10"
+                  aria-label={link.label}
+                />
               )}
+              <InlineEdit
+                pageSlug="navbar"
+                sectionKey={`${link.key}_label`}
+                initialContent={link.label}
+                as="span"
+                className={
+                  isActive
+                    ? "text-primary font-bold border-b-2 border-secondary-container pb-1 lowercase font-body tracking-tight"
+                    : "text-on-surface-variant hover:text-primary transition-colors duration-300 lowercase font-body tracking-tight"
+                }
+              />
               {isEditing && (
                 <button
                   onClick={() => toggleHidden(link.key, link.hidden)}

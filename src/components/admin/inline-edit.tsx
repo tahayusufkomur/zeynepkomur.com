@@ -1,7 +1,7 @@
 "use client";
 
 import { useAdmin } from "@/hooks/use-admin";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { showToast } from "./toast";
 import { TextStyleToolbar } from "./text-style-toolbar";
 
@@ -19,6 +19,10 @@ type InlineEditProps = {
 
 const DEFAULT_STYLE: FieldStyle = { fontFamily: null, fontSize: null, color: null };
 
+// Module-level caches so data survives component remounts
+const styleCache = new Map<string, FieldStyle>();
+const contentCache = new Map<string, string>();
+
 export function InlineEdit({
   pageSlug,
   sectionKey,
@@ -29,21 +33,51 @@ export function InlineEdit({
   multiline = false,
 }: InlineEditProps) {
   const { isEditing: editMode } = useAdmin();
-  const [content, setContent] = useState(initialContent);
+  const cacheKey = `${pageSlug}:${sectionKey}`;
+  const [content, setContent] = useState(contentCache.get(cacheKey) ?? initialContent);
   const [editing, setEditing] = useState(false);
   const [showToolbar, setShowToolbar] = useState(false);
-  const [style, setStyle] = useState<FieldStyle>(initialStyle ?? DEFAULT_STYLE);
+  const [style, setStyle] = useState<FieldStyle>(
+    initialStyle ?? styleCache.get(cacheKey) ?? DEFAULT_STYLE
+  );
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const contentRef = useRef(content);
+  contentRef.current = content;
 
   useEffect(() => {
     if (editing && inputRef.current) inputRef.current.focus();
   }, [editing]);
 
-  // Fetch saved style on mount if not provided via props
+  // Auto-save text content when edit mode is toggled off while editing
+  const saveContent = useCallback(async (text: string) => {
+    if (text === initialContent) return;
+    try {
+      const res = await fetch("/api/content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pageSlug, sectionKey, content: text }),
+      });
+      if (!res.ok) throw new Error();
+      showToast("kaydedildi", "success");
+    } catch {
+      showToast("kaydedilemedi, tekrar deneyin", "error");
+    }
+  }, [pageSlug, sectionKey, initialContent]);
+
   useEffect(() => {
-    if (initialStyle) return;
+    if (!editMode && editing) {
+      // Edit mode was toggled off while we were editing — save and exit
+      saveContent(contentRef.current);
+      setEditing(false);
+      setShowToolbar(false);
+    }
+  }, [editMode, editing, saveContent]);
+
+  // Fetch saved style on mount if not provided via props and not in cache
+  useEffect(() => {
+    if (initialStyle || styleCache.has(cacheKey)) return;
     fetch(`/api/content?page=${pageSlug}&section=${sectionKey}_style`)
       .then((r) => r.json())
       .then((rows: { content: string }[]) => {
@@ -51,35 +85,45 @@ export function InlineEdit({
           try {
             const parsed = JSON.parse(rows[0].content);
             if (parsed.fontFamily || parsed.fontSize || parsed.color) {
-              setStyle({
+              const s: FieldStyle = {
                 fontFamily: parsed.fontFamily || null,
                 fontSize: parsed.fontSize || null,
                 color: parsed.color || null,
-              });
+              };
+              styleCache.set(cacheKey, s);
+              setStyle(s);
             }
           } catch {}
         }
       })
       .catch(() => {});
-  }, [pageSlug, sectionKey, initialStyle]);
+  }, [pageSlug, sectionKey, initialStyle, cacheKey]);
 
   function saveStyleDebounced(s: FieldStyle) {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => {
-      fetch("/api/content", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pageSlug,
-          sectionKey: `${sectionKey}_style`,
-          content: JSON.stringify({ fontFamily: s.fontFamily, fontSize: s.fontSize, color: s.color }),
-        }),
-      }).catch(() => {});
+    saveTimerRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch("/api/content", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            pageSlug,
+            sectionKey: `${sectionKey}_style`,
+            content: JSON.stringify({ fontFamily: s.fontFamily, fontSize: s.fontSize, color: s.color }),
+          }),
+        });
+        if (!res.ok) {
+          console.error("[InlineEdit] save failed:", res.status, await res.text());
+        }
+      } catch (err) {
+        console.error("[InlineEdit] save error:", err);
+      }
     }, 400);
   }
 
   function handleStyleChange(s: FieldStyle) {
     setStyle(s);
+    styleCache.set(cacheKey, s);
     saveStyleDebounced(s);
   }
 
@@ -106,12 +150,16 @@ export function InlineEdit({
         <InputTag
           ref={inputRef as any}
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e) => {
+            setContent(e.target.value);
+            contentCache.set(cacheKey, e.target.value);
+          }}
           onBlur={handleSave}
           onKeyDown={(e) => {
             if (!multiline && e.key === "Enter") handleSave();
             if (e.key === "Escape") {
               setContent(initialContent);
+              contentCache.delete(cacheKey);
               setEditing(false);
               setShowToolbar(false);
             }
@@ -159,25 +207,13 @@ export function InlineEdit({
 
   async function handleSave() {
     setShowToolbar(false);
-    if (content !== initialContent) {
-      try {
-        const res = await fetch("/api/content", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ pageSlug, sectionKey, content }),
-        });
-        if (!res.ok) throw new Error();
-        showToast("kaydedildi", "success");
-      } catch {
-        setContent(initialContent);
-        showToast("kaydedilemedi, tekrar deneyin", "error");
-      }
-    }
+    await saveContent(content);
     setEditing(false);
   }
 
   async function handleReset() {
     setStyle(DEFAULT_STYLE);
+    styleCache.delete(cacheKey);
     setShowToolbar(false);
     try {
       await fetch("/api/content", {
