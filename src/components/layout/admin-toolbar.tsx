@@ -5,7 +5,6 @@ import { useEditMode } from "@/providers/edit-mode-provider";
 import { ArtworkReorderModal } from "@/components/admin/artwork-reorder-modal";
 import { CollectionManagerModal } from "@/components/admin/collection-manager-modal";
 import type { Artwork } from "@/components/artwork/artwork-card";
-import { HeroPickerModal } from "@/components/admin/hero-picker-modal";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -21,7 +20,6 @@ export function AdminToolbar() {
   const [showCollections, setShowCollections] = useState(false);
   const [showReorder, setShowReorder] = useState(false);
   const [reorderArtworks, setReorderArtworks] = useState<Artwork[]>([]);
-  const [showHeroPicker, setShowHeroPicker] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -168,16 +166,6 @@ export function AdminToolbar() {
               <span className="material-symbols-outlined text-lg">swap_vert</span>
               <span className="flex-1 text-left">eserleri sırala</span>
             </button>
-            <button
-              onClick={() => {
-                setOpen(false);
-                setShowHeroPicker(true);
-              }}
-              className="flex items-center gap-3 px-3 py-2.5 text-sm lowercase tracking-tight text-inverse-on-surface/80 hover:bg-white/10 hover:text-white transition-colors w-full"
-            >
-              <span className="material-symbols-outlined text-lg">home</span>
-              <span className="flex-1 text-left">ana sayfa görselleri</span>
-            </button>
           </div>
 
           {/* Stats */}
@@ -226,15 +214,6 @@ export function AdminToolbar() {
           onClose={() => setShowReorder(false)}
           onSaved={() => {
             setShowReorder(false);
-            router.refresh();
-          }}
-        />
-      )}
-      {showHeroPicker && (
-        <HeroPickerModal
-          onClose={() => setShowHeroPicker(false)}
-          onSaved={() => {
-            setShowHeroPicker(false);
             router.refresh();
           }}
         />

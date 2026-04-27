@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { showToast } from "@/components/admin/toast";
+import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import type { Artwork, ArtworkImage } from "./artwork-card";
 
 type ArtworkFormModalProps = {
@@ -9,6 +10,14 @@ type ArtworkFormModalProps = {
   onClose: () => void;
   onSaved: () => void;
 };
+
+const DIMENSION_OPTIONS = [
+  "10 x 15 cm",
+  "30 x 30 cm",
+  "35 x 50 cm",
+  "50 x 70 cm",
+  "70 x 100 cm",
+];
 
 export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModalProps) {
   const [title, setTitle] = useState(artwork?.title ?? "");
@@ -267,15 +276,12 @@ export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModal
             />
           </div>
 
-          {/* Description */}
+          {/* Description (rich text) */}
           <div>
             <label className="block text-[10px] font-bold uppercase tracking-widest text-primary mb-2">Açıklama</label>
-            <input
-              type="text"
+            <RichTextEditor
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-              className="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-primary px-0 py-3 text-on-surface lowercase transition-all"
+              onChange={setDescription}
               placeholder="yağlı boya tablosu"
             />
           </div>
@@ -298,13 +304,19 @@ export function ArtworkFormModal({ artwork, onClose, onSaved }: ArtworkFormModal
           <div className="grid grid-cols-2 gap-8">
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest text-primary mb-2">Boyutlar</label>
-              <input
-                type="text"
+              <select
                 value={dimensions}
                 onChange={(e) => setDimensions(e.target.value)}
                 className="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-primary px-0 py-3 text-on-surface lowercase transition-all"
-                placeholder="50x70 cm"
-              />
+              >
+                <option value="">seç</option>
+                {DIMENSION_OPTIONS.map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+                {dimensions && !DIMENSION_OPTIONS.includes(dimensions) && (
+                  <option value={dimensions}>{dimensions} (eski değer)</option>
+                )}
+              </select>
             </div>
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest text-primary mb-2">Teknik</label>

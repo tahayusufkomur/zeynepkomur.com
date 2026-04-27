@@ -32,8 +32,9 @@ export default async function IletisimPage() {
   const section2Title = await getContent("section_2_title", "bana her şeyi sorabilirsin.");
   const studioAddress = await getContent("studio_address", "moda, kadıköy, istanbul, türkiye");
   const studioHours = await getContent("studio_hours", "pazartesi - cumartesi, 10:00 - 19:00");
-  const studioEmail = await getContent("studio_email", "merhaba@zeynepkomur.com");
-  const studioSocial = await getContent("studio_social", "@zeynepkomur.com");
+  const studioEmail = await getContent("studio_email", "zeynep.komur4@gmail.com");
+  const studioSocial = await getContent("studio_social", "@arada.art");
+  const studioPhone = await getContent("studio_phone", "+90 530 250 04 11");
 
   // Fetch all page content rows for style map
   const allRows = await db
@@ -48,66 +49,66 @@ export default async function IletisimPage() {
       {fontsUrl && <link rel="stylesheet" href={fontsUrl} />}
       <Navbar currentPage="iletisim" navItems={navItems} />
 
-      <main className="flex-1 pt-48 pb-24 px-8 md:px-16 max-w-[1440px] mx-auto w-full">
+      <main className="flex-1 pt-20 pb-16 px-8 md:px-12 max-w-[1280px] mx-auto w-full">
         {/* Hero headline */}
-        <div className="mb-24 text-center lg:text-left">
-          <h1 className="text-8xl md:text-[10rem] font-extrabold tracking-tighter text-on-surface lowercase leading-none">
+        <div className="mb-12 text-center lg:text-left">
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter text-on-surface lowercase leading-none">
             <InlineEdit
               pageSlug="contact"
               sectionKey="headline"
               initialContent={headline}
               initialStyle={styleMap["headline"]}
               as="span"
-              className="text-8xl md:text-[10rem] font-extrabold tracking-tighter text-on-surface lowercase leading-none"
+              className="text-5xl md:text-7xl font-extrabold tracking-tighter text-on-surface lowercase leading-none"
             />
           </h1>
         </div>
 
         {/* Section 1: Beraber çalışalım */}
-        <section className="mb-48">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            <div className="lg:col-span-7">
+        <section className="mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="lg:col-span-6">
               <InlineEdit
                 pageSlug="contact"
                 sectionKey="section_1_title"
                 initialContent={section1Title}
                 initialStyle={styleMap["section_1_title"]}
                 as="h2"
-                className="text-7xl md:text-[9rem] font-extrabold tracking-tighter text-on-surface lowercase leading-[0.85] mb-8"
+                className="text-4xl md:text-5xl font-extrabold tracking-tighter text-on-surface lowercase leading-[0.95] mb-4"
               />
             </div>
-            <div className="lg:col-span-5 lg:pt-8">
+            <div className="lg:col-span-6">
               <ContactForm />
             </div>
           </div>
         </section>
 
         {/* Pink divider */}
-        <div className="w-32 h-2 bg-tertiary mb-48 opacity-60" />
+        <div className="w-24 h-1.5 bg-tertiary mb-16 opacity-60" />
 
         {/* Section 2: Bana her şeyi sorabilirsin */}
-        <section className="mb-48">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
-            <div className="lg:col-span-5 order-2 lg:order-1 lg:pb-8">
+        <section className="mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="lg:col-span-6 order-2 lg:order-1">
               <QuestionForm />
             </div>
-            <div className="lg:col-span-7 order-1 lg:order-2 text-right">
+            <div className="lg:col-span-6 order-1 lg:order-2 lg:text-right">
               <InlineEdit
                 pageSlug="contact"
                 sectionKey="section_2_title"
                 initialContent={section2Title}
                 initialStyle={styleMap["section_2_title"]}
                 as="h2"
-                className="text-7xl md:text-[9rem] font-extrabold tracking-tighter text-on-surface lowercase leading-[0.85] mb-8"
+                className="text-4xl md:text-5xl font-extrabold tracking-tighter text-on-surface lowercase leading-[0.95] mb-4"
               />
             </div>
           </div>
         </section>
 
         {/* Studio info grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-24 mb-32">
-          <div className="border-t border-outline-variant pt-8">
-            <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+          <div className="border-t border-outline-variant pt-5">
+            <p className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mb-2">
               stüdyo
             </p>
             <InlineEdit
@@ -117,11 +118,40 @@ export default async function IletisimPage() {
               initialStyle={styleMap["studio_address"]}
               as="p"
               multiline
-              className="text-2xl text-on-surface lowercase leading-tight"
+              className="text-base text-on-surface lowercase leading-snug"
             />
           </div>
-          <div className="border-t border-outline-variant pt-8">
-            <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-4">
+          <div className="border-t border-outline-variant pt-5">
+            <p className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mb-2">
+              iletişim
+            </p>
+            <InlineEdit
+              pageSlug="contact"
+              sectionKey="studio_phone"
+              initialContent={studioPhone}
+              initialStyle={styleMap["studio_phone"]}
+              as="p"
+              className="text-base text-on-surface lowercase leading-snug"
+            />
+            <InlineEdit
+              pageSlug="contact"
+              sectionKey="studio_email"
+              initialContent={studioEmail}
+              initialStyle={styleMap["studio_email"]}
+              as="p"
+              className="text-base text-on-surface lowercase leading-snug"
+            />
+            <InlineEdit
+              pageSlug="contact"
+              sectionKey="studio_social"
+              initialContent={studioSocial}
+              initialStyle={styleMap["studio_social"]}
+              as="p"
+              className="text-base text-on-surface lowercase leading-snug"
+            />
+          </div>
+          <div className="border-t border-outline-variant pt-5">
+            <p className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mb-2">
               mesai
             </p>
             <InlineEdit
@@ -131,28 +161,7 @@ export default async function IletisimPage() {
               initialStyle={styleMap["studio_hours"]}
               as="p"
               multiline
-              className="text-2xl text-on-surface lowercase leading-tight"
-            />
-          </div>
-          <div className="border-t border-outline-variant pt-8">
-            <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-4">
-              dijital
-            </p>
-            <InlineEdit
-              pageSlug="contact"
-              sectionKey="studio_email"
-              initialContent={studioEmail}
-              initialStyle={styleMap["studio_email"]}
-              as="p"
-              className="text-2xl text-on-surface lowercase leading-tight"
-            />
-            <InlineEdit
-              pageSlug="contact"
-              sectionKey="studio_social"
-              initialContent={studioSocial}
-              initialStyle={styleMap["studio_social"]}
-              as="p"
-              className="text-2xl text-on-surface lowercase leading-tight mt-1"
+              className="text-base text-on-surface lowercase leading-snug"
             />
           </div>
         </div>

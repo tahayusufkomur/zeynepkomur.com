@@ -29,11 +29,14 @@ export function GalleryClient({ artworks, dimensions, collections }: GalleryClie
 
   let filtered = artworks;
 
+  const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, " ");
+
   if (activeCategory) {
     filtered = filtered.filter((a) => a.category === activeCategory);
   }
   if (selectedDimension) {
-    filtered = filtered.filter((a) => a.dimensions === selectedDimension);
+    const target = normalize(selectedDimension);
+    filtered = filtered.filter((a) => normalize(a.dimensions ?? "") === target);
   }
   if (selectedCollection) {
     filtered = filtered.filter((a) => a.collectionIds?.includes(selectedCollection));

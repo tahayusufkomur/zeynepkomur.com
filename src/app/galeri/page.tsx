@@ -35,10 +35,17 @@ export default async function GaleriPage() {
     .orderBy(asc(artworks.sortOrder));
   const allArtworks = await attachImages(rawArtworks);
 
-  // Fetch distinct dimensions for filter
-  const distinctDimensions = [...new Set(
-    rawArtworks.map((a) => a.dimensions).filter((d) => d && d.trim() !== "")
-  )].sort();
+  // Fetch distinct dimensions for filter — dedupe by normalized form (trim + collapse spaces + lowercase)
+  const dimensionByNormalized = new Map<string, string>();
+  for (const a of rawArtworks) {
+    const trimmed = a.dimensions?.trim();
+    if (!trimmed) continue;
+    const normalized = trimmed.toLowerCase().replace(/\s+/g, " ");
+    if (!dimensionByNormalized.has(normalized)) {
+      dimensionByNormalized.set(normalized, trimmed);
+    }
+  }
+  const distinctDimensions = [...dimensionByNormalized.values()].sort();
 
   // Fetch published collections for filter
   const publishedCollections = await db

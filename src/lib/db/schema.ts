@@ -89,6 +89,21 @@ export const adminUsers = sqliteTable("admin_users", {
   passwordHash: text("password_hash").notNull(),
 });
 
+export const trainings = sqliteTable("trainings", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  content: text("content").notNull().default(""),
+  duration: text("duration").notNull().default(""),
+  price: text("price").notNull().default(""),
+  format: text("format").notNull().default(""),
+  imagePath: text("image_path").notNull().default(""),
+  isPublished: integer("is_published", { mode: "boolean" }).notNull().default(true),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
+  updatedAt: text("updated_at").notNull().default(sql`(datetime('now'))`),
+});
+
 export const emailCampaigns = sqliteTable("email_campaigns", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   templateId: text("template_id").notNull(),

@@ -13,12 +13,12 @@ const DEFAULTS: Record<string, string> = {
   brand: "by zeynep kömür",
   copyright: "by zeynep kömür. all rights reserved.",
   copyright_yellow: "by zeynep kömür. sade ama vurucu.",
-  email: "info@zeynepkomur.com",
-  phone: "+900000000000",
-  phone_label: "telefon",
-  email_label: "e-posta",
-  instagram_label: "instagram",
-  instagram_url: "https://instagram.com",
+  email: "zeynep.komur4@gmail.com",
+  phone: "+905302500411",
+  phone_label: "+90 530 250 04 11",
+  email_label: "zeynep.komur4@gmail.com",
+  instagram_label: "@arada.art",
+  instagram_url: "https://www.instagram.com/arada.art/",
 };
 
 function c(content: Record<string, string> | undefined, key: string) {

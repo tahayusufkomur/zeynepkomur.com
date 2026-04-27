@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { artworks, collectionArtworks } from "@/lib/db/schema";
-import { eq, ne, and, inArray } from "drizzle-orm";
+import { eq, ne, and, inArray, asc } from "drizzle-orm";
 import { attachImages } from "@/lib/db/artwork-with-images";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -33,6 +33,15 @@ export default async function EserPage({ params }: Props) {
   if (!artworkRow) notFound();
 
   const [artwork] = (await attachImages([artworkRow])) as Artwork[];
+
+  // Compute prev/next slug by same ordering used on the gallery page
+  const allSlugs = await db
+    .select({ slug: artworks.slug })
+    .from(artworks)
+    .orderBy(asc(artworks.sortOrder));
+  const currentIndex = allSlugs.findIndex((r) => r.slug === slug);
+  const prevSlug = currentIndex > 0 ? allSlugs[currentIndex - 1].slug : null;
+  const nextSlug = currentIndex >= 0 && currentIndex < allSlugs.length - 1 ? allSlugs[currentIndex + 1].slug : null;
 
   // Find related artworks: same collection first, then same category
   let related: Artwork[] = [];
@@ -96,7 +105,7 @@ export default async function EserPage({ params }: Props) {
           <span className="mx-2">/</span>
           <span className="text-on-surface">{artwork.title}</span>
         </nav>
-        <ArtworkDetailClient artwork={artwork} related={related} fieldStyleMap={fieldStyleMap} />
+        <ArtworkDetailClient artwork={artwork} related={related} fieldStyleMap={fieldStyleMap} prevSlug={prevSlug} nextSlug={nextSlug} />
       </main>
       <Footer variant="white" content={footerContent} />
     </div>

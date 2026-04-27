@@ -1,17 +1,15 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
-import { pageContent, artworks } from "@/lib/db/schema";
-import { eq, desc, and, inArray } from "drizzle-orm";
-import { attachImages } from "@/lib/db/artwork-with-images";
-import Image from "next/image";
+import { pageContent } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import Link from "next/link";
 import { InlineEdit } from "@/components/admin/inline-edit";
+import { PageImageSlot } from "@/components/admin/page-image-slot";
 import { Footer } from "@/components/layout/footer";
 import { HomeClient } from "./home-client";
 import { getFooterContent } from "@/lib/get-footer-content";
 import { getNavbarContent } from "@/lib/get-navbar-content";
-import { HomeArtworkOverlay } from "./home-artwork-overlay";
 import { parseStyleMap, collectFonts, buildGoogleFontsUrl } from "@/lib/fonts";
-import type { Artwork } from "@/components/artwork/artwork-card";
 
 type ContentMap = Record<string, string>;
 
@@ -20,17 +18,23 @@ const defaults: ContentMap = {
   hero_subtitle: "modernizmin sınırlarını zorlayan, renk ve formun dansı.",
   new_arrivals_title: "yeni gelenler",
   new_arrivals_description:
-    "son eklenen eserler ve koleksiyonlar. zeynep kömür seçkisiyle modern sanatın taze soluğu.",
+    "son eklenen görseller. zeynep kömür seçkisiyle modern sanatın taze soluğu.",
   quote_text:
     "Her çocuk bir sanatçıdır. Sorun, büyüdüğümüzde sanatçı kalmayı nasıl başaracağımızdır.",
   quote_attribution: "Pablo Picasso",
+  bento_large_title: "geometrinin sessizliği",
+  bento_bottom_title: "atölye günlüğü",
+  bento_bottom_desc: "süreçten sonuca, her fırça darbesinin bir hikayesi var.",
+  hero_image: "",
+  bento_large_image: "",
+  bento_vertical_image: "",
+  bento_bottom_image: "",
 };
 
 export default async function HomePage() {
   const footerContent = await getFooterContent();
   const navItems = await getNavbarContent();
 
-  // Fetch page content
   const rows = await db
     .select()
     .from(pageContent)
@@ -43,32 +47,10 @@ export default async function HomePage() {
   const styleMap = parseStyleMap(rows);
   const fontsUrl = buildGoogleFontsUrl(collectFonts(styleMap));
 
-  // Fetch hero artworks (from admin selection or fallback to latest 3)
-  let latestArtworks: Artwork[] = [];
-  const [heroRow] = await db
-    .select()
-    .from(pageContent)
-    .where(and(eq(pageContent.pageSlug, "home"), eq(pageContent.sectionKey, "hero_artworks")));
-
-  if (heroRow) {
-    try {
-      const heroIds: string[] = JSON.parse(heroRow.content);
-      if (heroIds.length === 3) {
-        const rows2 = await db.select().from(artworks).where(inArray(artworks.id, heroIds));
-        const withImages = (await attachImages(rows2)) as Artwork[];
-        latestArtworks = heroIds.map((id) => withImages.find((a) => a.id === id)).filter(Boolean) as Artwork[];
-      }
-    } catch {}
-  }
-
-  if (latestArtworks.length < 3) {
-    const rawLatest = await db.select().from(artworks).orderBy(desc(artworks.createdAt)).limit(3);
-    latestArtworks = (await attachImages(rawLatest)) as Artwork[];
-  }
-
   return (
     <HomeClient navItems={navItems}>
       {fontsUrl && <link rel="stylesheet" href={fontsUrl} />}
+
       {/* Hero Section */}
       <header className="relative min-h-[921px] flex flex-col items-center justify-center bg-white px-6 py-20 overflow-hidden">
         <div className="max-w-5xl w-full text-center z-10">
@@ -81,7 +63,7 @@ export default async function HomePage() {
             className="text-6xl md:text-9xl font-light text-on-surface tracking-tighter mb-16 lowercase"
           />
 
-          <HomeArtworkOverlay artwork={latestArtworks[0] ?? null} className="relative w-full aspect-square md:aspect-[21/9] bg-surface-container-low group">
+          <div className="relative w-full aspect-square md:aspect-[21/9] bg-surface-container-low group">
             {/* Decorative accents */}
             <div
               className="absolute -top-8 -left-8 w-32 h-32 z-0"
@@ -90,23 +72,15 @@ export default async function HomePage() {
             <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-primary z-0" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[105%] h-32 bg-highlight-pink/20 -rotate-1 pointer-events-none" />
 
-            {latestArtworks[0] ? (
-              <Image
-                src={latestArtworks[0].imagePath}
-                alt={latestArtworks[0].title}
-                fill
-                unoptimized
-                className="relative z-10 object-cover grayscale-[0.1] hover:grayscale-0 transition-all duration-1000 cursor-crosshair shadow-2xl"
-                priority
-              />
-            ) : (
-              <div className="relative z-10 w-full h-full bg-surface-container-low flex items-center justify-center">
-                <span className="material-symbols-outlined text-outline/30 text-8xl">
-                  palette
-                </span>
-              </div>
-            )}
-          </HomeArtworkOverlay>
+            <PageImageSlot
+              pageSlug="home"
+              sectionKey="hero_image"
+              initialSrc={content.hero_image}
+              alt="ana görsel"
+              className="absolute inset-0 z-10 shadow-2xl"
+              imgClassName="w-full h-full object-cover grayscale-[0.1] hover:grayscale-0 transition-all duration-1000"
+            />
+          </div>
         </div>
 
         <InlineEdit
@@ -119,7 +93,7 @@ export default async function HomePage() {
         />
       </header>
 
-      {/* Asymmetric Bento Grid (Yeni Gelenler) */}
+      {/* Asymmetric Bento Grid */}
       <section className="py-32 px-8 md:px-16 bg-white">
         <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
           <div>
@@ -148,59 +122,56 @@ export default async function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-10 h-auto md:h-[1100px]">
           {/* Large Card */}
-          <HomeArtworkOverlay artwork={latestArtworks[0] ?? null} className="md:col-span-2 md:row-span-2 relative group overflow-hidden bg-surface-container shadow-sm hover:shadow-xl transition-shadow duration-500">
-            {latestArtworks[0] ? (
-              <Image
-                src={latestArtworks[0].imagePath}
-                alt={latestArtworks[0].title}
-                fill
-                unoptimized
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-            ) : (
-              <div className="w-full h-full min-h-[400px] bg-surface-container flex items-center justify-center">
-                <span className="material-symbols-outlined text-outline/20 text-9xl">
-                  image
-                </span>
-              </div>
-            )}
-            <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-12 backdrop-blur-[2px]">
+          <div className="md:col-span-2 md:row-span-2 relative group overflow-hidden bg-surface-container shadow-sm hover:shadow-xl transition-shadow duration-500">
+            <PageImageSlot
+              pageSlug="home"
+              sectionKey="bento_large_image"
+              initialSrc={content.bento_large_image}
+              alt="öne çıkan görsel"
+              className="absolute inset-0"
+              imgClassName="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-12 backdrop-blur-[2px] pointer-events-none">
               <span className="text-white text-xs font-bold tracking-[0.3em] uppercase mb-4">
-                koleksiyon 01
+                öne çıkan
               </span>
-              <h3 className="text-white text-4xl font-bold lowercase leading-none">
-                {latestArtworks[0]?.title ?? "geometrinin sessizliği"}
-              </h3>
+              <InlineEdit
+                pageSlug="home"
+                sectionKey="bento_large_title"
+                initialContent={content.bento_large_title}
+                initialStyle={styleMap["bento_large_title"]}
+                as="h3"
+                className="text-white text-4xl font-bold lowercase leading-none pointer-events-auto"
+              />
             </div>
-          </HomeArtworkOverlay>
+          </div>
 
           {/* Vertical Card */}
-          <HomeArtworkOverlay artwork={latestArtworks[1] ?? null} className="md:col-span-1 md:row-span-1 relative group overflow-hidden bg-surface-container-low">
-            {latestArtworks[1] ? (
-              <Image
-                src={latestArtworks[1].imagePath}
-                alt={latestArtworks[1].title}
-                fill
-                unoptimized
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-              />
-            ) : (
-              <div className="w-full h-full min-h-[300px] bg-surface-container-low flex items-center justify-center">
-                <span className="material-symbols-outlined text-outline/20 text-7xl">
-                  image
-                </span>
-              </div>
-            )}
-            <div className="absolute top-0 left-0 bg-secondary px-6 py-2 text-xs font-bold text-on-secondary-container tracking-wider uppercase">
+          <div className="md:col-span-1 md:row-span-1 relative group overflow-hidden bg-surface-container-low">
+            <PageImageSlot
+              pageSlug="home"
+              sectionKey="bento_vertical_image"
+              initialSrc={content.bento_vertical_image}
+              alt="görsel"
+              className="absolute inset-0"
+              imgClassName="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+            />
+            <div
+              className="absolute top-0 left-0 px-6 py-2 text-xs font-extrabold tracking-wider uppercase pointer-events-none shadow-sm"
+              style={{ backgroundColor: "#ffd709", color: "#1a1500" }}
+            >
               yeni
             </div>
-          </HomeArtworkOverlay>
+          </div>
 
-          {/* Pink Highlight Square */}
-          <div className="md:col-span-1 md:row-span-1 bg-highlight-pink relative flex items-center justify-center p-12">
+          {/* Pink Highlight Square — links to custom artwork request */}
+          <Link
+            href="/ozel-istek"
+            className="md:col-span-1 md:row-span-1 bg-highlight-pink relative flex items-center justify-center p-12 group cursor-pointer transition-all duration-500 hover:bg-primary"
+          >
             <div className="text-center">
               <span
-                className="material-symbols-outlined text-white text-7xl mb-6"
+                className="material-symbols-outlined text-white text-7xl mb-6 transition-transform duration-500 group-hover:scale-110"
                 style={{ fontVariationSettings: "'FILL' 1" }}
               >
                 brush
@@ -208,36 +179,42 @@ export default async function HomePage() {
               <p className="text-white font-bold text-xl leading-tight lowercase">
                 sanatın dijital <br /> formunda kaybolun.
               </p>
+              <span className="mt-4 inline-flex items-center gap-1 text-white/80 text-[10px] font-bold uppercase tracking-widest">
+                resim siparişi
+                <span className="material-symbols-outlined text-sm transition-transform duration-500 group-hover:translate-x-1">arrow_forward</span>
+              </span>
             </div>
-          </div>
+          </Link>
 
           {/* Bottom Card */}
-          <HomeArtworkOverlay artwork={latestArtworks[2] ?? null} className="md:col-span-2 md:row-span-1 relative group overflow-hidden bg-surface-container-highest">
-            {latestArtworks[2] ? (
-              <Image
-                src={latestArtworks[2].imagePath}
-                alt={latestArtworks[2].title}
-                fill
-                unoptimized
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+          <div className="md:col-span-2 md:row-span-1 relative group overflow-hidden bg-surface-container-highest">
+            <PageImageSlot
+              pageSlug="home"
+              sectionKey="bento_bottom_image"
+              initialSrc={content.bento_bottom_image}
+              alt="görsel"
+              className="absolute inset-0"
+              imgClassName="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+            />
+            <div className="absolute bottom-0 left-0 p-10 bg-white/95 backdrop-blur shadow-2xl text-on-background max-w-sm m-6 pointer-events-none">
+              <InlineEdit
+                pageSlug="home"
+                sectionKey="bento_bottom_title"
+                initialContent={content.bento_bottom_title}
+                initialStyle={styleMap["bento_bottom_title"]}
+                as="h3"
+                className="text-2xl font-bold lowercase mb-2 pointer-events-auto"
               />
-            ) : (
-              <div className="w-full h-full min-h-[300px] bg-surface-container-highest flex items-center justify-center">
-                <span className="material-symbols-outlined text-outline/20 text-7xl">
-                  image
-                </span>
-              </div>
-            )}
-            <div className="absolute bottom-0 left-0 p-10 bg-white/95 backdrop-blur shadow-2xl text-on-background max-w-sm m-6">
-              <h4 className="text-2xl font-bold lowercase mb-2">
-                {latestArtworks[2]?.title ?? "atölye günlüğü"}
-              </h4>
-              <p className="text-base text-on-surface-variant lowercase leading-snug">
-                {latestArtworks[2]?.description ??
-                  "süreçten sonuca, her fırça darbesinin bir hikayesi var."}
-              </p>
+              <InlineEdit
+                pageSlug="home"
+                sectionKey="bento_bottom_desc"
+                initialContent={content.bento_bottom_desc}
+                initialStyle={styleMap["bento_bottom_desc"]}
+                as="p"
+                className="text-base text-on-surface-variant lowercase leading-snug pointer-events-auto"
+              />
             </div>
-          </HomeArtworkOverlay>
+          </div>
         </div>
       </section>
 

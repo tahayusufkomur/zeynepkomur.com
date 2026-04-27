@@ -16,6 +16,7 @@ type NavbarProps = {
 const DEFAULT_ITEMS: NavItem[] = [
   { key: "anasayfa", href: "/", label: "anasayfa", page: "anasayfa", hidden: false },
   { key: "galeri", href: "/galeri", label: "galeri", page: "galeri", hidden: false },
+  { key: "egitimler", href: "/egitimler", label: "eğitimler", page: "egitimler", hidden: false },
   { key: "hakkinda", href: "/hakkinda", label: "hakkında", page: "hakkinda", hidden: false },
   { key: "iletisim", href: "/iletisim", label: "iletişim", page: "iletisim", hidden: false },
 ];

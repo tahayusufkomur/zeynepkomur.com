@@ -81,3 +81,25 @@
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
 }
+
+.rich-text p { margin: 0; }
+.rich-text p + p { margin-top: 0.6em; }
+.rich-text strong, .rich-text b { font-weight: 700; }
+.rich-text em, .rich-text i { font-style: italic; }
+.rich-text ul { list-style: disc; padding-left: 1.2em; margin: 0.4em 0; }
+.rich-text ol { list-style: decimal; padding-left: 1.4em; margin: 0.4em 0; }
+.rich-text li { margin: 0.15em 0; }
+.rich-text h1 { font-size: 1.6em; font-weight: 700; margin: 0.6em 0 0.3em; line-height: 1.15; }
+.rich-text h2 { font-size: 1.35em; font-weight: 700; margin: 0.5em 0 0.25em; line-height: 1.2; }
+.rich-text h3 { font-size: 1.15em; font-weight: 700; margin: 0.4em 0 0.2em; line-height: 1.25; }
+.rich-text blockquote { border-left: 3px solid var(--color-primary); padding-left: 0.9em; font-style: italic; color: var(--color-on-surface-variant); margin: 0.6em 0; }
+.rich-text a { color: var(--color-primary); text-decoration: underline; }
+.rich-text a:hover { color: var(--color-primary-dim); }
+
+/* Line clamp on rich-text card previews: keep the formatting but cap lines */
+.line-clamp-2.rich-text,
+.line-clamp-3.rich-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Artwork } from "@/components/artwork/artwork-card";
 import { StyleableText } from "@/components/admin/styleable-text";
+import { RichText } from "@/components/ui/rich-text";
 
 type FieldStyle = { fontFamily: string | null; fontSize: number | null; color: string | null };
 
@@ -11,9 +12,11 @@ type Props = {
   artwork: Artwork;
   related: Artwork[];
   fieldStyleMap?: Record<string, FieldStyle>;
+  prevSlug?: string | null;
+  nextSlug?: string | null;
 };
 
-export function ArtworkDetailClient({ artwork, related, fieldStyleMap = {} }: Props) {
+export function ArtworkDetailClient({ artwork, related, fieldStyleMap = {}, prevSlug, nextSlug }: Props) {
   const allImages = [
     { imagePath: artwork.imagePath, id: "cover" },
     ...artwork.images,
@@ -24,8 +27,26 @@ export function ArtworkDetailClient({ artwork, related, fieldStyleMap = {} }: Pr
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-24">
         <div>
-          <div className="aspect-[3/4] relative bg-surface-container-low overflow-hidden mb-4">
+          <div className="aspect-[3/4] relative bg-surface-container-low overflow-hidden mb-4 group">
             <img src={allImages[activeIndex].imagePath} alt={artwork.title} className="w-full h-full object-cover" />
+            {prevSlug && (
+              <Link
+                href={`/eser/${prevSlug}`}
+                aria-label="Önceki eser"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/85 backdrop-blur text-on-surface w-11 h-11 flex items-center justify-center shadow-md hover:bg-primary hover:text-on-primary transition-colors opacity-0 group-hover:opacity-100"
+              >
+                <span className="material-symbols-outlined text-2xl">chevron_left</span>
+              </Link>
+            )}
+            {nextSlug && (
+              <Link
+                href={`/eser/${nextSlug}`}
+                aria-label="Sonraki eser"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/85 backdrop-blur text-on-surface w-11 h-11 flex items-center justify-center shadow-md hover:bg-primary hover:text-on-primary transition-colors opacity-0 group-hover:opacity-100"
+              >
+                <span className="material-symbols-outlined text-2xl">chevron_right</span>
+              </Link>
+            )}
           </div>
           {allImages.length > 1 && (
             <div className="flex gap-2 overflow-x-auto">
@@ -45,9 +66,10 @@ export function ArtworkDetailClient({ artwork, related, fieldStyleMap = {} }: Pr
           <StyleableText entityType="artwork" entityId={artwork.id} fieldName="title" initialStyle={fieldStyleMap[`${artwork.id}:title`]} as="h1" className="text-4xl md:text-5xl font-bold tracking-tighter text-on-surface lowercase mb-4">
             {artwork.title}
           </StyleableText>
-          <StyleableText entityType="artwork" entityId={artwork.id} fieldName="description" initialStyle={fieldStyleMap[`${artwork.id}:description`]} as="p" className="text-lg text-on-surface-variant lowercase mb-8">
-            {artwork.description}
-          </StyleableText>
+          <RichText
+            html={artwork.description}
+            className="text-lg text-on-surface-variant mb-8"
+          />
           <dl className="space-y-4 mb-10">
             {artwork.dimensions && (
               <div className="flex gap-4">
@@ -85,7 +107,7 @@ export function ArtworkDetailClient({ artwork, related, fieldStyleMap = {} }: Pr
                 </div>
                 <div className="p-6">
                   <h3 className="text-lg font-bold text-on-surface leading-tight lowercase">{art.title}</h3>
-                  <p className="text-sm text-on-surface-variant">{art.description}</p>
+                  <RichText html={art.description} className="text-sm text-on-surface-variant line-clamp-2 mt-1" />
                 </div>
               </Link>
             ))}

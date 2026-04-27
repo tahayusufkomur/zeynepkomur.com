@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import type { Artwork } from "./artwork-card";
+import { RichText } from "@/components/ui/rich-text";
 
 type ArtworkLightboxProps = {
   artwork: Artwork;
@@ -86,7 +87,7 @@ export function ArtworkLightbox({ artwork, onClose }: ArtworkLightboxProps) {
           {/* Artwork info */}
           <div className="text-center">
             <h3 className="text-white text-lg font-bold lowercase">{artwork.title}</h3>
-            <p className="text-white/60 text-sm lowercase">{artwork.description}</p>
+            <RichText html={artwork.description} className="text-white/60 text-sm mt-1 max-w-xl mx-auto" />
           </div>
 
           {/* Thumbnail strip */}
