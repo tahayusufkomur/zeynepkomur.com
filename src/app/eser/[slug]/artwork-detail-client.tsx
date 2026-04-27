@@ -22,6 +22,14 @@ export function ArtworkDetailClient({ artwork, related, fieldStyleMap = {}, prev
     ...artwork.images,
   ];
   const [activeIndex, setActiveIndex] = useState(0);
+  const hasMultiplePhotos = allImages.length > 1;
+
+  // When the artwork has extra photos, arrows cycle through THIS listing's photos.
+  // Otherwise they navigate between listings.
+  const arrowMode: "photos" | "listings" = hasMultiplePhotos ? "photos" : "listings";
+
+  const arrowBaseClass =
+    "absolute top-1/2 -translate-y-1/2 bg-white/85 backdrop-blur text-on-surface w-11 h-11 flex items-center justify-center shadow-md hover:bg-primary hover:text-on-primary transition-colors opacity-0 group-hover:opacity-100";
 
   return (
     <>
@@ -29,23 +37,50 @@ export function ArtworkDetailClient({ artwork, related, fieldStyleMap = {}, prev
         <div>
           <div className="aspect-[3/4] relative bg-surface-container-low overflow-hidden mb-4 group">
             <img src={allImages[activeIndex].imagePath} alt={artwork.title} className="w-full h-full object-cover" />
-            {prevSlug && (
-              <Link
-                href={`/eser/${prevSlug}`}
-                aria-label="Önceki eser"
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/85 backdrop-blur text-on-surface w-11 h-11 flex items-center justify-center shadow-md hover:bg-primary hover:text-on-primary transition-colors opacity-0 group-hover:opacity-100"
-              >
-                <span className="material-symbols-outlined text-2xl">chevron_left</span>
-              </Link>
-            )}
-            {nextSlug && (
-              <Link
-                href={`/eser/${nextSlug}`}
-                aria-label="Sonraki eser"
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/85 backdrop-blur text-on-surface w-11 h-11 flex items-center justify-center shadow-md hover:bg-primary hover:text-on-primary transition-colors opacity-0 group-hover:opacity-100"
-              >
-                <span className="material-symbols-outlined text-2xl">chevron_right</span>
-              </Link>
+
+            {arrowMode === "photos" ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setActiveIndex((i) => (i - 1 + allImages.length) % allImages.length)}
+                  aria-label="Önceki görsel"
+                  className={`${arrowBaseClass} left-2`}
+                >
+                  <span className="material-symbols-outlined text-2xl">chevron_left</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveIndex((i) => (i + 1) % allImages.length)}
+                  aria-label="Sonraki görsel"
+                  className={`${arrowBaseClass} right-2`}
+                >
+                  <span className="material-symbols-outlined text-2xl">chevron_right</span>
+                </button>
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white text-[10px] font-bold tracking-widest px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {activeIndex + 1} / {allImages.length}
+                </div>
+              </>
+            ) : (
+              <>
+                {prevSlug && (
+                  <Link
+                    href={`/eser/${prevSlug}`}
+                    aria-label="Önceki eser"
+                    className={`${arrowBaseClass} left-2`}
+                  >
+                    <span className="material-symbols-outlined text-2xl">chevron_left</span>
+                  </Link>
+                )}
+                {nextSlug && (
+                  <Link
+                    href={`/eser/${nextSlug}`}
+                    aria-label="Sonraki eser"
+                    className={`${arrowBaseClass} right-2`}
+                  >
+                    <span className="material-symbols-outlined text-2xl">chevron_right</span>
+                  </Link>
+                )}
+              </>
             )}
           </div>
           {allImages.length > 1 && (
