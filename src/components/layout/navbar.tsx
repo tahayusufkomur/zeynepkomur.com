@@ -48,11 +48,12 @@ export function Navbar({ currentPage, onNewsletterClick, navItems }: NavbarProps
 
   return (
     <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center w-full px-8 py-6 max-w-full">
-      <Link
-        href="/"
-        className="font-bold text-on-surface lowercase font-body tracking-tight text-4xl"
-      >
-        by zeynep kömür
+      <Link href="/" aria-label="Ana sayfa" className="block">
+        <img
+          src="/logo.svg"
+          alt="zeyneple.art"
+          className="h-10 md:h-12 w-auto"
+        />
       </Link>
 
       {/* Desktop nav links */}
