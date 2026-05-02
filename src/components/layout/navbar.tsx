@@ -5,11 +5,11 @@ import { useState } from "react";
 import { useAdmin } from "@/hooks/use-admin";
 import { InlineEdit } from "@/components/admin/inline-edit";
 import { showToast } from "@/components/admin/toast";
+import { NewsletterModal } from "@/components/newsletter-modal";
 import type { NavItem } from "@/lib/get-navbar-content";
 
 type NavbarProps = {
   currentPage: string;
-  onNewsletterClick?: () => void;
   navItems?: NavItem[];
 };
 
@@ -21,8 +21,9 @@ const DEFAULT_ITEMS: NavItem[] = [
   { key: "iletisim", href: "/iletisim", label: "iletişim", page: "iletisim", hidden: false },
 ];
 
-export function Navbar({ currentPage, onNewsletterClick, navItems }: NavbarProps) {
+export function Navbar({ currentPage, navItems }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showNewsletter, setShowNewsletter] = useState(false);
   const { isEditing } = useAdmin();
   const items = navItems ?? DEFAULT_ITEMS;
 
@@ -102,7 +103,7 @@ export function Navbar({ currentPage, onNewsletterClick, navItems }: NavbarProps
 
       <div className="flex items-center gap-4">
         <button
-          onClick={onNewsletterClick}
+          onClick={() => setShowNewsletter(true)}
           className="bg-primary text-on-primary px-6 py-2 font-bold tracking-tight hover:bg-primary-dim transition-all duration-300 active:scale-95 hidden md:block"
         >
           KULÜBE KATIL
@@ -144,7 +145,7 @@ export function Navbar({ currentPage, onNewsletterClick, navItems }: NavbarProps
           <button
             onClick={() => {
               setMobileOpen(false);
-              onNewsletterClick?.();
+              setShowNewsletter(true);
             }}
             className="bg-primary text-on-primary px-6 py-2 font-bold tracking-tight hover:bg-primary-dim transition-all duration-300 active:scale-95"
           >
@@ -152,6 +153,8 @@ export function Navbar({ currentPage, onNewsletterClick, navItems }: NavbarProps
           </button>
         </div>
       )}
+
+      {showNewsletter && <NewsletterModal onClose={() => setShowNewsletter(false)} />}
     </nav>
   );
 }
