@@ -17,8 +17,8 @@ const DEFAULTS: Record<string, string> = {
   phone: "+905302500411",
   phone_label: "+90 530 250 04 11",
   email_label: "zeynep.komur4@gmail.com",
-  instagram_label: "@arada.art",
-  instagram_url: "https://www.instagram.com/arada.art/",
+  instagram_label: "@zeynepkomurstudio",
+  instagram_url: "https://www.instagram.com/zeynepkomurstudio/",
 };
 
 function c(content: Record<string, string> | undefined, key: string) {

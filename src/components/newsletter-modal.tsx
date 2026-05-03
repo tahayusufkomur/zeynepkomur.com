@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 type NewsletterModalProps = {
   onClose: () => void;
@@ -12,6 +13,13 @@ export function NewsletterModal({ onClose }: NewsletterModalProps) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Render via portal so we escape any ancestor with backdrop-filter / transform,
+  // which would otherwise pin our `position: fixed` to the navbar instead of the viewport.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -42,7 +50,9 @@ export function NewsletterModal({ onClose }: NewsletterModalProps) {
     }
   }
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-[150] flex items-center justify-center bg-on-surface/60 backdrop-blur-sm p-4">
       <div className="bg-white w-full max-w-md shadow-2xl relative">
         {/* Close button */}
@@ -117,6 +127,7 @@ export function NewsletterModal({ onClose }: NewsletterModalProps) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

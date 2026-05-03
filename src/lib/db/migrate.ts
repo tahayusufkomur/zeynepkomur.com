@@ -164,12 +164,12 @@ export function migrate() {
   const replacements: Array<{ page: string; section: string; oldValues: string[]; newValue: string }> = [
     { page: "footer", section: "phone", oldValues: ["+900000000000"], newValue: "+905302500411" },
     { page: "footer", section: "email", oldValues: ["info@zeynepkomur.com"], newValue: "zeynep.komur4@gmail.com" },
-    { page: "footer", section: "instagram_url", oldValues: ["https://instagram.com"], newValue: "https://www.instagram.com/arada.art/" },
+    { page: "footer", section: "instagram_url", oldValues: ["https://instagram.com", "https://www.instagram.com/arada.art/"], newValue: "https://www.instagram.com/zeynepkomurstudio/" },
     { page: "footer", section: "phone_label", oldValues: ["telefon"], newValue: "+90 530 250 04 11" },
     { page: "footer", section: "email_label", oldValues: ["e-posta"], newValue: "zeynep.komur4@gmail.com" },
-    { page: "footer", section: "instagram_label", oldValues: ["instagram"], newValue: "@arada.art" },
+    { page: "footer", section: "instagram_label", oldValues: ["instagram", "@arada.art"], newValue: "@zeynepkomurstudio" },
     { page: "contact", section: "studio_email", oldValues: ["merhaba@zeynepkomur.com"], newValue: "zeynep.komur4@gmail.com" },
-    { page: "contact", section: "studio_social", oldValues: ["@zeynepkomur.com"], newValue: "@arada.art" },
+    { page: "contact", section: "studio_social", oldValues: ["@zeynepkomur.com", "@arada.art"], newValue: "@zeynepkomurstudio" },
   ];
   const getStmt = sqlite.prepare("SELECT content FROM page_content WHERE page_slug = ? AND section_key = ?");
   const updStmt = sqlite.prepare("UPDATE page_content SET content = ?, updated_at = datetime('now') WHERE page_slug = ? AND section_key = ?");

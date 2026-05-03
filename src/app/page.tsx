@@ -77,8 +77,8 @@ export default async function HomePage() {
               sectionKey="hero_image"
               initialSrc={content.hero_image}
               alt="ana görsel"
-              className="absolute inset-0 z-10 shadow-2xl"
-              imgClassName="w-full h-full object-cover grayscale-[0.1] hover:grayscale-0 transition-all duration-1000"
+              className="absolute inset-0 z-10 shadow-2xl overflow-hidden"
+              imgClassName="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
             />
           </div>
         </div>
@@ -131,7 +131,7 @@ export default async function HomePage() {
               className="absolute inset-0"
               imgClassName="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-12 backdrop-blur-[2px] pointer-events-none">
+            <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-12 pointer-events-none">
               <span className="text-white text-xs font-bold tracking-[0.3em] uppercase mb-4">
                 öne çıkan
               </span>
@@ -154,7 +154,7 @@ export default async function HomePage() {
               initialSrc={content.bento_vertical_image}
               alt="görsel"
               className="absolute inset-0"
-              imgClassName="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+              imgClassName="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
             <div
               className="absolute top-0 left-0 px-6 py-2 text-xs font-extrabold tracking-wider uppercase pointer-events-none shadow-sm"

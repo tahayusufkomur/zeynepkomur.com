@@ -33,7 +33,7 @@ export default async function IletisimPage() {
   const studioAddress = await getContent("studio_address", "moda, kadıköy, istanbul, türkiye");
   const studioHours = await getContent("studio_hours", "pazartesi - cumartesi, 10:00 - 19:00");
   const studioEmail = await getContent("studio_email", "zeynep.komur4@gmail.com");
-  const studioSocial = await getContent("studio_social", "@arada.art");
+  const studioSocial = await getContent("studio_social", "@zeynepkomurstudio");
   const studioPhone = await getContent("studio_phone", "+90 530 250 04 11");
 
   // Fetch all page content rows for style map
