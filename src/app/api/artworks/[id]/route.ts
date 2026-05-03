@@ -47,6 +47,10 @@ export async function PUT(
     artworkFields.slug = slug;
   }
 
+  // Snapshot the current row BEFORE updating so we can compare cover paths
+  // and clean up the previous cover file if it changed.
+  const [previous] = await db.select().from(artworks).where(eq(artworks.id, id));
+
   const [updated] = await db
     .update(artworks)
     .set({ ...artworkFields, updatedAt: sql`(datetime('now'))` })
@@ -55,17 +59,28 @@ export async function PUT(
 
   if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  // Files we MUST keep on disk after this PUT, regardless of which
+  // table they appear in: the (new) cover + every additional image.
+  // Including the cover here is critical — without it, "promote to cover"
+  // would mark the new cover for deletion (it used to live in artwork_images,
+  // not in newPaths) and silently nuke the file the row now points to.
+  const protectedPaths = new Set<string>();
+  if (updated.imagePath) protectedPaths.add(updated.imagePath);
+  if (Array.isArray(images)) {
+    for (const img of images as { imagePath: string }[]) {
+      if (img?.imagePath) protectedPaths.add(img.imagePath);
+    }
+  }
+
   // If images array was provided, sync artwork_images
   if (Array.isArray(images)) {
-    // Get existing images to clean up deleted files
     const existingImages = await db
       .select()
       .from(artworkImages)
       .where(eq(artworkImages.artworkId, id));
 
-    const newPaths = new Set(images.map((img: { imagePath: string }) => img.imagePath));
     for (const existing of existingImages) {
-      if (!newPaths.has(existing.imagePath)) {
+      if (!protectedPaths.has(existing.imagePath)) {
         await deleteUpload(existing.imagePath);
       }
     }
@@ -80,6 +95,15 @@ export async function PUT(
           sortOrder: i,
         }))
       );
+    }
+  }
+
+  // If the cover changed, the previous cover file becomes an orphan unless
+  // it's now (or still) referenced as an additional image — in which case
+  // it lives in protectedPaths.
+  if (previous && previous.imagePath && previous.imagePath !== updated.imagePath) {
+    if (!protectedPaths.has(previous.imagePath)) {
+      await deleteUpload(previous.imagePath);
     }
   }
 
