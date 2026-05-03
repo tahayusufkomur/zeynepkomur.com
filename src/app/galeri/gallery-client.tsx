@@ -17,7 +17,11 @@ type GalleryClientProps = {
 
 export function GalleryClient({ artworks, dimensions, collections }: GalleryClientProps) {
   const searchParams = useSearchParams();
-  const initialCategory = searchParams.get("category");
+  // Default to "resim" when no ?category param is present; honor the param
+  // (including ?category=all to opt out of any default).
+  const categoryParam = searchParams.get("category");
+  const initialCategory =
+    categoryParam === null ? "resim" : categoryParam === "all" ? null : categoryParam;
 
   const [activeCategory, setActiveCategory] = useState<string | null>(initialCategory);
   const [selectedDimension, setSelectedDimension] = useState<string | null>(null);
