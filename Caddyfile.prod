@@ -1,7 +1,15 @@
 {$DOMAIN:localhost} {
     handle /uploads/* {
         root * /srv
-        file_server
+        @uploadFile file
+        handle @uploadFile {
+            file_server
+        }
+        # File missing on disk — let Next.js try the -original.{ext} fallback
+        handle {
+            rewrite * /api/img-fallback{uri}
+            reverse_proxy app:3000
+        }
     }
 
     handle {
