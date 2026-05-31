@@ -1,7 +1,15 @@
+# Shared json-file log cap so container logs can't fill the disk on the old MacBook.
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   caddy:
     image: caddy:2-alpine
     container_name: zeyneple-caddy
+    logging: *default-logging
     # Static file serving + reverse proxy; tiny footprint.
     mem_limit: 64m
     mem_reservation: 16m
@@ -17,10 +25,19 @@ services:
       - web
       - edge
     restart: unless-stopped
+    healthcheck:
+      # Liveness via Caddy's localhost admin API (host-independent). A failure only
+      # marks the container unhealthy in `docker ps`; it does not trigger a restart.
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:2019/config/ >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
   app:
     build: .
     container_name: zeyneple-app
+    logging: *default-logging
     # Cap RAM at 512m and keep V8's heap comfortably under it so the app gets a
     # clean restart rather than a kernel OOM-kill if it ever runs away.
     mem_limit: 512m

@@ -1,0 +1,14 @@
+# Fleet hygiene baseline. Enable once with:  pre-commit install
+# Follow-up: add Yelp/detect-secrets with a real baseline
+#   (`detect-secrets scan > .secrets.baseline`) once the tool is installed.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: detect-private-key

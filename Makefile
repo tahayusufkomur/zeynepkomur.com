@@ -1,4 +1,4 @@
-.PHONY: help dev dev-reset build run stop reset logs convert-media seed-artworks
+.PHONY: help dev dev-reset build up down run stop reset logs check convert-media seed-artworks
 
 # Deployment lives in the home-server ops repo, not here:
 #   cd ~/ws/home-server && make deploy PROJECT=zeyneple   # rsync + build on the home server
@@ -25,19 +25,26 @@ dev-reset: ## Reset dev database and restart dev server
 build: ## Build Docker images (local)
 	docker compose build
 
-run: ## Run local stack (Caddy + app)
+up: ## Start local stack (Caddy + app), detached
 	docker compose up -d
 
-stop: ## Stop local stack
+down: ## Stop local stack
 	docker compose down
 
-reset: ## Reset local stack (delete data)
+run: up    ## alias for `up`
+stop: down ## alias for `down`
+
+reset: ## DESTRUCTIVE: reset local stack (delete data) + rebuild
 	docker compose down -v
 	rm -rf data/*.db data/backups/*
 	docker compose up -d --build
 
 logs: ## Tail local logs
 	docker compose logs -f
+
+check: ## Lint + typecheck
+	npm run lint
+	npx tsc --noEmit
 
 convert-media: ## Convert raw media to AVIF
 	npx tsx scripts/convert-media.ts
