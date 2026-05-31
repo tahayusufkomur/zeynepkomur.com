@@ -1,4 +1,7 @@
-{$DOMAIN:localhost} {
+# Served behind Cloudflare Tunnel: plain HTTP on :80, no TLS here.
+# Cloudflare terminates TLS at the edge; cloudflared reaches this container
+# over the private `edge` docker network. www -> apex redirect is a Cloudflare rule.
+:80 {
     handle /uploads/* {
         root * /srv
         @uploadFile file
@@ -15,8 +18,4 @@
     handle {
         reverse_proxy app:3000
     }
-}
-
-www.{$DOMAIN:localhost} {
-    redir https://{$DOMAIN}{uri} permanent
 }

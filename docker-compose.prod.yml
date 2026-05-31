@@ -1,11 +1,11 @@
 services:
   caddy:
     image: caddy:2-alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    env_file:
-      - .env.prod
+    container_name: zeyneple-caddy
+    # Static file serving + reverse proxy; tiny footprint.
+    mem_limit: 64m
+    mem_reservation: 16m
+    # No host ports: cloudflared reaches this proxy over the shared `edge` network.
     volumes:
       - ./Caddyfile.prod:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
@@ -13,10 +13,18 @@ services:
       - app_uploads:/srv/uploads:ro
     depends_on:
       - app
+    networks:
+      - web
+      - edge
     restart: unless-stopped
 
   app:
     build: .
+    container_name: zeyneple-app
+    # Cap RAM at 512m and keep V8's heap comfortably under it so the app gets a
+    # clean restart rather than a kernel OOM-kill if it ever runs away.
+    mem_limit: 512m
+    mem_reservation: 128m
     expose:
       - "3000"
     volumes:
@@ -24,6 +32,10 @@ services:
       - app_uploads:/app/public/uploads
     env_file:
       - .env.prod
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=384
+    networks:
+      - web
     restart: unless-stopped
 
 volumes:
@@ -31,3 +43,9 @@ volumes:
   caddy_config:
   app_data:
   app_uploads:
+
+networks:
+  web:
+  # Shared with the cloudflared edge stack; created once: `docker network create edge`
+  edge:
+    external: true
